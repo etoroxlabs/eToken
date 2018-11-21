@@ -1,0 +1,12 @@
+{
+  "name": "etorotoken",
+  "version": "0.1",
+  "main": "index.js",
+  "repository": "git@github.com:eTokenize/server.git",
+  "author": "eTokenize",
+  "license": "Proprietary",
+  "private": true,
+  "dependencies": {
+    "openzeppelin-solidity": "^2.0.0"
+  }
+}
