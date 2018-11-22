@@ -1,10 +1,10 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/access/rbac/RBAC.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./KillSwitch.sol";
+import "./roles/WhitelistedRole.sol";
 
-contract EToroRole is RBAC, Ownable, KillSwitch {
+contract EToroRole is Ownable, KillSwitch, WhitelistedRole {
     string public constant ROLE_WHITELISTED = "whitelisted";
     string public constant ROLE_ADMIN = "admin";
 
@@ -30,20 +30,20 @@ contract EToroRole is RBAC, Ownable, KillSwitch {
         isWhitelisted = value;
     }
 
-    function addAdmin(address user) public onlyOwner {
-        addRole(user, ROLE_ADMIN);
-    }
+    /* function addAdmin(address user) public onlyOwner { */
+    /*     addRole(user, ROLE_ADMIN); */
+    /* } */
 
-    function removeAdmin(address user) public onlyOwner {
-        removeRole(user, ROLE_ADMIN);
-    }
+    /* function removeAdmin(address user) public onlyOwner { */
+    /*     removeRole(user, ROLE_ADMIN); */
+    /* } */
 
-    function addToWhitelist(address user) public onlyAdmin {
-        addRole(user, ROLE_WHITELISTED);
-    }
+    /* function addToWhitelist(address user) public onlyAdmin { */
+    /*     addRole(user, ROLE_WHITELISTED); */
+    /* } */
 
-    function removeFromWhitelist(address user) public onlyAdmin {
-        removeRole(user, ROLE_WHITELISTED);
-    }
+    /* function removeFromWhitelist(address user) public onlyAdmin { */
+    /*     removeRole(user, ROLE_WHITELISTED); */
+    /* } */
 
 }
