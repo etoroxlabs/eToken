@@ -14,14 +14,14 @@ contract EToroRole is RBAC, Ownable, KillSwitch {
         checkWhitelisted(msg.sender);
         _;
     }
-    
+
     modifier onlyAdmin() {
         checkRole(msg.sender, ROLE_ADMIN);
         _;
     }
 
     function checkWhitelisted(address user) public view {
-        if (isWhitelisted && user != owner) { // owner is also auto whitelisted 
+        if (isWhitelisted && user != owner) { // owner is also auto whitelisted
             checkRole(user, ROLE_WHITELISTED);
         }
     }
