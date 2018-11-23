@@ -1,14 +1,17 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./KillSwitch.sol";
 import "./roles/WhitelistedRole.sol";
+import "./roles/AdministratorRole.sol";
 
-contract EToroRole is Ownable, KillSwitch, WhitelistedRole {
+contract EToroRole is Ownable, WhitelistedRole, AdministratorRole {
     string public constant ROLE_WHITELISTED = "whitelisted";
     string public constant ROLE_ADMIN = "admin";
 
     bool public isWhitelisted = true;
+
+    WhitelistedRole private whitelistedrole;
+    AdministratorRole private administratorrole;
 
     modifier onlyWhitelisted() {
         checkWhitelisted(msg.sender);
@@ -16,13 +19,13 @@ contract EToroRole is Ownable, KillSwitch, WhitelistedRole {
     }
 
     modifier onlyAdmin() {
-        checkRole(msg.sender, ROLE_ADMIN);
+        administratorrole.isAdmin(msg.sender);
         _;
     }
 
     function checkWhitelisted(address user) public view {
         if (isWhitelisted && user != owner) { // owner is also auto whitelisted
-            checkRole(user, ROLE_WHITELISTED);
+            whitelistedrole.isWhitelisted(user);
         }
     }
 
@@ -30,20 +33,24 @@ contract EToroRole is Ownable, KillSwitch, WhitelistedRole {
         isWhitelisted = value;
     }
 
-    /* function addAdmin(address user) public onlyOwner { */
-    /*     addRole(user, ROLE_ADMIN); */
-    /* } */
+    function addAdmin(address user) public onlyOwner {
+        administratorrole.addAdmin(user);
+    }
 
-    /* function removeAdmin(address user) public onlyOwner { */
-    /*     removeRole(user, ROLE_ADMIN); */
-    /* } */
+    function removeAdmin(address user) public onlyOwner {
+        administratorrole.removeAdmin(user);
+    }
 
-    /* function addToWhitelist(address user) public onlyAdmin { */
-    /*     addRole(user, ROLE_WHITELISTED); */
-    /* } */
+    function renounceAdmin(address user) public onlyAdmin {
+        administratorrole.renounceAdmin();
+    }
 
-    /* function removeFromWhitelist(address user) public onlyAdmin { */
-    /*     removeRole(user, ROLE_WHITELISTED); */
-    /* } */
+    function addToWhitelist(address user) public onlyAdmin { 
+        whitelistedrole.addWhitelisted(user); 
+    } 
+
+    function removeFromWhitelist(address user) public onlyAdmin {
+        whitelistedrole.removeWhitelisted(user);
+    }
 
 }
