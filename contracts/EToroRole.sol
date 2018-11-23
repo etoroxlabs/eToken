@@ -5,13 +5,11 @@ import "./roles/WhitelistedRole.sol";
 import "./roles/AdministratorRole.sol";
 
 contract EToroRole is Ownable, WhitelistedRole, AdministratorRole {
-    string public constant ROLE_WHITELISTED = "whitelisted";
-    string public constant ROLE_ADMIN = "admin";
 
-    bool public isWhitelisted = true;
+    bool public whitelistEnabled = true;
 
-    WhitelistedRole private whitelistedrole;
-    AdministratorRole private administratorrole;
+    WhitelistedRole private whitelistedRole;
+    AdministratorRole private administratorRole;
 
     modifier onlyWhitelisted() {
         checkWhitelisted(msg.sender);
@@ -19,38 +17,38 @@ contract EToroRole is Ownable, WhitelistedRole, AdministratorRole {
     }
 
     modifier onlyAdmin() {
-        administratorrole.isAdmin(msg.sender);
+        administratorRole.isAdmin(msg.sender);
         _;
     }
 
     function checkWhitelisted(address user) public view {
-        if (isWhitelisted && user != owner) { // owner is also auto whitelisted
-            whitelistedrole.isWhitelisted(user);
+        if (whitelistEnabled && user != owner) { // owner is also auto whitelisted
+            whitelistedRole.isWhitelisted(user);
         }
     }
 
     function enableWhitelist(bool value) public onlyOwner {
-        isWhitelisted = value;
+        whitelistEnabled = value;
     }
 
     function addAdmin(address user) public onlyOwner {
-        administratorrole.addAdmin(user);
+        administratorRole.addAdmin(user);
     }
 
     function removeAdmin(address user) public onlyOwner {
-        administratorrole.removeAdmin(user);
+        administratorRole.removeAdmin(user);
     }
 
-    function renounceAdmin(address user) public onlyAdmin {
-        administratorrole.renounceAdmin();
+    function renounceAdmin() public onlyAdmin {
+        administratorRole.renounceAdmin();
     }
 
     function addToWhitelist(address user) public onlyAdmin { 
-        whitelistedrole.addWhitelisted(user); 
+        whitelistedRole.addWhitelisted(user); 
     } 
 
     function removeFromWhitelist(address user) public onlyAdmin {
-        whitelistedrole.removeWhitelisted(user);
+        whitelistedRole.removeWhitelisted(user);
     }
 
 }
