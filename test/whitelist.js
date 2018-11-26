@@ -68,14 +68,15 @@ contract("Whitelist", async (accounts) => {
         util.assertReverts(wl.addWhitelisted(user4, {from: user3}));
         await wl.addWhitelistAdmin(user4, {from: owner});
         assert(await wl.isWhitelistAdmin.call(user4, {from: owner}));
-        await wl.addWhitelisted(user4, {from: user3});
+        await wl.addWhitelisted(user4, {from: owner});
+        assert(await wl.isWhitelisted(user4, {from: user3}));
     });
 
     it("rejects unprivileged privilege propagation", async () => {
          assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user3})));
          util.assertReverts(wl.addWhitelisted(user6, {from: user3}));
-    //     util.assertReverts(wl.addWhitelistAdmin(user5, {from: user3}));
-    //     assert( ! (await wl.isWhitelistAdmin.call(user5, {from: user3})));
-    //     util.assertReverts(wl.addWhitelisted(user5, {from: user3}));
+         util.assertReverts(wl.addWhitelistAdmin(user6, {from: user3}));
+         assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user3})));
+         util.assertReverts(wl.addWhitelisted(user6, {from: user3}));
     });
 });
