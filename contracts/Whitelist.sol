@@ -18,22 +18,32 @@ contract Whitelist is WhitelistAdminRole {
         _addWhitelisted(account);
     }
 
+
+    function removeWhitelisted(address account)
+        public
+        onlyWhitelistAdmin
+    {
+        _removeWhitelisted(account);
+    }
+
+
     function isWhitelisted(address account)
         public
         view
         returns (bool)
     {
-        return whitelist.has(account);
+        return whitelist.has(account) || isWhitelistAdmin(account);
     }
+
 
     function _addWhitelisted(address account) internal {
         whitelist.add(account);
         emit WhitelistAdded(account);
     }
 
+
     function _removeWhitelisted(address account) internal {
         whitelist.remove(account);
         emit WhitelistRemoved(account);
     }
-
 }

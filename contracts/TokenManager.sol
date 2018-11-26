@@ -55,7 +55,7 @@ contract TokenManager is Ownable {
     /**
        Creates a new token
     */
-    function newToken (bytes32 _name, string _symbol, uint8 _decimals, uint256 cap, address eToroRole)
+    function newToken (bytes32 _name, string _symbol, uint8 _decimals, address eToroRole)
         public
         onlyOwner
         tokenNotExists(_name)
@@ -72,7 +72,7 @@ contract TokenManager is Ownable {
         // returning a hashed list of the contract names.
         string memory nameStr = StringUtils.bytes32ToString(_name);
 
-        EToroToken tok = new EToroToken(nameStr, _symbol, _decimals, cap, eToroRole);
+        EToroToken tok = new EToroToken(nameStr, _symbol, _decimals, msg.sender, eToroRole);
         tokens[_name] = TokenEntry({index: names.length, token: tok, exists: true});
         names.push(_name);
         emit TokenCreated(_name);

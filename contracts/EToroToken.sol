@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Capped.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./roles/BurnerRole.sol";
 import "./Whitelist.sol";
@@ -13,7 +12,6 @@ contract EToroToken is ERC20Mintable,
     ERC20Burnable,
     ERC20Detailed,
     ERC20Pausable,
-    ERC20Capped,
     Ownable,
     Whitelist,
     BurnerRole
@@ -24,13 +22,19 @@ contract EToroToken is ERC20Mintable,
     constructor(string _name,
                 string _symbol,
                 uint8 _decimals,
-                uint256 cap,
+                address owner,
                 address whitelistAddress)
         public
         ERC20Detailed(_name, _symbol, _decimals)
-        ERC20Capped(cap)
         {
             whitelist = Whitelist(whitelistAddress);
+            addMinter(owner);
+            renounceMinter();
+            addPauser(owner);
+            renouncePauser();
+            addBurner(owner);
+            renounceBurner();
+            transferOwnership(owner);
         }
 
     modifier requireWhitelisted(address account) {
