@@ -3,7 +3,7 @@
 const util = require("./utils.js");
 
 const TokenManager = artifacts.require("TokenManager");
-const EToroRole = artifacts.require("EToroRole");
+const Whitelist = artifacts.require("Whitelist");
 const EToroToken = artifacts.require("EToroToken");
 
 const ERROR = new Error('should not have reached this');
@@ -34,22 +34,74 @@ contract('EToro Token', accounts => {
 
     describe('Minting and Burning', function() {
         it('should mint new tokens', async () => {
+            const mintVal = 1000;
             const initialBalance = await token.balanceOf.call(owner);
             const initialSupply = await token.totalSupply.call();
-            await token.mint(owner, 10000, {from: owner});
-            // const balance = await token.balanceOf.call(owner);
-            // const supply = await token.totalSupply.call();
-            // assert.equal(balance.toNumber(), initialBalance.toNumber() + 10000);
-            // assert.equal(supply.toNumber(), initialSupply.toNumber() + 10000)
+            let res = await token.isMinter.call(owner, {from: owner});
+            await token.mint(owner, mintVal, {from: owner});
+            const balance = await token.balanceOf.call(owner);
+            const supply = await token.totalSupply.call();
+            assert(balance.equals(initialBalance.plus(mintVal)));
+            assert(supply.equals(initialSupply.plus(mintVal)));
         });
 
-        // it('should not allow non owner to mint tokens', async () => {
+        // it('should not allow non minter to mint tokens', async () => {
         //     const initialBalance = await token.balanceOf.call(admin);
-        //     util.assertThrows(await token.mint(admin, 1, { from: admin}));
+        //     util.assertThrows(await token.mint(admin, 1, {from: admin}));
         //     const balance = await token.balanceOf.call(admin);
-        //     assert.equal(balance.toNumber(), initialBalance.toNumber());
+        //     assert(balance.equals(initialBalance));
         // });
+    });
+});
 
+contract('EToro Token default permissions', async (accounts) => {
+
+    const owner = accounts[0];
+    const admin = accounts[1];
+    const whitelisted = accounts[2];
+    const user = accounts[3];
+    const user2 = accounts[4];
+
+    let token;
+
+    before(async () => {
+        let tokMgr = await TokenManager.deployed();
+        let role = await Whitelist.deployed();
+
+        // Create a token token
+        await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});
+        token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
+        //await token.addMinterQ
+
+
+        //WHITELISTED = await token.ROLE_WHITELISTED.call();
+        //ADMIN = await token.ROLE_ADMIN.call();
+    });
+
+    it("Rejects unpriveleged transfer", async () => {
+        const initialBalance = await token.balanceOf.call(user);
+        util.assertThrows(await token.transfer(user, 1, {from: user}));
+        const balance = await token.balanceOf.call(user);
+        assert(balance.equals(initialBalance));
+    });
+
+    it("Rejects unpriveleged approve", async () => {
+        //const initialBalance = await token.balanceOf.call(user);
+        util.assertThrows(await token.approve(user, 1, {from: user}));
+        //const balance = await token.balanceOf.call(user);
+        // TODO: Assert correct state
+        assert(balance.equals(initialBalance));
+    });
+
+    it("Rejects unpriveleged transferFrom", async () => {
+        const initialBalance = await token.balanceOf.call(user);
+        util.assertThrows(await token.transferFrom(user, 1, {from: user}));
+        const balance = await token.balanceOf.call(user);
+        assert(balance.equals(initialBalance));
+    });
+
+
+});
         // it('should burn tokens', async () => {
         //     const initialBalance = await token.balanceOf.call(owner);
         //     const initialSupply = await token.totalSupply.call();

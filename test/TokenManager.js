@@ -25,7 +25,7 @@ contract("TokenManager", async (accounts) => {
     });
 
     it("should create and retrieve tokens", async () => {
-        await tokMgr.newToken(tokName, "e", 4, 10, whitelist.address, {from: a0});
+        await tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0});
         let res = await tokMgr.getToken.call(tokName, {from: a0});
         let tok = EToroToken.at(res);
         let contractTokName = await tok.name.call({from: a0})
@@ -34,8 +34,8 @@ contract("TokenManager", async (accounts) => {
 
     it("fails on duplicated names", async () => {
         let tokName = "eEUR";
-        await tokMgr.newToken(tokName, "e", 4, 10, whitelist.address, {from: a0});
-        await util.assertReverts(tokMgr.newToken(tokName, "e", 4, 10, whitelist.address, {from: a0}));
+        await tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0});
+        await util.assertReverts(tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0}));
     });
 
     it("should properly remove tokens", async () => {
@@ -43,7 +43,7 @@ contract("TokenManager", async (accounts) => {
         // Token shouldn't exist before creation
         await util.assertReverts(tokMgr.getToken.call(tokName, {from: a0}));
         // Create token
-        await tokMgr.newToken(tokName, "e", 4, 10, whitelist.address, {from: a0});
+        await tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0});
         // Retrieve token. This should be successful
         await tokMgr.getToken.call(tokName, {from: a0});
         // Delete token
@@ -69,8 +69,8 @@ contract("Token manager list retrieve", async (accounts) => {
     it("Retrieves a list of created tokens", async () => {
         let expected = ["tok1", "tok2"];
 
-        await tokMgr.newToken("tok1", "e", 4, 10, whitelist.address, {from: a0});
-        await tokMgr.newToken("tok2", "e", 4, 10, whitelist.address, {from: a0});
+        await tokMgr.newToken("tok1", "e", 4, whitelist.address, {from: a0});
+        await tokMgr.newToken("tok2", "e", 4, whitelist.address, {from: a0});
 
         let r = (await tokMgr.getTokens.call({from: a0})).map(util.bytes32ToString);
         // Sort arrays since implementation does not require stable order of tokens
