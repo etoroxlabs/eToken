@@ -8,16 +8,6 @@ const EToroToken = artifacts.require("EToroToken");
 
 const tokName = "eUSD";
 
-function arraysEqual(arr1, arr2) {
-    if (! (arr1 instanceof Array && arr2 instanceof Array)) {
-        throw new TypeError("assertArraysEqual function expected arrays");
-    }
-    if (arr1.length !== arr2.length) {
-        throw new TypeError("Argument arrays had different lengths");
-    }
-    return arr1.every((v, i) => arr2[i] === v);
-}
-
 contract("TokenManager", async (accounts) => {
 
     let tokMgr;
