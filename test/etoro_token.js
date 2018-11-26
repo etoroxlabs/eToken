@@ -54,7 +54,7 @@ contract('EToro Token', accounts => {
     });
 });
 
-contract('EToro Token default permissions', async (accounts) => {
+contract('EToro Token default permissions ', async (accounts) => {
 
     const owner = accounts[0];
     const admin = accounts[1];
@@ -100,9 +100,10 @@ contract('EToro Token default permissions', async (accounts) => {
         assert(balance.equals(initialBalance));
     });
 
+//});
 
-});
-        // it('should burn tokens', async () => {
+
+// it('should burn tokens', async () => {
         //     const initialBalance = await token.balanceOf.call(owner);
         //     const initialSupply = await token.totalSupply.call();
         //     await token.burn(5000, { from: owner });
@@ -229,7 +230,7 @@ contract('EToro Token default permissions', async (accounts) => {
     //         assert.equal(balance.toNumber(), initialBalance.toNumber() + 1);
     //     });
     // });
-});
+//});
     // describe('Whitelist management', function() {
     //     it('should add an admin by owner', async () => {
     //         let isAdmin = await token.hasRole.call(admin, ADMIN);

@@ -32,7 +32,7 @@ contract Whitelist is WhitelistAdminRole {
         view
         returns (bool)
     {
-        return whitelist.has(account);
+        return whitelist.has(account) || isWhitelistAdmin(account);
     }
 
 
