@@ -20,7 +20,7 @@ contract('EToro Token', accounts => {
 
     before(async () => {
         let tokMgr = await TokenManager.deployed();
-        let role = await EToroRole.deployed();
+        let role = await Whitelist.deployed();
 
         // Create a token token
         await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});

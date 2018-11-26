@@ -1,9 +1,7 @@
-let EToroRole = artifacts.require('EToroRole');
-//let EToroToken = artifacts.require('EToroToken');
+let Whitelist = artifacts.require('Whitelist');
 let TokenManager = artifacts.require('TokenManager');
 
 module.exports = function(deployer) {
-    deployer.deploy(EToroRole);
-    //deployer.deploy(EToroToken);
+    deployer.deploy(Whitelist);
     deployer.deploy(TokenManager);
 }
