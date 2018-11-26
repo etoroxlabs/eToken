@@ -3,7 +3,7 @@
 const util = require("./utils.js");
 
 const TokenManager = artifacts.require("TokenManager");
-const EToroRole = artifacts.require("EToroRole");
+const Whitelist = artifacts.require("Whitelist");
 const EToroToken = artifacts.require("EToroToken");
 
 const tokName = "eUSD";
@@ -17,7 +17,7 @@ contract("TokenManager", async (accounts) => {
 
     before(async () => {
         tokMgr = await TokenManager.deployed();
-        role = await EToroRole.deployed();
+        role = await Whitelist.deployed();
     });
 
     it("Should throw on retrieving non-existing entires", async () => {
