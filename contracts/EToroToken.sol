@@ -3,83 +3,89 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Capped.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./EToroRole.sol";
+import "./roles/BurnerRole.sol";
+import "./Whitelist.sol";
 
-contract EToroToken is ERC20Mintable, ERC20Burnable, ERC20Detailed, Ownable, EToroRole {
+contract EToroToken is ERC20Mintable,
+    ERC20Burnable,
+    ERC20Detailed,
+    ERC20Pausable,
+    ERC20Capped,
+    Ownable,
+    Whitelist,
+    BurnerRole
+{
 
-    EToroRole private eToroRole;
+    Whitelist private whitelist;
 
     constructor(string _name,
                 string _symbol,
                 uint8 _decimals,
-                address eToroRoleAddress)
+                uint256 cap,
+                address whitelistAddress)
         public
         ERC20Detailed(_name, _symbol, _decimals)
+        ERC20Capped(cap)
         {
-            eToroRole = EToroRole(eToroRoleAddress);
+            whitelist = Whitelist(whitelistAddress);
         }
 
+    modifier requireWhitelisted(address account) {
+        require(whitelist.isWhitelisted(account));
+        _;
+    }
 
     function transfer(address _to, uint256 _value)
-        public onlyWhitelisted
+        public
+        requireWhitelisted(_to)
         returns (bool)
     {
-        eToroRole.checkWhitelisted(_to);
         return super.transfer(_to, _value);
     }
 
 
     function approve(address _spender, uint256 _value)
-      public onlyWhitelisted
-      returns (bool)
+        public
+        requireWhitelisted(_spender)
+        returns (bool)
     {
-      eToroRole.checkWhitelisted(_spender);
         return super.approve(_spender, _value);
     }
 
 
     function transferFrom(address _from, address _to, uint256 _value)
-      public
-      returns (bool)
+        public
+        requireWhitelisted(_from)
+        requireWhitelisted(_to)
+        returns (bool)
     {
-      require(eToroRole.isWhitelisted(_from));
-      require(eToroRole.isWhitelisted(_to));
-      return super.transferFrom(_from, _to, _value);
+        return super.transferFrom(_from, _to, _value);
     }
 
 
     function increaseAllowance(address _spender, uint256 _addedValue)
         public
-        onlyWhitelisted
+        requireWhitelisted(_spender)
         returns (bool)
     {
-        eToroRole.checkWhitelisted(_spender);
         return super.increaseAllowance(_spender, _addedValue);
     }
 
 
     function decreaseAllowance(address _spender, uint256 _subtractedValue)
         public
-        onlyWhitelisted
+        requireWhitelisted(_spender)
         returns (bool)
     {
         return super.decreaseAllowance(_spender, _subtractedValue);
     }
 
 
-    function burn(uint256 _value)
-      public onlyOwner
-    {
+    function burn(uint256 _value) public onlyBurner {
         super.burn(_value);
     }
 
-
-    function mint(address _to, uint256 _value)
-        //public onlyOwner
-      returns (bool)
-    {
-        //eToroRole.checkWhitelisted(_to);
-        return super.mint(_to, _value);
-    }
 }
