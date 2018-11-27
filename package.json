@@ -4,14 +4,19 @@
   "main": "index.js",
   "repository": "git@github.com:eTokenize/server.git",
   "author": "eTokenize",
-  "license": "Proprietary",
+  "license": "UNLICENSED",
   "private": true,
-  "dependencies": {
-    "@ensdomains/ens": "^0.1.1",
-    "eth-ens-namehash": "^2.0.8",
-    "openzeppelin-solidity": "^2.0.0"
+  "scripts": {
+    "build": "truffle compile",
+    "start": "ganache-cli --quiet --gasLimit 10000000 --noVMErrorsOnRPCResponse -p 8545 -m \"concert load couple harbor equip island argue ramp clarify fence smart topic\"",
+    "migrate": "truffle migrate --reset --network development && npm run setupaccounts",
+    "setupaccounts": "truffle exec --network development './scripts/setup_contracts.js'"
   },
-  "devDependencies": {
-    "truffle": "^4.1.14"
+  "dependencies": {
+    "ganache-cli": "^6.2.3",
+    "openzeppelin-solidity": "^2.0.0",
+    "truffle": "^4.1.14",
+    "@ensdomains/ens": "^0.1.1",
+    "eth-ens-namehash": "^2.0.8"
   }
 }
