@@ -115,6 +115,7 @@ contract TokenManager is Ownable {
         view
         returns (bytes32[])
     {
+        // TODO: Maybe filter out 0 entries (deleted names) from the list?
         return names;
     }
 }
