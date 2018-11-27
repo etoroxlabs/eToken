@@ -1,9 +1,9 @@
 let Whitelist = artifacts.require('Whitelist');
 let TokenManager = artifacts.require('TokenManager');
 
-const ENS = artifacts.require('@ensdomains/ens/contracts/ENSRegistry.sol');
-const PublicResolver = artifacts.require('@ensdomains/ens/contracts/PublicResolver.sol');
-const ReverseRegistrar = artifacts.require('@ensdomains/ens/contracts/ReverseRegistrar.sol');
+const ENS = artifacts.require('ENSRegistry');
+const PublicResolver = artifacts.require('PublicResolver');
+const ReverseRegistrar = artifacts.require('ReverseRegistrar');
 const namehash = require('eth-ens-namehash');
 
 module.exports = function(deployer) {
