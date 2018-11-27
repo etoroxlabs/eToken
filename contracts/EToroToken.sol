@@ -7,13 +7,14 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./roles/BurnerRole.sol";
 import "./Whitelist.sol";
+import "./WhitelistGuarded.sol";
 
 contract EToroToken is ERC20Mintable,
     ERC20Burnable,
     ERC20Detailed,
     ERC20Pausable,
     Ownable,
-    Whitelist,
+    WhitelistGuarded,
     BurnerRole
 {
 
@@ -37,14 +38,10 @@ contract EToroToken is ERC20Mintable,
             transferOwnership(owner);
         }
 
-    modifier requireWhitelisted(address account) {
-        require(whitelist.isWhitelisted(account));
-        _;
-    }
-
     function transfer(address _to, uint256 _value)
         public
-        requireWhitelisted(_to)
+        requireWhitelisted(whitelist, _to)
+        onlyWhitelisted(whitelist)
         returns (bool)
     {
         return super.transfer(_to, _value);
@@ -53,7 +50,8 @@ contract EToroToken is ERC20Mintable,
 
     function approve(address _spender, uint256 _value)
         public
-        requireWhitelisted(_spender)
+        requireWhitelisted(whitelist, _spender)
+        onlyWhitelisted(whitelist)
         returns (bool)
     {
         return super.approve(_spender, _value);
@@ -62,8 +60,9 @@ contract EToroToken is ERC20Mintable,
 
     function transferFrom(address _from, address _to, uint256 _value)
         public
-        requireWhitelisted(_from)
-        requireWhitelisted(_to)
+        requireWhitelisted(whitelist, _from)
+        requireWhitelisted(whitelist, _to)
+        onlyWhitelisted(whitelist)
         returns (bool)
     {
         return super.transferFrom(_from, _to, _value);
@@ -72,7 +71,8 @@ contract EToroToken is ERC20Mintable,
 
     function increaseAllowance(address _spender, uint256 _addedValue)
         public
-        requireWhitelisted(_spender)
+        requireWhitelisted(whitelist, _spender)
+        onlyWhitelisted(whitelist)
         returns (bool)
     {
         return super.increaseAllowance(_spender, _addedValue);
@@ -81,7 +81,8 @@ contract EToroToken is ERC20Mintable,
 
     function decreaseAllowance(address _spender, uint256 _subtractedValue)
         public
-        requireWhitelisted(_spender)
+        requireWhitelisted(whitelist, _spender)
+        onlyWhitelisted(whitelist)
         returns (bool)
     {
         return super.decreaseAllowance(_spender, _subtractedValue);
