@@ -20,13 +20,13 @@ contract EToroToken is ERC20Mintable,
 
     Whitelist private whitelist;
 
-    constructor(string _name,
-                string _symbol,
-                uint8 _decimals,
+    constructor(string name,
+                string symbol,
+                uint8 decimals,
                 address owner,
                 address whitelistAddress)
         public
-        ERC20Detailed(_name, _symbol, _decimals)
+        ERC20Detailed(name, symbol, decimals)
         {
             whitelist = Whitelist(whitelistAddress);
             addMinter(owner);
@@ -38,59 +38,59 @@ contract EToroToken is ERC20Mintable,
             transferOwnership(owner);
         }
 
-    function transfer(address _to, uint256 _value)
+    function transfer(address to, uint256 value)
         public
-        requireWhitelisted(whitelist, _to)
+        requireWhitelisted(whitelist, to)
         onlyWhitelisted(whitelist)
         returns (bool)
     {
-        return super.transfer(_to, _value);
+        return super.transfer(to, value);
     }
 
 
-    function approve(address _spender, uint256 _value)
+    function approve(address spender, uint256 value)
         public
-        requireWhitelisted(whitelist, _spender)
+        requireWhitelisted(whitelist, spender)
         onlyWhitelisted(whitelist)
         returns (bool)
     {
-        return super.approve(_spender, _value);
+        return super.approve(spender, value);
     }
 
 
-    function transferFrom(address _from, address _to, uint256 _value)
+    function transferFrom(address from, address to, uint256 value)
         public
-        requireWhitelisted(whitelist, _from)
-        requireWhitelisted(whitelist, _to)
+        requireWhitelisted(whitelist, from)
+        requireWhitelisted(whitelist, to)
         onlyWhitelisted(whitelist)
         returns (bool)
     {
-        return super.transferFrom(_from, _to, _value);
+        return super.transferFrom(from, to, value);
     }
 
 
-    function increaseAllowance(address _spender, uint256 _addedValue)
+    function increaseAllowance(address spender, uint256 addedValue)
         public
-        requireWhitelisted(whitelist, _spender)
+        requireWhitelisted(whitelist, spender)
         onlyWhitelisted(whitelist)
         returns (bool)
     {
-        return super.increaseAllowance(_spender, _addedValue);
+        return super.increaseAllowance(spender, addedValue);
     }
 
 
-    function decreaseAllowance(address _spender, uint256 _subtractedValue)
+    function decreaseAllowance(address spender, uint256 subtractedValue)
         public
-        requireWhitelisted(whitelist, _spender)
+        requireWhitelisted(whitelist, spender)
         onlyWhitelisted(whitelist)
         returns (bool)
     {
-        return super.decreaseAllowance(_spender, _subtractedValue);
+        return super.decreaseAllowance(spender, subtractedValue);
     }
 
 
-    function burn(uint256 _value) public onlyBurner {
-        super.burn(_value);
+    function burn(uint256 value) public onlyBurner {
+        super.burn(value);
     }
 
 }
