@@ -15,6 +15,8 @@
   "dependencies": {
     "ganache-cli": "^6.2.3",
     "openzeppelin-solidity": "^2.0.0",
-    "truffle": "^4.1.14"
+    "truffle": "^4.1.14",
+    "@ensdomains/ens": "^0.1.1",
+    "eth-ens-namehash": "^2.0.8"
   }
 }
