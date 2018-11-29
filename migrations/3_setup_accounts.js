@@ -1,8 +1,9 @@
 
 const Whitelist = artifacts.require("Whitelist");
 const TokenManager = artifacts.require("TokenManager");
+const EToroToken = artifacts.require("EToroToken");
 
-module.exports = async function(deployer, _network, accounts) {
+async function setup_accounts(deployer, _network, accounts) {
 
   /*
     The purpose of this is to automatically setup the test environment accounts.
@@ -16,6 +17,8 @@ module.exports = async function(deployer, _network, accounts) {
     const whitelistAdmin = accounts[1];
     const whitelisted = accounts[2];
 
+    const intialMintValue = "100";
+
     // Setup whitelists
     const whitelistContract = await Whitelist.deployed();
     
@@ -25,7 +28,41 @@ module.exports = async function(deployer, _network, accounts) {
     // Setup tokens
     const tokenManagerContract = await TokenManager.deployed();
 
-    await tokenManagerContract.newToken("eToro US Dollar", "eUSD", 4, whitelistContract.address, { from: owner });
-    await tokenManagerContract.newToken("eToro Australian Dollar", "eAUD", 4, whitelistContract.address, { from: owner });
+    const tokenDetails = [
+      {
+        name: "eToro US Dollar",
+        symbol: "eUSD",
+        decimals: 4
+      },
+      {
+        name: "eToro Australian Dollar",
+        symbol: "eAUD",
+        decimals: 4
+      }
+    ];
+
+    const tokensNew = await Promise.all(
+      tokenDetails.map((td) =>
+        tokenManagerContract.newToken(td.name, td.symbol, td.decimals, whitelistContract.address, { from: owner })
+      )
+    )
+
+    const tokens = await Promise.all(
+      tokenDetails.map(async (td) =>
+        EToroToken.at(await tokenManagerContract.getToken(td.name, {from: owner}))
+      )
+    );
+
+    // Mint tokens
+    await Promise.all(
+      tokens.map((t) => {
+        console.log(t);
+        t.mint(owner, intialMintValue, { from: owner });
+      })
+    );
   }
+};
+
+module.exports = (deployer, _network, accounts) => {
+  deployer.then(async () => await setup_accounts(deployer, _network, accounts));
 }
