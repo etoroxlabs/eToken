@@ -1,9 +1,9 @@
 
 const Whitelist = artifacts.require("Whitelist");
 const TokenManager = artifacts.require("TokenManager");
+const EToroToken = artifacts.require("EToroToken");
 
-module.exports = function(callback) {
-
+async function setup_accounts(deployer, _network, accounts) {
   /*
     The purpose of this is to automatically setup the test environment accounts.
     DO NOT use in production yet.
@@ -15,6 +15,8 @@ module.exports = function(callback) {
 
   const exec = async () => {
 
+    const intialMintValue = "100";
+
     // Setup whitelists
     const whitelistContract = await Whitelist.deployed();
     
@@ -24,12 +26,46 @@ module.exports = function(callback) {
     // Setup tokens
     const tokenManagerContract = await TokenManager.deployed();
 
-    await tokenManagerContract.newToken("eToro US Dollar", "eUSD", 4, whitelistContract.address, { from: owner });
-    await tokenManagerContract.newToken("eToro Australian Dollar", "eAUD", 4, whitelistContract.address, { from: owner });
+    const tokenDetails = [
+      {
+        name: "eToro US Dollar",
+        symbol: "eUSD",
+        decimals: 4
+      },
+      {
+        name: "eToro Australian Dollar",
+        symbol: "eAUD",
+        decimals: 4
+      }
+    ];
+
+    const tokensNew = await Promise.all(
+      tokenDetails.map((td) =>
+        tokenManagerContract.newToken(td.name, td.symbol, td.decimals, whitelistContract.address, { from: owner })
+      )
+    )
+
+    const tokens = await Promise.all(
+      tokenDetails.map(async (td) =>
+        EToroToken.at(await tokenManagerContract.getToken(td.name, {from: owner}))
+      )
+    );
+
+    // Mint tokens
+    await Promise.all(
+      tokens.map((t) => {
+        console.log(t);
+        t.mint(owner, intialMintValue, { from: owner });
+      })
+    );
   }
 
   exec().then(
     () => callback(),
     (reason) => callback(reason)
   )
+};
+
+module.exports = (deployer, _network, accounts) => {
+  deployer.then(async () => await setup_accounts(deployer, _network, accounts));
 }
