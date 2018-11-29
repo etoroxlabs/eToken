@@ -54,7 +54,6 @@ async function setup_accounts(deployer, _network, accounts) {
     // Mint tokens
     await Promise.all(
       tokens.map((t) => {
-        console.log(t);
         t.mint(owner, intialMintValue, { from: owner });
       })
     );
