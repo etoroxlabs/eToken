@@ -14,6 +14,7 @@ contract('EToro Token', accounts => {
     const admin = accounts[1];
     const whitelisted = accounts[2];
     const user = accounts[3];
+    const user1 = accounts[3];
 
     let token;
     let WHITELISTED, ADMIN;
@@ -23,7 +24,7 @@ contract('EToro Token', accounts => {
         let role = await Whitelist.deployed();
 
         // Create a token token
-        await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});
+        await tokMgr.newToken("eUSD", "e", 1000, role.address, {from: owner});
         token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
         //await token.addMinterQ
 
@@ -43,6 +44,17 @@ contract('EToro Token', accounts => {
             const supply = await token.totalSupply.call();
             assert(balance.equals(initialBalance.plus(mintVal)));
             assert(supply.equals(initialSupply.plus(mintVal)));
+        });
+
+        it('should burn tokens', async () => {
+            const burnVal = 500;
+            const initialBalance = await token.balanceOf.call(owner, {from: owner});
+            const initialSupply = await token.totalSupply.call({from: owner});
+            await token.burn(burnVal, { from: owner });
+            const balance = await token.balanceOf.call(owner, {from: owner});
+            const supply = await token.totalSupply.call({from: owner});
+            assert(balance.equals(initialBalance.minus(burnVal)));
+            assert(supply.equals(initialSupply.minus(burnVal)));
         });
 
         // it('should not allow non minter to mint tokens', async () => {
@@ -78,40 +90,30 @@ contract('EToro Token default permissions ', async (accounts) => {
         //ADMIN = await token.ROLE_ADMIN.call();
     });
 
-    it("Rejects unpriveleged transfer", async () => {
-        const initialBalance = await token.balanceOf.call(user);
-        util.assertThrows(await token.transfer(user, 1, {from: user}));
+    it("Rejects unprivileged transfer", async () => {
+        const initialBalance = await token.balanceOf.call(user, {from: user});
+         await util.assertReverts(token.transfer(user, 1, {from: user}));
         const balance = await token.balanceOf.call(user);
         assert(balance.equals(initialBalance));
     });
 
-    it("Rejects unpriveleged approve", async () => {
-        //const initialBalance = await token.balanceOf.call(user);
-        util.assertThrows(await token.approve(user, 1, {from: user}));
-        //const balance = await token.balanceOf.call(user);
+    it("Rejects unprivileged approve", async () => {
+        const initialBalance = await token.balanceOf.call(user);
+        await util.assertReverts(token.approve(user, 1, {from: user}));
+        const balance = await token.balanceOf.call(user);
         // TODO: Assert correct state
         assert(balance.equals(initialBalance));
     });
 
-    it("Rejects unpriveleged transferFrom", async () => {
-        const initialBalance = await token.balanceOf.call(user);
-        util.assertThrows(await token.transferFrom(user, 1, {from: user}));
+    it("Rejects unprivileged transferFrom", async () => {
+        const initialBalance = await token.balanceOf.call(user, {from: user});
+        await util.assertReverts(token.transferFrom(user, user2, 1, {from: user}));
         const balance = await token.balanceOf.call(user);
         assert(balance.equals(initialBalance));
     });
 
 //});
 
-
-// it('should burn tokens', async () => {
-        //     const initialBalance = await token.balanceOf.call(owner);
-        //     const initialSupply = await token.totalSupply.call();
-        //     await token.burn(5000, { from: owner });
-        //     const balance = await token.balanceOf.call(owner);
-        //     const supply = await token.totalSupply.call();
-        //     assert.equal(balance.toNumber(), initialBalance.toNumber() - 5000);
-        //     assert.equal(supply.toNumber(), initialSupply.toNumber() - 5000)
-        // });
 
         // it('should not allow non owner to burn tokens', async () => {
         //     await token.mint(whitelisted, 10, { from: owner }); // seed the account so we can try and burn it.

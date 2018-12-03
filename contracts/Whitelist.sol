@@ -11,6 +11,7 @@ contract Whitelist is WhitelistAdminRole {
 
     Roles.Role private whitelist;
 
+
     function addWhitelisted(address account)
         public
         onlyWhitelistAdmin

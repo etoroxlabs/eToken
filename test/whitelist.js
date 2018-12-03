@@ -43,6 +43,13 @@ contract("Whitelist", async (accounts) => {
         assert(await wl.isWhitelisted.call(user, {from: owner}));
     });
 
+    it("rejects privileged attempt to add same user to whitelist multiple times", async () => {
+        assert( ! (await wl.isWhitelisted.call(user2, {from: owner})));
+        await wl.addWhitelisted(user2, {from: owner});
+        await util.assertReverts(wl.addWhitelisted(user2, {from: owner}));
+        assert(await wl.isWhitelisted.call(user2, {from: owner}));
+    });
+
     it("allows privileged to remove from whitelist", async () => {
         assert( ! (await wl.isWhitelisted.call(user1, {from: owner})));
         await wl.addWhitelisted(user1, {from: owner});
@@ -53,7 +60,7 @@ contract("Whitelist", async (accounts) => {
 
     it("rejects unprivileged from adding to whitelist", async () => {
         assert( ! (await wl.isWhitelisted.call(user3, {from: user2})));
-        util.assertReverts(wl.addWhitelisted(user3, {from: user2}));
+        await util.assertReverts(wl.addWhitelisted(user3, {from: user2}));
         assert( ! (await wl.isWhitelisted.call(user3, {from: user2})));
     });
 
@@ -65,18 +72,18 @@ contract("Whitelist", async (accounts) => {
 
     it("allows privileged privilege propagation", async () => {
         assert( ! (await wl.isWhitelistAdmin.call(user4, {from: owner})));
-        util.assertReverts(wl.addWhitelisted(user4, {from: user3}));
-        await wl.addWhitelistAdmin(user4, {from: owner});
-        assert(await wl.isWhitelistAdmin.call(user4, {from: owner}));
-        await wl.addWhitelisted(user4, {from: owner});
+        await util.assertReverts(wl.addWhitelisted(user4, {from: user3}));
+        await wl.addWhitelistAdmin(user3, {from: owner});
+        assert(await wl.isWhitelistAdmin.call(user3, {from: owner}));
+        await wl.addWhitelisted(user4, {from: user3});
         assert(await wl.isWhitelisted(user4, {from: user3}));
     });
 
     it("rejects unprivileged privilege propagation", async () => {
-         assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user3})));
-         util.assertReverts(wl.addWhitelisted(user6, {from: user3}));
-         util.assertReverts(wl.addWhitelistAdmin(user6, {from: user3}));
-         assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user3})));
-         util.assertReverts(wl.addWhitelisted(user6, {from: user3}));
+         assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user5})));
+         await util.assertReverts(wl.addWhitelisted(user6, {from: user5}));
+         await util.assertReverts(wl.addWhitelistAdmin(user6, {from: user5}));
+         assert( ! (await wl.isWhitelistAdmin.call(user6, {from: user5})));
+         await util.assertReverts(wl.addWhitelisted(user6, {from: user5}));
     });
 });
