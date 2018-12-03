@@ -5,9 +5,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storag
 import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Burnable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "./roles/BurnerRole.sol";
 import "./Whitelist.sol";
