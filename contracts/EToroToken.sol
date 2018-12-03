@@ -1,21 +1,25 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Burnable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Mintable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "./roles/BurnerRole.sol";
 import "./Whitelist.sol";
 import "./WhitelistGuarded.sol";
 
-contract EToroToken is ERC20Mintable,
-    ERC20Burnable,
+contract EToroToken is ExternalERC20Mintable,
+    ExternalERC20Burnable,
+    ExternalERC20Pausable,
     ERC20Detailed,
-    ERC20Pausable,
-    Ownable,
     WhitelistGuarded,
-    BurnerRole
+    BurnerRole,
+    Ownable
 {
 
     Whitelist private whitelist;
@@ -24,8 +28,10 @@ contract EToroToken is ERC20Mintable,
                 string symbol,
                 uint8 decimals,
                 address owner,
-                address whitelistAddress)
+                address whitelistAddress,
+                ExternalERC20Storage externalERC20Storage)
         public
+        ExternalERC20(externalERC20Storage)
         ERC20Detailed(name, symbol, decimals)
         {
             whitelist = Whitelist(whitelistAddress);

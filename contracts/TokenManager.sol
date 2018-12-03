@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
 import "./EToroToken.sol";
 import "./lib/StringUtils.sol";
 
@@ -72,7 +73,15 @@ contract TokenManager is Ownable {
         // returning a hashed list of the contract names.
         string memory nameStr = StringUtils.bytes32ToString(_name);
 
-        EToroToken tok = new EToroToken(nameStr, _symbol, _decimals, msg.sender, eToroRole);
+        ExternalERC20Storage externalERC20Storage = new ExternalERC20Storage();
+
+        EToroToken tok = new EToroToken(nameStr, _symbol, _decimals,
+                                        msg.sender, eToroRole,
+                                        externalERC20Storage);
+
+        externalERC20Storage.transferImplementor(address(tok));
+        externalERC20Storage.transferOwnership(msg.sender);
+
         tokens[_name] = TokenEntry({index: names.length, token: tok, exists: true});
         names.push(_name);
         emit TokenCreated(_name);
