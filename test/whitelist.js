@@ -18,7 +18,7 @@ contract("Whitelist", async (accounts) => {
 
 
     before(async () => {
-        wl = await Whitelist.deployed();
+        wl = await Whitelist.new();
     });
 
     it("is initially not in whitelist from unprivileged", async () => {

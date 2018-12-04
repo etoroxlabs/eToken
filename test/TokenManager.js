@@ -16,8 +16,8 @@ contract("TokenManager", async (accounts) => {
     let user = accounts[1];
 
     before(async () => {
-        tokMgr = await TokenManager.deployed();
-        whitelist = await Whitelist.deployed();
+        tokMgr = await TokenManager.new();
+        whitelist = await Whitelist.new();
     });
 
     it("Should throw on retrieving non-existing entires", async () => {
@@ -61,8 +61,8 @@ contract("Token manager list retrieve", async (accounts) => {
     let a0 = accounts[0];
 
     before(async () => {
-        tokMgr = await TokenManager.deployed();
-        whitelist = await Whitelist.deployed();
+        tokMgr = await TokenManager.new();
+        whitelist = await Whitelist.new();
     });
 
     it("returns an empty list initially", async () => {
@@ -115,8 +115,8 @@ contract("Token manager permissions", async (accounts) => {
     let user = accounts[1];
 
     before(async () => {
-        tokMgr = await TokenManager.deployed();
-        whitelist = await Whitelist.deployed();
+        tokMgr = await TokenManager.new();
+        whitelist = await Whitelist.new();
     });
 
     it("Rejects unauthorized newToken", async () => {
