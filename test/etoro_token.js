@@ -9,7 +9,7 @@ const EToroToken = artifacts.require("EToroToken");
 const ERROR = new Error('should not have reached this');
 const isSolidityError = (e) => e.message === 'VM Exception while processing transaction: revert';
 
-contract('EToro Token', accounts => {
+contract('EToro Token', async accounts => {
     const owner = accounts[0];
     const admin = accounts[1];
     const whitelisted = accounts[2];
@@ -20,8 +20,8 @@ contract('EToro Token', accounts => {
     let WHITELISTED, ADMIN;
 
     before(async () => {
-        let tokMgr = await TokenManager.deployed();
-        let role = await Whitelist.deployed();
+        let tokMgr = await TokenManager.new();
+        let role = await Whitelist.new();
 
         // Create a token token
         await tokMgr.newToken("eUSD", "e", 1000, role.address, {from: owner});
@@ -66,7 +66,7 @@ contract('EToro Token', accounts => {
     });
 });
 
-contract('EToro Token default permissions ', async (accounts) => {
+contract('EToro Token default permissions ', async accounts => {
 
     const owner = accounts[0];
     const admin = accounts[1];
@@ -77,8 +77,8 @@ contract('EToro Token default permissions ', async (accounts) => {
     let token;
 
     before(async () => {
-        let tokMgr = await TokenManager.deployed();
-        let role = await Whitelist.deployed();
+        let tokMgr = await TokenManager.new();
+        let role = await Whitelist.new();
 
         // Create a token token
         await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});
