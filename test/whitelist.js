@@ -17,7 +17,7 @@ contract("Whitelist", async (accounts) => {
     let user6 = accounts[7];
 
 
-    before(async () => {
+    beforeEach(async () => {
         wl = await Whitelist.new();
     });
 
