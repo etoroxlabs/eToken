@@ -12,7 +12,7 @@
     "migrate": "truffle migrate --reset --network development && npm run setupaccounts",
     "setupaccounts": "truffle exec --network development './scripts/setup_contracts.js'",
     "test": "scripts/test.sh",
-    "coverage": "solidity-coverage"
+    "coverage": "scripts/coverage.sh"
   },
   "dependencies": {
     "@ensdomains/ens": "^0.1.1",
@@ -23,6 +23,7 @@
     "truffle-hdwallet-provider": "^0.0.6"
   },
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "solidity-coverage": "^0.5.11"
   }
 }
