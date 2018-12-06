@@ -12,7 +12,7 @@
     "migrate": "truffle migrate --reset --network development && npm run setupaccounts",
     "setupaccounts": "truffle exec --network development './scripts/setup_contracts.js'",
     "test": "scripts/test.sh",
-    "coverage": "solidity-coverage"
+    "coverage": "scripts/coverage.sh"
   },
   "dependencies": {
     "@ensdomains/ens": "^0.1.1",
