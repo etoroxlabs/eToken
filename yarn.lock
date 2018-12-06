@@ -2,10 +2,9 @@
 # yarn lockfile v1
 
 
-"@ensdomains/ens@^0.1.1":
+"@ensdomains/ens@ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8":
   version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@ensdomains/ens/-/ens-0.1.1.tgz#69f4a86162a229824bb1123bc794f05d4622e79c"
-  integrity sha512-W6kguGEgTcK4aDTgB7cRycYiwJ0tqzjcB4hoXWd0WPJst0BJ4DKJ6fnTwrtfGUvkVyvH3LYBGLHCyAvh0lB0Vg==
+  resolved "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8"
   dependencies:
     eth-ens-namehash "^1.0.2"
     ethereumjs-testrpc "^6.0.3"
