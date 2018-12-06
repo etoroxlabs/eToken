@@ -4,8 +4,8 @@ const util = require("./utils.js");
 const { shouldBehaveLikeOwnable }
       = require("openzeppelin-solidity/test/ownership/Ownable.behavior.js")
 
-const TokenManager = artifacts.require("TokenManager");
 const Whitelist = artifacts.require("Whitelist");
+const ExternalERC20Storage = artifacts.require("ExternalERC20Storage");
 const EToroToken = artifacts.require("EToroToken");
 
 const ERROR = new Error('should not have reached this');
@@ -21,19 +21,18 @@ contract('EToro Token', async accounts => {
     let token;
     let WHITELISTED, ADMIN;
 
-    beforeEach(async function () {
-        let tokMgr = await TokenManager.new();
+    before(async function () {
         let role = await Whitelist.new();
 
         // Create a token token
-        await tokMgr.newToken("eUSD", "e", 18, role.address, {from: owner});
-        token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
-        this.ownable = token;
-        //await token.addMinterQ
-
-
-        //WHITELISTED = await token.ROLE_WHITELISTED.call();
-        //ADMIN = await token.ROLE_ADMIN.call();
+        const externalERC20Storage =
+              await ExternalERC20Storage.new({from: owner});
+        const token = await EToroToken.new("eUSD", "e", 1000, owner,
+                                           role.address,
+                                           externalERC20Storage.address,
+                                           {from: owner});
+        await externalERC20Storage.transferImplementor(
+            token.address, {from: owner});
     });
 
     shouldBehaveLikeOwnable(owner, [user1]);
@@ -82,17 +81,12 @@ contract('EToro Token default permissions ', async accounts => {
     let token;
 
     before(async () => {
-        let tokMgr = await TokenManager.new();
         let role = await Whitelist.new();
 
         // Create a token token
-        await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});
-        token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
-        //await token.addMinterQ
-
-
-        //WHITELISTED = await token.ROLE_WHITELISTED.call();
-        //ADMIN = await token.ROLE_ADMIN.call();
+        const externalERC20Storage = await ExternalERC20Storage.new({from: owner});
+        const token = await EToroToken.new("eUSD", "e", 1000, owner, role.address, externalERC20Storage.address, {from: owner});
+        await externalERC20Storage.transferImplementor(token.address, {from: owner});
     });
 
     it("Rejects unprivileged transfer", async () => {
