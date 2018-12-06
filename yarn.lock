@@ -4457,6 +4457,7 @@ once@1.x, once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
+<<<<<<< HEAD
 "openzeppelin-solidity@ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#6f179c1def0505b64574cc69db35b9b297225842":
   version "2.0.0"
   resolved "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#6f179c1def0505b64574cc69db35b9b297225842"
@@ -4480,6 +4481,11 @@ optionator@^0.8.1:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
     wordwrap "~1.0.0"
+=======
+"openzeppelin-solidity@ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#0be0b813621f07efa2ebd14f94d40f0db0dac3ad":
+  version "2.0.0"
+  resolved "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#0be0b813621f07efa2ebd14f94d40f0db0dac3ad"
+>>>>>>> Bump OZ fork to fix warnings
 
 original-require@1.0.1:
   version "1.0.1"
