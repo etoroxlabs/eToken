@@ -24,7 +24,7 @@ contract('EToro Token', async accounts => {
         let role = await Whitelist.new();
 
         // Create a token token
-        await tokMgr.newToken("eUSD", "e", 1000, role.address, {from: owner});
+        await tokMgr.newToken("eUSD", "e", 18, role.address, {from: owner});
         token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
         //await token.addMinterQ
 
