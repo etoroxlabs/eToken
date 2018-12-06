@@ -1,6 +1,8 @@
 'use strict';
 
 const util = require("./utils.js");
+const { shouldBehaveLikeOwnable }
+      = require("openzeppelin-solidity/test/ownership/Ownable.behavior.js")
 
 const TokenManager = artifacts.require("TokenManager");
 const Whitelist = artifacts.require("Whitelist");
@@ -15,13 +17,17 @@ contract("TokenManager", async (accounts) => {
     let a0 = accounts[0];
     let user = accounts[1];
 
-    before(async () => {
+    beforeEach(async function () {
         tokMgr = await TokenManager.new();
         whitelist = await Whitelist.new();
+        this.ownable = tokMgr;
     });
 
+    shouldBehaveLikeOwnable(a0, [user]);
+
     it("Should throw on retrieving non-existing entires", async () => {
-        await util.assertReverts(tokMgr.getToken.call(tokName, {from: accounts[0]}));
+        await util.assertReverts(tokMgr.getToken.call(tokName,
+                                                      {from: accounts[0]}));
     });
 
     it("should create and retrieve tokens", async () => {
@@ -29,13 +35,15 @@ contract("TokenManager", async (accounts) => {
         let res = await tokMgr.getToken.call(tokName, {from: a0});
         let tok = EToroToken.at(res);
         let contractTokName = await tok.name.call({from: a0})
-        assert(contractTokName === tokName, "Name of created contract did not match the expected");
+        assert(contractTokName === tokName,
+               "Name of created contract did not match the expected");
     });
 
     it("fails on duplicated names", async () => {
         let tokName = "eEUR";
         await tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0});
-        await util.assertReverts(tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0}));
+        await util.assertReverts(
+            tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: a0}));
     });
 
     it("should properly remove tokens", async () => {
@@ -82,7 +90,8 @@ contract("Token manager list retrieve", async (accounts) => {
         await tokMgr.newToken("tok1", "e", 4, whitelist.address, {from: a0});
         await tokMgr.newToken("tok2", "e", 4, whitelist.address, {from: a0});
 
-        let r = (await tokMgr.getTokens.call({from: a0})).map(util.bytes32ToString);
+        let r = (await tokMgr.getTokens.call({from: a0}))
+            .map(util.bytes32ToString);
         // Sort arrays since implementation does not require stable order of tokens
         assert.deepEqual(r.sort(), expected.sort(),
                "Token list returned does not match expected");
@@ -94,13 +103,8 @@ contract("Token manager list retrieve", async (accounts) => {
 
     it("Elements are set to 0 when deleted", async () => {
         let expected = [0, 0];
-
-        let r = await tokMgr.getTokens.call({from: a0}); //.map(parseInt);
-
-        // We could do this with a map, but it fails. Probably due to a bug in node.
-        let actual = [];
-        r.forEach(x => { actual.push(parseInt(x)) })
-
+        let actual = (await tokMgr.getTokens.call({from: a0}))
+            .map((x) => parseInt(x));
         assert.deepEqual(actual, expected,
                          "Token list returned does not match expected");
 
@@ -126,7 +130,8 @@ contract("Token manager permissions", async (accounts) => {
     });
 
     it("Rejects unauthorized deleteToken", async () => {
-        await tokMgr.newToken(tokName, "e", 4, whitelist.address, {from: owner});
+        await tokMgr.newToken(tokName, "e", 4, whitelist.address,
+                              {from: owner});
         await util.assertReverts(tokMgr.deleteToken(tokName, {from: user}));
     });
 });
