@@ -6,7 +6,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Burnab
 import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "./roles/BurnerRole.sol";
+import "openzeppelin-solidity/contracts/access/roles/BurnerRole.sol";
 import "./Whitelist.sol";
 import "./WhitelistGuarded.sol";
 
@@ -15,8 +15,7 @@ contract EToroToken is ExternalERC20Mintable,
     ExternalERC20Pausable,
     ERC20Detailed,
     WhitelistGuarded,
-    BurnerRole,
-    Ownable
+    BurnerRole
 {
 
     Whitelist private whitelist;
