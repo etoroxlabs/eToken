@@ -1,6 +1,8 @@
 'use strict';
 
 const util = require("./utils.js");
+const { shouldBehaveLikeOwnable }
+      = require("openzeppelin-solidity/test/ownership/Ownable.behavior.js")
 
 const TokenManager = artifacts.require("TokenManager");
 const Whitelist = artifacts.require("Whitelist");
@@ -19,19 +21,22 @@ contract('EToro Token', async accounts => {
     let token;
     let WHITELISTED, ADMIN;
 
-    before(async () => {
+    beforeEach(async function () {
         let tokMgr = await TokenManager.new();
         let role = await Whitelist.new();
 
         // Create a token token
         await tokMgr.newToken("eUSD", "e", 18, role.address, {from: owner});
         token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
+        this.ownable = token;
         //await token.addMinterQ
 
 
         //WHITELISTED = await token.ROLE_WHITELISTED.call();
         //ADMIN = await token.ROLE_ADMIN.call();
     });
+
+    shouldBehaveLikeOwnable(owner, [user1]);
 
     describe('Minting and Burning', function() {
         it('should mint new tokens', async () => {
@@ -322,4 +327,3 @@ contract('EToro Token default permissions ', async accounts => {
     //         }
     //     });
     // });
-
