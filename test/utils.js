@@ -1,3 +1,9 @@
+const BigNumber = web3.BigNumber;
+const should = require('chai')
+  .use(require('chai-bignumber')(BigNumber))
+  .should();
+const truffleAssert = require("truffle-assertions");
+
 exports.assertReverts = async (f) => {
     let res = false;
     try {
@@ -38,5 +44,54 @@ exports.bytes32ToString = (str) => {
     return  parts.map((x) => String.fromCharCode(x)).join('');
 }
 
-//exports = {assertReverts: true, bytes32ToString: true}
-//module.exports = [assertReverts, bytes32ToString]
+/**
+   Given a transaction log and a list of expected events, ensure that the list
+   contains a complete and in-order list of the events that were emitted during
+   the transaction.
+
+   The list of events should have the format [{eventName: string, paramMap:
+   Object}], where eventName is the name of the event and paramMap lists event
+   parameters and their expected events.
+*/
+let emittedEvents = (log, expectedEvents) => {
+    log.sort((a, b) => {a.logIndex - a.logIndex});
+    (log.length).should.be.equal(expectedEvents.length);
+    for (let i = 0; i < log.length; i++) {
+        const event = log[i];
+        const expect = expectedEvents[i];
+        event.event.should.be.equal(expect.eventName);
+        (Object.entries(event.args).length).should.be.equal(
+            Object.entries(expect.paramMap).length);
+         for (const [k, v] of Object.entries(expect.paramMap)) {
+             contains(event.args, k, v);
+         }
+    }
+}
+exports.emittedEvents = emittedEvents;
+
+/**
+   Like emittedEvents, but takes a contract creation instead of a log
+*/
+exports.emittedEventsContract = async (contract, expectedEvents) => {
+    const { logs } =
+          await truffleAssert.createTransactionResult(contract,
+                                                      contract.transactionHash);
+    emittedEvents(logs, expectedEvents);
+}
+
+
+// From Openzeppelin test library
+function contains (args, key, value) {
+  if (isBigNumber(args[key])) {
+    args[key].should.be.bignumber.equal(value);
+  } else {
+    args[key].should.be.equal(value);
+  }
+}
+
+// From openzeppelin test library
+function isBigNumber (object) {
+  return object.isBigNumber ||
+    object instanceof BigNumber ||
+    (object.constructor && object.constructor.name === 'BigNumber');
+}

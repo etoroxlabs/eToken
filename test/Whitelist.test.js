@@ -3,7 +3,6 @@
 const util = require("./utils.js");
 const { inLogs }
       = require("openzeppelin-solidity/test/helpers/expectEvent.js");
-const truffleAssert = require("truffle-assertions");
 
 const Whitelist = artifacts.require("Whitelist");
 
@@ -12,13 +11,12 @@ contract("Whitelist", async function ([owner, user, user1, user2, user3,
 
     beforeEach(async function() {
         this.wl = await Whitelist.new();
-        const { logs } =
-              await truffleAssert.createTransactionResult(this.wl,
-                                                          this.wl.transactionHash);
-        inLogs(logs, "OwnershipTransferred",
-               {previousOwner: '0x0000000000000000000000000000000000000000',
-                newOwner: owner});
-        inLogs(logs, "WhitelistAdminAdded", {account: owner});
+        const events = [{eventName: "OwnershipTransferred",
+                         paramMap: {previousOwner: '0x0000000000000000000000000000000000000000',
+                                    newOwner: owner}},
+                        {eventName: "WhitelistAdminAdded",
+                         paramMap: {account: owner}}];
+        await util.emittedEventsContract(this.wl, events);
     });
 
     it("is initially not in whitelist from unprivileged", async function() {
