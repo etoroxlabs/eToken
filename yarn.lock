@@ -4540,9 +4540,9 @@ once@1.x, once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-"openzeppelin-solidity@ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#0be0b813621f07efa2ebd14f94d40f0db0dac3ad":
+"openzeppelin-solidity@ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#e39209e634f3b91a70bdf3d8826257c8083d7845":
   version "2.0.0"
-  resolved "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#0be0b813621f07efa2ebd14f94d40f0db0dac3ad"
+  resolved "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#e39209e634f3b91a70bdf3d8826257c8083d7845"
 
 optimist@^0.6.1:
   version "0.6.1"
