@@ -1,6 +1,9 @@
 'use strict';
 
 const util = require("./utils.js");
+const { inLogs }
+      = require("openzeppelin-solidity/test/helpers/expectEvent.js");
+const truffleAssert = require("truffle-assertions");
 
 const Whitelist = artifacts.require("Whitelist");
 
@@ -9,6 +12,13 @@ contract("Whitelist", async function ([owner, user, user1, user2, user3,
 
     beforeEach(async function() {
         this.wl = await Whitelist.new();
+        const { logs } =
+              await truffleAssert.createTransactionResult(this.wl,
+                                                          this.wl.transactionHash);
+        inLogs(logs, "OwnershipTransferred",
+               {previousOwner: '0x0000000000000000000000000000000000000000',
+                newOwner: owner});
+        inLogs(logs, "WhitelistAdminAdded", {account: owner});
     });
 
     it("is initially not in whitelist from unprivileged", async function() {
@@ -27,15 +37,20 @@ contract("Whitelist", async function ([owner, user, user1, user2, user3,
         assert(await this.wl.isWhitelisted.call(owner, {from: user1}));
     });
 
+    async function addWhitelisted(t, user, from) {
+        const { logs } = await t.wl.addWhitelisted(user, {from: owner});
+        inLogs(logs, "WhitelistAdded");
+    }
+
     it("allows privileged to add to whitelist", async function() {
         assert( ! (await this.wl.isWhitelisted.call(user, {from: owner})));
-        await this.wl.addWhitelisted(user, {from: owner});
+        addWhitelisted(this, user, owner);
         assert(await this.wl.isWhitelisted.call(user, {from: owner}));
     });
 
     it("rejects privileged attempt to add same user to whitelist multiple times", async function() {
         assert( ! (await this.wl.isWhitelisted.call(user2, {from: owner})));
-        await this.wl.addWhitelisted(user2, {from: owner});
+        addWhitelisted(this, user2, owner);
         await util.assertReverts(this.wl.addWhitelisted(user2, {from: owner}));
         assert(await this.wl.isWhitelisted.call(user2, {from: owner}));
     });
