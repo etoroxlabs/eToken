@@ -15,18 +15,15 @@
     "coverage": "scripts/coverage.sh"
   },
   "dependencies": {
-    "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
+    "@ensdomains/ens": "^0.1.1",
     "eth-ens-namehash": "^2.0.8",
     "ganache-cli": "^6.2.3",
-    "openzeppelin-solidity": "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#e39209e634f3b91a70bdf3d8826257c8083d7845",
+    "openzeppelin-solidity": "^2.0.0",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "^0.0.6"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "chai-bignumber": "^3.0.0",
     "coveralls": "^3.0.2",
-    "solidity-coverage": "^0.5.11",
-    "truffle-assertions": "^0.7.1"
+    "solidity-coverage": "^0.5.11"
   }
 }
