@@ -1,133 +1,137 @@
 'use strict';
 
 const util = require("./utils.js");
+const { shouldBehaveLikeOwnable }
+      = require("openzeppelin-solidity/test/ownership/Ownable.behavior.js")
 
-const TokenManager = artifacts.require("TokenManager");
 const Whitelist = artifacts.require("Whitelist");
+const ExternalERC20Storage = artifacts.require("ExternalERC20Storage");
 const EToroToken = artifacts.require("EToroToken");
 
 const ERROR = new Error('should not have reached this');
 const isSolidityError = (e) => e.message === 'VM Exception while processing transaction: revert';
 
-contract('EToro Token', async accounts => {
-    const owner = accounts[0];
-    const admin = accounts[1];
-    const whitelisted = accounts[2];
-    const user = accounts[3];
-    const user1 = accounts[3];
+contract('EToro Token',  async function(
+    [owner, minter, pauser, burner, whitelistAdmin,
+     whitelisted, whitelisted1, user, user1, ...restAccounts]) {
 
-    let token;
-    let WHITELISTED, ADMIN;
-
-    before(async () => {
-        let tokMgr = await TokenManager.new();
-        let role = await Whitelist.new();
+    beforeEach(async function() {
+        let whitelist = await Whitelist.new({from: owner});
 
         // Create a token token
-        await tokMgr.newToken("eUSD", "e", 1000, role.address, {from: owner});
-        token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
-        //await token.addMinterQ
+        const externalERC20Storage =
+              await ExternalERC20Storage.new({from: owner});
+        const token = await EToroToken.new("eUSD", "e", 1000, 0,
+                                           whitelist.address,
+                                           externalERC20Storage.address,
+                                           {from: owner});
+        await externalERC20Storage.transferImplementor(
+            token.address, {from: owner});
 
+        // Setup permissions
+        await token.addMinter(minter, {from: owner});
+        await token.addPauser(pauser, {from: owner});
+        await token.addBurner(burner, {from: owner});
+        await whitelist.addWhitelistAdmin(whitelistAdmin, {from: owner});
+        await whitelist.addWhitelisted(whitelisted, {from: owner});
+        await whitelist.addWhitelisted(whitelisted1, {from: owner});
 
-        //WHITELISTED = await token.ROLE_WHITELISTED.call();
-        //ADMIN = await token.ROLE_ADMIN.call();
+        // Set test state
+        this.token = token;
+        this.local = {};
     });
 
-    describe('Minting and Burning', function() {
-        it('should mint new tokens', async () => {
-            const mintVal = 1000;
-            const initialBalance = await token.balanceOf.call(owner);
-            const initialSupply = await token.totalSupply.call();
-            let res = await token.isMinter.call(owner, {from: owner});
-            await token.mint(owner, mintVal, {from: owner});
-            const balance = await token.balanceOf.call(owner);
-            const supply = await token.totalSupply.call();
-            assert(balance.equals(initialBalance.plus(mintVal)));
-            assert(supply.equals(initialSupply.plus(mintVal)));
+    //shouldBehaveLikeOwnable(owner, [user1]);
+
+    describe("Basic tests", async function() {
+        const tokenIsInitiallyEmpty = async (t) => {
+            const initialBalance = await t.token.balanceOf.call(owner, {from: owner});
+            const initialSupply = await t.token.totalSupply.call({from: owner});
+            assert(initialBalance.equals(0));
+            assert(initialSupply.equals(0));
+            t.local.curBalance = initialBalance;
+            t.local.curSupply = initialSupply;
+        }
+
+        const mintAndVerify = async (t, amount) => {
+            await t.token.mint(owner, amount, {from: owner});
+            const balance = await t.token.balanceOf.call(owner);
+            const supply = await t.token.totalSupply.call();
+            //console.log(balance.toNumber(), supply.toNumber());
+            assert(balance.equals(t.local.curBalance.plus(amount)));
+            assert(supply.equals(t.local.curSupply.plus(amount)));
+            t.local.curBalance = balance;
+            t.local.curSupply = supply;
+            ///console.log(t.local.initialBalance.toNumber(), t.local.initialSupply.toNumber());
+        }
+
+        describe('Minting and Burning', function() {
+            it('should mint new tokens', async function() {
+                const mintVal = 1000;
+                await tokenIsInitiallyEmpty(this);
+                await mintAndVerify(this, mintVal);
+            });
+
+            it('should burn tokens', async function() {
+                const burnVal = 500;
+                await tokenIsInitiallyEmpty(this);
+                await mintAndVerify(this, 1000);
+                await this.token.burn(burnVal, { from: owner });
+                const balance = await this.token.balanceOf.call(owner, {from: owner});
+                const supply = await this.token.totalSupply.call({from: owner});
+                assert(balance.equals(this.local.curBalance.minus(burnVal)));
+                assert(supply.equals(this.local.curSupply.minus(burnVal)));
+            });
+
+            it('should not allow non minter to mint tokens', async function() {
+                const initialBalance = await this.token.balanceOf.call(user);
+                util.assertReverts(this.token.mint(user, 1, {from: user}));
+                const balance = await this.token.balanceOf.call(user);
+                assert(balance.equals(initialBalance));
+            });
+        });
+    });
+
+    describe("default permissions", function() {
+        it("Rejects unprivileged transfer", async function() {
+            const initialBalance = await this.token.balanceOf.call(user, {from: user});
+            await util.assertReverts(this.token.transfer(user, 1, {from: user}));
+            const balance = await this.token.balanceOf.call(user);
+            assert(balance.equals(initialBalance));
         });
 
-        it('should burn tokens', async () => {
-            const burnVal = 500;
-            const initialBalance = await token.balanceOf.call(owner, {from: owner});
-            const initialSupply = await token.totalSupply.call({from: owner});
-            await token.burn(burnVal, { from: owner });
-            const balance = await token.balanceOf.call(owner, {from: owner});
-            const supply = await token.totalSupply.call({from: owner});
-            assert(balance.equals(initialBalance.minus(burnVal)));
-            assert(supply.equals(initialSupply.minus(burnVal)));
+        it("Rejects unprivileged approve", async function() {
+            const initialBalance = await this.token.balanceOf.call(user);
+            await util.assertReverts(this.token.approve(user, 1, {from: user}));
+            const balance = await this.token.balanceOf.call(user);
+            // TODO: Assert correct state
+            assert(balance.equals(initialBalance));
         });
 
-        // it('should not allow non minter to mint tokens', async () => {
-        //     const initialBalance = await token.balanceOf.call(admin);
-        //     util.assertThrows(await token.mint(admin, 1, {from: admin}));
-        //     const balance = await token.balanceOf.call(admin);
-        //     assert(balance.equals(initialBalance));
-        // });
+        it("Rejects unprivileged transferFrom", async function() {
+            const initialBalance = await this.token.balanceOf.call(user, {from: user});
+            await util.assertReverts(this.token.transferFrom(user, user1, 1, {from: user}));
+            const balance = await this.token.balanceOf.call(user);
+            assert(balance.equals(initialBalance));
+        });
+
     });
 });
 
-contract('EToro Token default permissions ', async accounts => {
 
-    const owner = accounts[0];
-    const admin = accounts[1];
-    const whitelisted = accounts[2];
-    const user = accounts[3];
-    const user2 = accounts[4];
-
-    let token;
-
-    before(async () => {
-        let tokMgr = await TokenManager.new();
-        let role = await Whitelist.new();
-
-        // Create a token token
-        await tokMgr.newToken("eUSD", "e", 4, role.address, {from: owner});
-        token = EToroToken.at(await tokMgr.getToken.call("eUSD", {from: owner}));
-        //await token.addMinterQ
-
-
-        //WHITELISTED = await token.ROLE_WHITELISTED.call();
-        //ADMIN = await token.ROLE_ADMIN.call();
-    });
-
-    it("Rejects unprivileged transfer", async () => {
-        const initialBalance = await token.balanceOf.call(user, {from: user});
-         await util.assertReverts(token.transfer(user, 1, {from: user}));
-        const balance = await token.balanceOf.call(user);
-        assert(balance.equals(initialBalance));
-    });
-
-    it("Rejects unprivileged approve", async () => {
-        const initialBalance = await token.balanceOf.call(user);
-        await util.assertReverts(token.approve(user, 1, {from: user}));
-        const balance = await token.balanceOf.call(user);
-        // TODO: Assert correct state
-        assert(balance.equals(initialBalance));
-    });
-
-    it("Rejects unprivileged transferFrom", async () => {
-        const initialBalance = await token.balanceOf.call(user, {from: user});
-        await util.assertReverts(token.transferFrom(user, user2, 1, {from: user}));
-        const balance = await token.balanceOf.call(user);
-        assert(balance.equals(initialBalance));
-    });
-
-//});
-
-
-        // it('should not allow non owner to burn tokens', async () => {
-        //     await token.mint(whitelisted, 10, { from: owner }); // seed the account so we can try and burn it.
-        //     const initialBalance = await token.balanceOf.call(whitelisted);
-        //     try {
-        //         await token.burn(1, { from: whitelisted }); // burning is always done from the owners account to respect privacy of token holders
-        //         throw ERROR;
-        //     } catch (error) {
-        //         if (!isSolidityError(error)) throw error;
-        //         const balance = await token.balanceOf.call(whitelisted);
-        //         assert.equal(balance.toNumber(), initialBalance.toNumber());
-        //     }
-        // });
-    });
+//         // it('should not allow non owner to burn tokens', async () => {
+//         //     await token.mint(whitelisted, 10, { from: owner }); // seed the account so we can try and burn it.
+//         //     const initialBalance = await token.balanceOf.call(whitelisted);
+//         //     try {
+//         //         await token.burn(1, { from: whitelisted }); // burning is always done from the owners account to respect privacy of token holders
+//         //         throw ERROR;
+//         //     } catch (error) {
+//         //         if (!isSolidityError(error)) throw error;
+//         //         const balance = await token.balanceOf.call(whitelisted);
+//         //         assert.equal(balance.toNumber(), initialBalance.toNumber());
+//         //     }
+//         // });
+//     });
 
     // describe('ERC20 Whitelisted functionality', function() {
     //     it('should not allow transfer tokens to non whitelisted address', async () => {
@@ -322,4 +326,3 @@ contract('EToro Token default permissions ', async accounts => {
     //         }
     //     });
     // });
-
