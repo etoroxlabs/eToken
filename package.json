@@ -12,7 +12,7 @@
     "migrate": "truffle migrate --reset --network development",
     "test": "scripts/test.sh && yarn lint",
     "coverage": "scripts/coverage.sh",
-    "lint": "standard && jshint scripts test migrations truffle.js && solhint contracts/**/*.sol",
+    "lint": "standard && solhint contracts/**/*.sol",
     "circleci": "yarn coverage && yarn lint"
   },
   "dependencies": {
@@ -28,7 +28,6 @@
     "chai-bignumber": "^3.0.0",
     "coveralls": "^3.0.2",
     "eth-gas-reporter": "^0.1.12",
-    "jshint": "^2.9.7",
     "solhint": "^1.4.0",
     "solidity-coverage": "^0.5.11",
     "standard": "^12.0.1",
