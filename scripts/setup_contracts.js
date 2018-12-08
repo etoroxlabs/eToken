@@ -1,9 +1,10 @@
+/* global artifacts, web3, callback */
 
 const Whitelist = artifacts.require('Whitelist')
 const TokenManager = artifacts.require('TokenManager')
 const EToroToken = artifacts.require('EToroToken')
 
-async function setup_accounts (deployer, _network, accounts) {
+async function setupAccounts (deployer, _network, accounts) {
   /*
     The purpose of this is to automatically setup the test environment accounts.
     DO NOT use in production yet.
@@ -38,7 +39,7 @@ async function setup_accounts (deployer, _network, accounts) {
       }
     ]
 
-    const tokensNew = await Promise.all(
+    await Promise.all(
       tokenDetails.map((td) =>
         tokenManagerContract.newToken(td.name, td.symbol, td.decimals, whitelistContract.address, { from: owner })
       )
@@ -65,5 +66,5 @@ async function setup_accounts (deployer, _network, accounts) {
 };
 
 module.exports = (deployer, _network, accounts) => {
-  deployer.then(async () => await setup_accounts(deployer, _network, accounts))
+  deployer.then(setupAccounts(deployer, _network, accounts))
 }

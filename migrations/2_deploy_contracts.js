@@ -1,3 +1,5 @@
+/* global artifacts, web3 */
+
 let Whitelist = artifacts.require('Whitelist')
 let TokenManager = artifacts.require('TokenManager')
 
@@ -17,8 +19,8 @@ module.exports = function (deployer, _network, accounts) {
   deployer.deploy(TokenManager)
 
   // Deploy local ENS when running on dev network
-  if (deployer.network == 'development' ||
-        deployer.network == 'develop') {
+  if (deployer.network === 'development' ||
+        deployer.network === 'develop') {
     deployer.deploy(ENS)
       .then(() => {
         return deployer.deploy(
