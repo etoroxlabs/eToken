@@ -1,8 +1,10 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./Whitelist.sol";
 
+
 contract WhitelistGuarded {
+
 
     modifier requireWhitelisted(Whitelist wl, address account) {
         require(wl.isWhitelisted(account));
