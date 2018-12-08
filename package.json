@@ -10,8 +10,10 @@
     "build": "truffle compile",
     "start": "ganache-cli --quiet --gasLimit 7000000 -p 8545 -m \"concert load couple harbor equip island argue ramp clarify fence smart topic\"",
     "migrate": "truffle migrate --reset --network development",
-    "test": "scripts/test.sh",
-    "coverage": "scripts/coverage.sh"
+    "test": "scripts/test.sh && yarn lint",
+    "coverage": "scripts/coverage.sh",
+    "lint": "standard && jshint scripts test migrations truffle.js && solhint contracts/**/*.sol",
+    "circleci": "yarn coverage && yarn lint"
   },
   "dependencies": {
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
@@ -26,7 +28,10 @@
     "chai-bignumber": "^3.0.0",
     "coveralls": "^3.0.2",
     "eth-gas-reporter": "^0.1.12",
+    "jshint": "^2.9.7",
+    "solhint": "^1.4.0",
     "solidity-coverage": "^0.5.11",
+    "standard": "^12.0.1",
     "truffle-assertions": "^0.7.1"
   }
 }
