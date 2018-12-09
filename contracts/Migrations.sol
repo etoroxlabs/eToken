@@ -1,6 +1,6 @@
 /* solhint-disable var-name-mixedcase, func-param-name-mixedcase */
 
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
 
 contract Migrations {
