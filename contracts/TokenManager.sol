@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "etokenize-openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
-import "./EToroToken.sol";
+import "./token/EToroToken.sol";
 import "./lib/StringUtils.sol";
 
 contract TokenManager is Ownable {

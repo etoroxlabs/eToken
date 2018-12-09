@@ -7,10 +7,10 @@ import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalE
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "etokenize-openzeppelin-solidity/contracts/access/roles/BurnerRole.sol";
-import "./Whitelist.sol";
-import "./WhitelistGuarded.sol";
+import "../Whitelist.sol";
+import "../WhitelistGuarded.sol";
 
-contract EToroToken is ExternalERC20Mintable,
+contract EToroTokenImpl is ExternalERC20Mintable,
     ExternalERC20Burnable,
     ExternalERC20Pausable,
     ERC20Detailed,
@@ -26,7 +26,7 @@ contract EToroToken is ExternalERC20Mintable,
                 address owner,
                 address whitelistAddress,
                 ExternalERC20Storage externalERC20Storage)
-        public
+        internal
         ExternalERC20(externalERC20Storage)
         ERC20Detailed(name, symbol, decimals)
         {
