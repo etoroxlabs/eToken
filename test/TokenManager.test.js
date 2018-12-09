@@ -8,6 +8,7 @@ const ExternalERC20Storage = artifacts.require("ExternalERC20Storage");
 const TokenManager = artifacts.require("TokenManager");
 const Whitelist = artifacts.require("Whitelist");
 const EToroToken = artifacts.require("EToroToken");
+const EToroTokenMock = artifacts.require("EToroTokenMock");
 
 const tokName = "eUSD";
 
@@ -29,42 +30,49 @@ contract("TokenManager", async ([owner, user, ...accounts]) => {
                                                       {from: accounts[0]}));
     });
 
-    it("should create and retrieve tokens", async () => {
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await tokMgr.newToken(tokName, "e", 4,
-                              whitelist.address,
-                              externalERC20Storage.address,
-                              {from: owner});
+    it("should add tokens", async () => {
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
 
-        let address = await tokMgr.getToken.call(tokName, {from: owner});
-        let tok = EToroToken.at(address);
-        let contractTokName = await tok.name.call({from: owner})
+        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+
+        const address = await tokMgr.getToken.call(tokName, {from: owner});
+        const tok = EToroToken.at(address);
+        const contractTokName = await tok.name.call({from: owner});
+
         assert(contractTokName === tokName,
                "Name of created contract did not match the expected");
     });
 
     it("fails on duplicated names", async () => {
-        let tokName = "eEUR";
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await tokMgr.newToken(tokName, "e", 4, whitelist.address,
-                              externalERC20Storage.address, {from: owner});
-        await util.assertReverts(
-            tokMgr.newToken(tokName, "e", 4,
-                            whitelist.address,
-                            externalERC20Storage.address,
-                            {from: owner}));
+        const tokName = "eEUR";
+        const eToroToken1 = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+        const eToroToken2 = await EToroTokenMock.new(
+          tokName, "se", 7, whitelist.address,
+          {from: owner}
+        );
+
+        await tokMgr.addToken(tokName, eToroToken1.address, {from: owner});
+        await util.assertReverts(tokMgr.addToken(tokName, eToroToken2.address, {from: owner}));
     });
 
     it("should properly remove tokens", async () => {
         let tokName = "myTok";
         // Token shouldn't exist before creation
         await util.assertReverts(tokMgr.getToken.call(tokName, {from: owner}));
-        // Create token
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await tokMgr.newToken(tokName, "e", 4,
-                              whitelist.address,
-                              externalERC20Storage.address,
-                              {from: owner});
+        
+        // Create token and add token
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+
         // Retrieve token. This should be successful
         await tokMgr.getToken.call(tokName, {from: owner});
         // Delete token
@@ -87,9 +95,9 @@ contract("Token manager list retrieve", async (accounts) => {
     });
 
     it("returns an empty list initially", async () => {
-        let expected = [];
+        const expected = [];
 
-        let r = await tokMgr.getTokens.call({from: owner});
+        const r = await tokMgr.getTokens.call({from: owner});
 
         assert.deepEqual(r, expected,
                "Token list returned does not match expected");
@@ -98,21 +106,22 @@ contract("Token manager list retrieve", async (accounts) => {
 
 
     it("returns a list of created tokens", async () => {
-        let expected = ["tok1", "tok2"];
+        const expected = ["tok1", "tok2"];
 
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await tokMgr.newToken("tok1", "e", 4,
-                              whitelist.address,
-                              externalERC20Storage.address,
-                              {from: owner});
+        const eToroToken1 = await EToroTokenMock.new(
+          "tok1", "e", 4, whitelist.address,
+          {from: owner}
+        );
 
-        const externalERC20Storage2 = await ExternalERC20Storage.new();
-        await tokMgr.newToken("tok2", "e", 4,
-                              whitelist.address,
-                              externalERC20Storage2.address,
-                              {from: owner});
+        const eToroToken2 = await EToroTokenMock.new(
+          "tok2", "e", 4, whitelist.address,
+          {from: owner}
+        );
 
-        let r = (await tokMgr.getTokens.call({from: owner}))
+        await tokMgr.addToken("tok1", eToroToken1.address, {from: owner});
+        await tokMgr.addToken("tok2", eToroToken2.address, {from: owner});
+
+        const r = (await tokMgr.getTokens.call({from: owner}))
             .map(util.bytes32ToString);
         // Sort arrays since implementation does not require stable order of tokens
         assert.deepEqual(r.sort(), expected.sort(),
@@ -146,19 +155,30 @@ contract("Token manager permissions", async (accounts) => {
     });
 
     it("Rejects unauthorized newToken", async () => {
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await util.assertReverts(tokMgr.newToken(tokName, "e", 4,
-                                                 whitelist.address,
-                                                 externalERC20Storage.address,
-                                                 {from: user}));
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+
+        await util.assertReverts(tokMgr.addToken(
+          tokName, eToroToken.address,
+          {from: user}
+        ));
     });
 
     it("Rejects unauthorized deleteToken", async () => {
-        const externalERC20Storage = await ExternalERC20Storage.new();
-        await tokMgr.newToken(tokName, "e", 4,
-                              whitelist.address,
-                              externalERC20Storage.address,
-                              {from: owner});
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+        tokMgr.addToken(
+          tokName, eToroToken.address,
+          {from: owner}
+        )
+
         await util.assertReverts(tokMgr.deleteToken(tokName, {from: user}));
+        
+        const tokenAddress = await tokMgr.getToken.call(tokName, {from: owner});
+        assert(tokenAddress === eToroToken.address);
     });
 });
