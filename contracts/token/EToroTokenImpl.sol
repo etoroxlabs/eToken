@@ -31,19 +31,6 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         ERC20Detailed(name, symbol, decimals)
         {
             whitelist = Whitelist(whitelistAddress);
-
-            // If needed, e.g. if this constructor is invoked from another
-            // contract, we need a way to set the actual contract owner since it
-            // not represented by msg.sender
-            if (owner != address(0) && msg.sender != owner) {
-                addMinter(owner);
-                renounceMinter();
-                addPauser(owner);
-                renouncePauser();
-                addBurner(owner);
-                renounceBurner();
-                transferOwnership(owner);
-            }
         }
 
     function transfer(address to, uint256 value)
