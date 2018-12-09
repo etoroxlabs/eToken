@@ -35,7 +35,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
             // If needed, e.g. if this constructor is invoked from another
             // contract, we need a way to set the actual contract owner since it
             // not represented by msg.sender
-            if (owner != address(0)) {
+            if (owner != address(0) && msg.sender != owner) {
                 addMinter(owner);
                 renounceMinter();
                 addPauser(owner);
