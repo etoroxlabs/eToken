@@ -31,6 +31,30 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         upgradedToken = _upgradedToken;
     }
 
+    function name() public view returns(string) {
+        if (isUpgraded()) {
+            return upgradedToken.name();
+        } else {
+            return super.name();
+        }
+    }
+
+    function symbol() public view returns(string) {
+        if (isUpgraded()) {
+            return upgradedToken.symbol();
+        } else {
+            return super.symbol();
+        }
+    }
+
+    function decimals() public view returns(uint8) {
+        if (isUpgraded()) {
+            return upgradedToken.decimals();
+        } else {
+            return super.decimals();
+        }
+    }
+
     function totalSupply() public view returns (uint256) {
         if (isUpgraded()) {
             return upgradedToken.totalSupply();

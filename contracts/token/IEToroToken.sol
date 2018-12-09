@@ -1,6 +1,14 @@
 pragma solidity ^0.4.24;
 
 interface IEToroToken {
+
+    /* Taken from ERC20Detailed in openzeppelin-solidity */
+    function name() external view returns(string);
+
+    function symbol() external view returns(string);
+
+    function decimals() external view returns(uint8);
+
     /* Taken from IERC20 in openzeppelin-solidity */
     function totalSupply() external view returns (uint256);
 
