@@ -3,7 +3,7 @@ exports.assertReverts = async (f) => {
     try {
         await f;
     } catch (e) {
-        assert(e.message === 'VM Exception while processing transaction: revert',
+        assert(e.message.includes('VM Exception while processing transaction: revert'),
                `Got an error as expected, but it was of the wrong kind: ${e.message}`);
         res = true;
     }
