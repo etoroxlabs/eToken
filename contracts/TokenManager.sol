@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "etokenize-openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
-import "./token/EToroToken.sol";
+import "./token/IEToroToken.sol";
 import "./lib/StringUtils.sol";
 
 contract TokenManager is Ownable {
@@ -14,13 +14,13 @@ contract TokenManager is Ownable {
     struct TokenEntry {
         bool exists;
         uint index;
-        EToroToken token;
+        IEToroToken token;
     }
 
     mapping (bytes32 => TokenEntry) private tokens;
     bytes32[] private names;
 
-    event TokenCreated(bytes32 _name);
+    event TokenAdded(bytes32 _name);
     event TokenDeleted(bytes32 _name);
 
     /**
@@ -39,7 +39,7 @@ contract TokenManager is Ownable {
        Require that the token _name exists
     */
     modifier tokenExists (bytes32 _name) {
-        require(_tokenExists(_name));
+        require(_tokenExists(_name), "Token does not exist");
         _;
     }
 
@@ -48,44 +48,30 @@ contract TokenManager is Ownable {
        Require that the token _name does not exist
     */
     modifier tokenNotExists (bytes32 _name) {
-        require(!(_tokenExists(_name)));
+        require(!(_tokenExists(_name)), "Token already exist");
         _;
     }
 
+    modifier notNullToken (IEToroToken _iEToroToken) {
+        require(_iEToroToken != IEToroToken(0), "Supplied token is null");
+        _;
+    }
 
     /**
-       Creates a new token
+       Adds a token to the manager
     */
-    function newToken (bytes32 _name,
-                       string _symbol,
-                       uint8 _decimals,
-                       address eToroRole,
-                       ExternalERC20Storage externalERC20Storage)
+    function addToken (bytes32 _name, IEToroToken _iEToroToken)
         public
         onlyOwner
         tokenNotExists(_name)
-    {
-        // TODO: I really want to get rid of this hacky type conversion
-        // It's only here because we can't return an array of strings from the
-        // getTokens functions, so we store token names as bytes32.
-        // Solc suggests that enabling experimental ABIEncoderV2 will allow us
-        // to return an array of strings thereby making this hack redundant.
-        // Consider the tradeoffs related to this.
-        //
-        // Alternatively, we could require that the client (or a server)
-        // maintains client names separately and limit this contract to only
-        // returning a hashed list of the contract names.
-        string memory nameStr = StringUtils.bytes32ToString(_name);
+        notNullToken(_iEToroToken) {
 
-        EToroToken tok = new EToroToken(nameStr, _symbol, _decimals,
-                                        msg.sender, eToroRole,
-                                        externalERC20Storage);
-
-        tokens[_name] = TokenEntry({index: names.length, token: tok, exists: true});
+        tokens[_name] = TokenEntry({index: names.length,
+                                    token: _iEToroToken,
+                                    exists: true});
         names.push(_name);
-        emit TokenCreated(_name);
+        emit TokenAdded(_name);
     }
-
 
     /**
        Deletes a token.
@@ -109,7 +95,7 @@ contract TokenManager is Ownable {
         public
         tokenExists(_name)
         view
-        returns (EToroToken)
+        returns (IEToroToken)
     {
         return tokens[_name].token;
     }
