@@ -9,8 +9,7 @@
   "scripts": {
     "build": "truffle compile",
     "start": "ganache-cli --quiet --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse -p 8545 -m \"concert load couple harbor equip island argue ramp clarify fence smart topic\"",
-    "migrate": "truffle migrate --reset --network development && npm run setupaccounts",
-    "setupaccounts": "truffle exec --network development './scripts/setup_contracts.js'",
+    "migrate": "truffle migrate --reset --network development",
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh"
   },
