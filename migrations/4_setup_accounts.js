@@ -49,7 +49,7 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       const externalERC20Storage = await ExternalERC20Storage.new()
       const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
-        owner, whitelistContract.address, externalERC20Storage.address,
+        whitelistContract.address, externalERC20Storage.address,
         { from: owner }
       )
       await tokenManagerContract.addToken(td.name, token.address)

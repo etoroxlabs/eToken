@@ -10,6 +10,6 @@ contract EToroTokenMock is EToroToken {
                 uint8 decimals,
                 address whitelistAddress)
         EToroToken(name, symbol, decimals,
-                   msg.sender, whitelistAddress, new ExternalERC20Storage())
+                   whitelistAddress, new ExternalERC20Storage())
         public { }
 }

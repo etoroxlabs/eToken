@@ -21,7 +21,7 @@ contract('EToro Token',  async function(
         // Create a token token
         const externalERC20Storage =
               await ExternalERC20Storage.new({from: owner});
-        const token = await EToroToken.new("eUSD", "e", 1000, 0,
+        const token = await EToroToken.new("eUSD", "e", 1000,
                                            whitelist.address,
                                            externalERC20Storage.address,
                                            {from: owner});

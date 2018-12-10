@@ -23,7 +23,6 @@ contract EToroTokenImpl is ExternalERC20Mintable,
     constructor(string name,
                 string symbol,
                 uint8 decimals,
-                address owner,
                 address whitelistAddress,
                 ExternalERC20Storage externalERC20Storage)
         internal

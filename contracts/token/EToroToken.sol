@@ -12,12 +12,11 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     constructor(string name,
                 string symbol,
                 uint8 decimals,
-                address owner,
                 address whitelistAddress,
                 ExternalERC20Storage externalERC20Storage)
         public
         EToroTokenImpl(name, symbol, decimals,
-                       owner, whitelistAddress, externalERC20Storage) {
+                       whitelistAddress, externalERC20Storage) {
 
     }
 
