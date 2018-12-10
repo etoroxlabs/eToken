@@ -2,7 +2,7 @@
 
 const util = require("./utils.js");
 const { inLogs }
-      = require("openzeppelin-solidity/test/helpers/expectEvent.js");
+      = require("etokenize-openzeppelin-solidity/test/helpers/expectEvent.js");
 const truffleAssert = require("truffle-assertions");
 
 const Whitelist = artifacts.require("Whitelist");
