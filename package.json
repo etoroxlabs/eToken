@@ -17,7 +17,7 @@
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
     "eth-ens-namehash": "^2.0.8",
     "ganache-cli": "^6.2.3",
-    "openzeppelin-solidity": "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#e39209e634f3b91a70bdf3d8826257c8083d7845",
+      "openzeppelin-solidity": "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#8532cd697b70d9c7f076423fb198ebeecdaa7da2",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "^0.0.6"
   },
