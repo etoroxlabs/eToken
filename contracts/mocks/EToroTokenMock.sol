@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
+import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
 import "../token/EToroToken.sol";
 
 contract EToroTokenMock is EToroToken {
