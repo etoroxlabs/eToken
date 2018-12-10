@@ -7,7 +7,7 @@ import "./IEToroToken.sol";
 
 contract EToroToken is IEToroToken, EToroTokenImpl {
 
-    IEToroToken private upgradedToken;
+    IEToroToken public upgradedToken;
 
     constructor(string name,
                 string symbol,
@@ -27,6 +27,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     function upgrade(IEToroToken _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
         require(_upgradedToken != IEToroToken(0), "Supplied address is null");
+        require(_upgradedToken != this, "Cannot supply itself as upgrade token");
         upgradedToken = _upgradedToken;
     }
 
@@ -82,7 +83,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
 
     function transfer(address to, uint256 value) public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.transfer(to, value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.transfer(to, value);
         }
@@ -91,7 +92,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     function approve(address spender, uint256 value)
         public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.approve(spender, value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.approve(spender, value);
         }
@@ -100,7 +101,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     function transferFrom(address from, address to, uint256 value)
         public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.transferFrom(from, to, value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.transferFrom(from, to, value);
         }
@@ -108,7 +109,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
 
     function mint(address to, uint256 value) public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.mint(to, value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.mint(to, value);
         }
@@ -116,7 +117,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
 
     function burn(uint256 value) public {
         if (isUpgraded()) {
-            return upgradedToken.burn(value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.burn(value);
         }
@@ -124,7 +125,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
 
     function burnFrom(address from, uint256 value) public {
         if (isUpgraded()) {
-            return upgradedToken.burnFrom(from, value);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.burnFrom(from, value);
         }
@@ -134,7 +135,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
                                uint addedValue)
         public returns (bool success) {
         if (isUpgraded()) {
-            return upgradedToken.increaseAllowance(spender, addedValue);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.increaseAllowance(spender, addedValue);
         }
@@ -144,7 +145,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
                                uint subtractedValue)
         public returns (bool success) {
         if (isUpgraded()) {
-            return upgradedToken.decreaseAllowance(spender, subtractedValue);
+            revert("Can only be executed through the upgraded token");
         } else {
             return super.decreaseAllowance(spender, subtractedValue);
         }
