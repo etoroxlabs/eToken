@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/access/Roles.sol";
-import "openzeppelin-solidity/contracts/access/roles/WhitelistAdminRole.sol";
+import "etokenize-openzeppelin-solidity/contracts/access/Roles.sol";
+import "etokenize-openzeppelin-solidity/contracts/access/roles/WhitelistAdminRole.sol";
 
 contract Whitelist is WhitelistAdminRole {
     using Roles for Roles.Role;

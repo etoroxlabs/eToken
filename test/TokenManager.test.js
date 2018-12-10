@@ -2,7 +2,7 @@
 
 const util = require("./utils.js");
 const { shouldBehaveLikeOwnable }
-      = require("openzeppelin-solidity/test/ownership/Ownable.behavior.js")
+      = require("etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js")
 
 const ExternalERC20Storage = artifacts.require("ExternalERC20Storage");
 const TokenManager = artifacts.require("TokenManager");
