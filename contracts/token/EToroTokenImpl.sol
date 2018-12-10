@@ -87,4 +87,8 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         super.burn(value);
     }
 
+
+    function burnFrom(address from, uint256 value) public onlyBurner {
+        super.burnFrom(from, value);
+    }
 }
