@@ -16,8 +16,8 @@
   "dependencies": {
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
     "eth-ens-namehash": "^2.0.8",
-    "ganache-cli": "^6.2.3",
     "etokenize-openzeppelin-solidity": "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#4e7f7efa2d58886aa6dc31ee80fc6d49358b0fe2",
+    "ganache-cli": "^6.2.3",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "^0.0.6"
   },
@@ -25,6 +25,7 @@
     "chai": "^4.2.0",
     "chai-bignumber": "^3.0.0",
     "coveralls": "^3.0.2",
+    "eth-gas-reporter": "^0.1.12",
     "solidity-coverage": "^0.5.11",
     "truffle-assertions": "^0.7.1"
   }
