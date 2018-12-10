@@ -21,6 +21,7 @@ contract TokenManager is Ownable {
 
     event TokenAdded(bytes32 _name);
     event TokenDeleted(bytes32 _name);
+    event TokenUpgraded(bytes32 _name);
 
     /**
        Returns true if the token specified in _name exists
@@ -63,8 +64,8 @@ contract TokenManager is Ownable {
         public
         onlyOwner
         tokenNotExists(_name)
-        notNullToken(_iEToroToken) {
-
+        notNullToken(_iEToroToken) 
+    {
         tokens[_name] = TokenEntry({index: names.length,
                                     token: _iEToroToken,
                                     exists: true});
@@ -86,6 +87,18 @@ contract TokenManager is Ownable {
         emit TokenDeleted(_name);
     }
 
+    /**
+       Upgrades a token
+    */
+    function upgradeToken (bytes32 _name, IEToroToken _iEToroToken)
+        public
+        onlyOwner
+        tokenExists(_name)
+        notNullToken(_iEToroToken)
+    {
+        tokens[_name].token = _iEToroToken;
+        emit TokenUpgraded(_name);
+    }
 
     /**
        Returns the token _name
