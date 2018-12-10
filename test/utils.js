@@ -1,10 +1,11 @@
-exports.assertReverts = async (f) => {
+exports.assertReverts = async (f, includes = "") => {
     let res = false;
     try {
         await f;
     } catch (e) {
-        assert(e.message === 'VM Exception while processing transaction: revert',
-               "Got an error as expected, but it was of the wrong kind");
+        assert(e.message.includes('VM Exception while processing transaction: revert') && 
+               e.message.includes(includes),
+               `Got an error as expected, but it was of the wrong kind: ${e.message}`);
         res = true;
     }
     assert(res, "Expected an error");
@@ -37,6 +38,10 @@ exports.bytes32ToString = (str) => {
     }
     return  parts.map((x) => String.fromCharCode(x)).join('');
 }
+
+const { ZERO_ADDRESS } = require('etokenize-openzeppelin-solidity/test/helpers/constants.js'); 
+
+exports.ZERO_ADDRESS = ZERO_ADDRESS;
 
 //exports = {assertReverts: true, bytes32ToString: true}
 //module.exports = [assertReverts, bytes32ToString]

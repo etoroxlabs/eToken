@@ -7,10 +7,10 @@ import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalE
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "etokenize-openzeppelin-solidity/contracts/access/roles/BurnerRole.sol";
-import "./Whitelist.sol";
-import "./WhitelistGuarded.sol";
+import "../Whitelist.sol";
+import "../WhitelistGuarded.sol";
 
-contract EToroToken is ExternalERC20Mintable,
+contract EToroTokenImpl is ExternalERC20Mintable,
     ExternalERC20Burnable,
     ExternalERC20Pausable,
     ERC20Detailed,
@@ -23,27 +23,13 @@ contract EToroToken is ExternalERC20Mintable,
     constructor(string name,
                 string symbol,
                 uint8 decimals,
-                address owner,
                 address whitelistAddress,
                 ExternalERC20Storage externalERC20Storage)
-        public
+        internal
         ExternalERC20(externalERC20Storage)
         ERC20Detailed(name, symbol, decimals)
         {
             whitelist = Whitelist(whitelistAddress);
-
-            // If needed, e.g. if this constructor is invoked from another
-            // contract, we need a way to set the actual contract owner since it
-            // not represented by msg.sender
-            if (owner != address(0)) {
-                addMinter(owner);
-                renounceMinter();
-                addPauser(owner);
-                renouncePauser();
-                addBurner(owner);
-                renounceBurner();
-                transferOwnership(owner);
-            }
         }
 
     function transfer(address to, uint256 value)
@@ -101,4 +87,8 @@ contract EToroToken is ExternalERC20Mintable,
         super.burn(value);
     }
 
+
+    function burnFrom(address from, uint256 value) public onlyBurner {
+        super.burnFrom(from, value);
+    }
 }

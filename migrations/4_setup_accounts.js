@@ -47,11 +47,12 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
   const tokens = await Promise.all(
     tokenDetails.map(async (td) => {
       const externalERC20Storage = await ExternalERC20Storage.new()
-      await tokenManagerContract.newToken(
+      const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
         whitelistContract.address, externalERC20Storage.address,
         { from: owner }
       )
+      await tokenManagerContract.addToken(td.name, token.address)
 
       const tokenAddress = await tokenManagerContract.getToken(td.name, { from: owner })
       await externalERC20Storage.transferImplementor(tokenAddress, { from: owner })
