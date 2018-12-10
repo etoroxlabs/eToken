@@ -320,8 +320,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.transfer(owner, 2000, {from: whitelisted}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.transfer(owner, 2000, {from: whitelisted})
                 );
             })
 
@@ -339,8 +338,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.approve(owner, 2000, {from: whitelisted}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.approve(owner, 2000, {from: whitelisted})
                 );
             })
 
@@ -356,8 +354,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.transferFrom(owner, whitelisted1, 80, {from: whitelisted}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.transferFrom(owner, whitelisted1, 80, {from: whitelisted})
                 );
             })
 
@@ -373,8 +370,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.mint(owner, 80, {from: owner}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.mint(owner, 80, {from: owner})
                 );
             })
 
@@ -390,8 +386,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.burn(80, {from: owner}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.burn(80, {from: owner})
                 );
             })
 
@@ -407,8 +402,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.burnFrom(owner, 80, {from: owner}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.burnFrom(owner, 80, {from: owner})
                 );
             })
 
@@ -424,8 +418,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.increaseAllowance(owner, 80, {from: owner}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.increaseAllowance(owner, 80, {from: owner})
                 );
             })
 
@@ -441,8 +434,7 @@ contract('EToro Token',  async function(
                 await upgradeAndCheck(initialToken, upgradeToken);
 
                 await util.assertReverts(
-                    initialToken.decreaseAllowance(owner, 80, {from: owner}), 
-                    "Can only be executed through the upgraded token"
+                    initialToken.decreaseAllowance(owner, 80, {from: owner})
                 );
             })
         });
