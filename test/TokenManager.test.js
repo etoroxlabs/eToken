@@ -46,6 +46,30 @@ contract("TokenManager", async ([owner, user, ...accounts]) => {
                "Name of created contract did not match the expected");
     });
 
+    it("should upgrade token", async () => {
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+
+        const eToroToken2 = await EToroTokenMock.new(
+          tokName, "e", 8, whitelist.address,
+          {from: owner}
+        );
+
+        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+        const address = await tokMgr.getToken(tokName, {from: owner});
+
+        assert(eToroToken.address === address,
+               "Created contract did not match the expected");
+
+        await tokMgr.upgradeToken(tokName, eToroToken2.address, {from: owner});
+        const address2 = await tokMgr.getToken(tokName, {from: owner});
+
+        assert(eToroToken2.address === address2,
+               "Created contract did not match the expected");
+    });
+
     it("fails on duplicated names", async () => {
         const tokName = "eEUR";
         const eToroToken1 = await EToroTokenMock.new(
@@ -149,7 +173,7 @@ contract("Token manager permissions", async (accounts) => {
     let owner = accounts[0];
     let user = accounts[1];
 
-    before(async () => {
+    beforeEach(async () => {
         tokMgr = await TokenManager.new();
         whitelist = await Whitelist.new();
     });
@@ -180,5 +204,29 @@ contract("Token manager permissions", async (accounts) => {
         
         const tokenAddress = await tokMgr.getToken.call(tokName, {from: owner});
         assert(tokenAddress === eToroToken.address);
+    });
+
+    it("Rejects unauthorized upgradeToken", async () => {
+        const eToroToken = await EToroTokenMock.new(
+          tokName, "e", 4, whitelist.address,
+          {from: owner}
+        );
+
+        const eToroToken2 = await EToroTokenMock.new(
+          tokName, "e", 8, whitelist.address,
+          {from: owner}
+        );
+
+        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+        const address = await tokMgr.getToken(tokName);
+
+        assert(eToroToken.address === address,
+               "Created contract did not match the expected");
+
+        await util.assertReverts(tokMgr.upgradeToken(tokName, eToroToken2.address, {from: user}));
+        const address2 = await tokMgr.getToken(tokName);
+
+        assert(eToroToken.address === address2,
+               "Created contract did not match the expected");
     });
 });

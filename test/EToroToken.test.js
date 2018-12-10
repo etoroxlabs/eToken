@@ -91,32 +91,167 @@ contract('EToro Token',  async function(
                 const balance = await this.token.balanceOf.call(user);
                 assert(balance.equals(initialBalance));
             });
+
+            it('should allow burnFrom', async function() {
+                const burnVal = 100;
+                await this.token.mint(whitelisted, burnVal, {from: owner});
+                (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(burnVal);
+
+                await this.token.approve(owner, burnVal, {from: whitelisted});
+                await this.token.burnFrom(whitelisted, burnVal, {from: owner});
+
+                (await this.token.totalSupply()).should.be.bignumber.equal(0);
+            });
+        });
+
+        describe('Transfer', function() {
+
+            it('should perform transfer', async function() {
+                const burnVal = 100;
+                await this.token.mint(whitelisted, burnVal, {from: owner});
+                (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(burnVal);
+                (await this.token.balanceOf(whitelisted1)).should.be.bignumber.equal(0);
+
+                await this.token.transfer(whitelisted1, 50, {from: whitelisted});
+
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(50);
+                (await this.token.balanceOf(whitelisted1)).should.be.bignumber.equal(50);
+                (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+            });
+
+            it('should perform transferFrom', async function() {
+                const burnVal = 100;
+                await this.token.mint(owner, burnVal, {from: owner});
+                (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+
+                (await this.token.balanceOf(owner)).should.be.bignumber.equal(burnVal);
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(0);
+                (await this.token.balanceOf(whitelisted1)).should.be.bignumber.equal(0);
+
+                await this.token.approve(whitelisted, 50, {from: owner})
+                await this.token.transferFrom(owner, whitelisted1, 50, {from: whitelisted});
+                await util.assertReverts(this.token.transferFrom(owner, whitelisted1, 1, {from: whitelisted}));
+
+                (await this.token.balanceOf(owner)).should.be.bignumber.equal(50);
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(0);
+                (await this.token.balanceOf(whitelisted1)).should.be.bignumber.equal(50);
+                (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+            });
+        })
+
+        describe('Allowance', function() {
+
+            it('should perform increaseAllowance', async function() {
+                const mintVal = 100;
+                await this.token.mint(whitelisted, mintVal, {from: owner});
+                (await this.token.totalSupply()).should.be.bignumber.equal(mintVal);
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(mintVal);
+
+                await this.token.approve(owner, 20, {from: whitelisted});
+                (await this.token.allowance(whitelisted, owner)).should.be.bignumber.equal(20);
+                await this.token.increaseAllowance(owner, 80, {from: whitelisted});
+                (await this.token.allowance(whitelisted, owner)).should.be.bignumber.equal(mintVal);
+            });
+
+            it('should perform decreaseAllowance', async function() {
+                const mintVal = 100;
+                await this.token.mint(whitelisted, mintVal, {from: owner});
+                (await this.token.totalSupply()).should.be.bignumber.equal(mintVal);
+                (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(mintVal);
+
+                await this.token.approve(owner, 20, {from: whitelisted});
+                (await this.token.allowance(whitelisted, owner)).should.be.bignumber.equal(20);
+                await this.token.decreaseAllowance(owner, 5, {from: whitelisted});
+                (await this.token.allowance(whitelisted, owner)).should.be.bignumber.equal(15);
+            });
         });
     });
 
     describe("default permissions", function() {
-        it("Rejects unprivileged transfer", async function() {
-            const initialBalance = await this.token.balanceOf.call(user, {from: user});
+        it("Rejects unprivileged transfer when both are non-whitelisted", async function() {
+            const initialBalance = await this.token.balanceOf(user);
             await util.assertReverts(this.token.transfer(user, 1, {from: user}));
-            const balance = await this.token.balanceOf.call(user);
+            const balance = await this.token.balanceOf(user);
             assert(balance.equals(initialBalance));
         });
 
+        it("Rejects unprivileged transfer when receiver are non-whitelisted", async function() {
+            await this.token.mint(whitelisted, 100, {from: owner});
+            const initialBalance = await this.token.balanceOf(whitelisted);
+            await util.assertReverts(this.token.transfer(user, 10, {from: whitelisted}));
+            const balance = await this.token.balanceOf(whitelisted);
+            assert(balance.equals(initialBalance));
+        })
+
+        it("Rejects unprivileged transfer when transmitter are non-whitelisted", async function() {
+            await this.token.mint(user, 100, {from: owner});
+            const initialBalance = await this.token.balanceOf(user);
+            await util.assertReverts(this.token.transfer(whitelisted, 10, {from: user}));
+            const balance = await this.token.balanceOf(user);
+            assert(balance.equals(initialBalance));
+        })
+
         it("Rejects unprivileged approve", async function() {
-            const initialBalance = await this.token.balanceOf.call(user);
+            const initialBalance = await this.token.balanceOf(user);
             await util.assertReverts(this.token.approve(user, 1, {from: user}));
-            const balance = await this.token.balanceOf.call(user);
+            const balance = await this.token.balanceOf(user);
             // TODO: Assert correct state
             assert(balance.equals(initialBalance));
         });
 
         it("Rejects unprivileged transferFrom", async function() {
-            const initialBalance = await this.token.balanceOf.call(user, {from: user});
+            const initialBalance = await this.token.balanceOf(user, {from: user});
             await util.assertReverts(this.token.transferFrom(user, user1, 1, {from: user}));
-            const balance = await this.token.balanceOf.call(user);
+            const balance = await this.token.balanceOf(user);
             assert(balance.equals(initialBalance));
         });
 
+        it("Rejects unprivileged burn", async function() {
+            const burnVal = 100;
+            await this.token.mint(whitelisted, burnVal, {from: owner});
+            (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+            (await this.token.balanceOf(whitelisted)).should.be.bignumber.equal(burnVal);
+
+            await util.assertReverts(this.token.burn(burnVal, {from: whitelisted}));
+
+            (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+        });
+
+        it("Rejects unprivileged burnFrom", async function() {
+            const burnVal = 100;
+            await tokenIsInitiallyEmpty(this);
+            await mintAndVerify(this, burnVal);
+
+            await this.token.approve(whitelisted, burnVal, {from: owner});
+            await util.assertReverts(this.token.burnFrom(owner, burnVal, {from: whitelisted}));
+
+            (await this.token.totalSupply()).should.be.bignumber.equal(burnVal);
+        });
+
+        it("Rejects unprivileged increaseAllowance", async function() {
+            const mintVal = 100;
+            await this.token.mint(user, mintVal, {from: owner});
+            (await this.token.totalSupply()).should.be.bignumber.equal(mintVal);
+            (await this.token.balanceOf(user)).should.be.bignumber.equal(mintVal);
+
+            (await this.token.allowance(user, whitelisted)).should.be.bignumber.equal(0);
+            await util.assertReverts(this.token.increaseAllowance(whitelisted, 5, {from: user}));
+            (await this.token.allowance(user, whitelisted)).should.be.bignumber.equal(0);
+        });
+
+        it("Rejects unprivileged decreaseAllowance", async function() {
+            const mintVal = 100;
+            await this.token.mint(user, mintVal, {from: owner});
+            (await this.token.totalSupply()).should.be.bignumber.equal(mintVal);
+            (await this.token.balanceOf(user)).should.be.bignumber.equal(mintVal);
+
+            (await this.token.allowance(user, whitelisted)).should.be.bignumber.equal(0);
+            await util.assertReverts(this.token.decreaseAllowance(whitelisted, 5, {from: user}));
+            (await this.token.allowance(user, whitelisted)).should.be.bignumber.equal(0);
+        });
     });
 
     describe("upgradability", function() {
