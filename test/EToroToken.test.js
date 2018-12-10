@@ -5,7 +5,7 @@
 
 const util = require('./utils.js')
 
-const Whitelist = artifacts.require('Whitelist')
+const Accesslist = artifacts.require('Accesslist')
 const EToroTokenMock = artifacts.require('EToroTokenMock')
 
 const BigNumber = web3.BigNumber
@@ -18,23 +18,23 @@ contract('EToro Token', async function (
   [owner, minter, pauser, burner, whitelistAdmin,
     whitelisted, whitelisted1, user, user1, ...restAccounts]) {
   beforeEach(async function () {
-    const whitelist = await Whitelist.new({ from: owner })
+    const accesslist = await Accesslist.new({ from: owner })
 
     // Create a token token
     const token = await EToroTokenMock.new('eUSD', 'e', 1000,
-      whitelist.address,
+      accesslist.address,
       { from: owner })
 
     // Setup permissions
     await token.addMinter(minter, { from: owner })
     await token.addPauser(pauser, { from: owner })
     await token.addBurner(burner, { from: owner })
-    await whitelist.addWhitelistAdmin(whitelistAdmin, { from: owner })
-    await whitelist.addWhitelisted(whitelisted, { from: owner })
-    await whitelist.addWhitelisted(whitelisted1, { from: owner })
+    await accesslist.addWhitelistAdmin(whitelistAdmin, { from: owner })
+    await accesslist.addWhitelisted(whitelisted, { from: owner })
+    await accesslist.addWhitelisted(whitelisted1, { from: owner })
 
     // Set test state
-    this.whitelist = whitelist
+    this.accesslist = accesslist
     this.token = token
     this.local = {}
   })
@@ -187,6 +187,62 @@ contract('EToro Token', async function (
       assert(balance.equals(initialBalance))
     })
 
+    it('Rejects unprivileged transfer when both are blacklisted and none are whitelisted', async function () {
+      await this.token.mint(user, 10, { from: owner })
+      await this.accesslist.addBlacklisted(user, { from: owner })
+      await this.accesslist.addBlacklisted(user1, { from: owner })
+      const initialBalance = await this.token.balanceOf(user1)
+      await util.assertReverts(this.token.transfer(user, 1, { from: user1 }))
+      const balance = await this.token.balanceOf(user1)
+      assert(balance.equals(initialBalance))
+    })
+
+    it('Rejects unprivileged transfer when receiver is blacklisted and non-whitelisted', async function () {
+      await this.token.mint(whitelisted, 100, { from: owner })
+      const initialBalance = await this.token.balanceOf(user)
+      await this.accesslist.addBlacklisted(user, { from: owner })
+      await util.assertReverts(this.token.transfer(user, 1, { from: whitelisted }))
+      const balance = await this.token.balanceOf(user)
+      assert(balance.equals(initialBalance))
+    })
+
+    it('Rejects unprivileged transfer when transmitter is blacklisted and non-whitelisted', async function () {
+      await this.token.mint(user, 100, { from: owner })
+      const initialBalance = await this.token.balanceOf(whitelisted)
+      await this.accesslist.addBlacklisted(user, { from: owner })
+      await util.assertReverts(this.token.transfer(whitelisted, 1, { from: user }))
+      const balance = await this.token.balanceOf(whitelisted)
+      assert(balance.equals(initialBalance))
+    })
+
+    it('Rejects unprivileged transfer when both are blacklisted and whitelisted', async function () {
+      await this.token.mint(whitelisted, 100, { from: owner })
+      const initialBalance = await this.token.balanceOf(whitelisted1)
+      await this.accesslist.addBlacklisted(whitelisted, { from: owner })
+      await this.accesslist.addBlacklisted(whitelisted1, { from: owner })
+      await util.assertReverts(this.token.transfer(whitelisted1, 1, { from: whitelisted }))
+      const balance = await this.token.balanceOf(whitelisted1)
+      assert(balance.equals(initialBalance))
+    })
+
+    it('Rejects unprivileged transfer when receiver is both blacklisted and whitelisted', async function () {
+      await this.token.mint(whitelisted, 100, { from: owner })
+      const initialBalance = await this.token.balanceOf(whitelisted1)
+      await this.accesslist.addBlacklisted(whitelisted1, { from: owner })
+      await util.assertReverts(this.token.transfer(whitelisted1, 1, { from: whitelisted }))
+      const balance = await this.token.balanceOf(whitelisted1)
+      assert(balance.equals(initialBalance))
+    })
+
+    it('Rejects unprivileged transfer when transmitter is both blacklisted and whitelisted', async function () {
+      await this.token.mint(whitelisted, 100, { from: owner })
+      const initialBalance = await this.token.balanceOf(whitelisted1)
+      await this.accesslist.addBlacklisted(whitelisted, { from: owner })
+      await util.assertReverts(this.token.transfer(whitelisted1, 1, { from: whitelisted }))
+      const balance = await this.token.balanceOf(whitelisted1)
+      assert(balance.equals(initialBalance))
+    })
+
     it('Rejects unprivileged approve', async function () {
       const initialBalance = await this.token.balanceOf(user)
       await util.assertReverts(this.token.approve(user, 1, { from: user }))
@@ -273,7 +329,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         );
 
@@ -291,13 +347,13 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
         const upgradeToken2 = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -327,7 +383,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           newName, 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         );
 
@@ -348,7 +404,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', newSymbol, 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         );
 
@@ -369,7 +425,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', newDecimals,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         );
 
@@ -390,7 +446,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -413,7 +469,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -435,7 +491,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -451,7 +507,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -467,7 +523,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -483,7 +539,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -499,7 +555,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -515,7 +571,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -531,7 +587,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -547,7 +603,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         )
 
@@ -565,7 +621,7 @@ contract('EToro Token', async function (
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
-          this.whitelist.address,
+          this.accesslist.address,
           { from: owner }
         );
 

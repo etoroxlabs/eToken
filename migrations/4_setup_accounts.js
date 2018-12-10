@@ -1,6 +1,6 @@
 /* global artifacts */
 
-const Whitelist = artifacts.require('Whitelist')
+const Accesslist = artifacts.require('Accesslist')
 const TokenManager = artifacts.require('TokenManager')
 const EToroToken = artifacts.require('EToroToken')
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
@@ -21,10 +21,10 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
   const intialMintValue = '100'
 
   // Setup whitelists
-  const whitelistContract = await Whitelist.deployed()
+  const accesslistContract = await Accesslist.deployed()
 
-  await whitelistContract.addWhitelistAdmin(whitelistAdmin, { from: owner })
-  await whitelistContract.addWhitelisted(whitelisted, { from: whitelistAdmin })
+  await accesslistContract.addWhitelistAdmin(whitelistAdmin, { from: owner })
+  await accesslistContract.addWhitelisted(whitelisted, { from: whitelistAdmin })
 
   // Setup tokens
   const tokenManagerContract = await TokenManager.deployed()
@@ -47,7 +47,7 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       const externalERC20Storage = await ExternalERC20Storage.new()
       const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
-        whitelistContract.address, externalERC20Storage.address,
+        accesslistContract.address, externalERC20Storage.address,
         { from: owner }
       )
       await tokenManagerContract.addToken(td.name, token.address)

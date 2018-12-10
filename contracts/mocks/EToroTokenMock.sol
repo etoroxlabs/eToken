@@ -11,11 +11,11 @@ contract EToroTokenMock is EToroToken {
         string name,
         string symbol,
         uint8 decimals,
-        address whitelistAddress
+        Accesslist accesslist
     )
         EToroToken(
             name, symbol, decimals,
-            whitelistAddress, new ExternalERC20Storage()
+            accesslist, new ExternalERC20Storage()
         )
         public 
     { 
