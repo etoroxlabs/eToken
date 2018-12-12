@@ -16,12 +16,12 @@ contract WhitelistAdminRole is Ownable {
     }
 
     modifier onlyWhitelistAdmin() {
-        require(isWhitelistAdmin(msg.sender));
+        require(isWhitelistAdmin(msg.sender), "not whitelistAdmin");
         _;
     }
 
     modifier requireWhitelistAdmin(address account) {
-        require(isWhitelistAdmin(account));
+        require(isWhitelistAdmin(account), "not whitelistAdmin");
         _;
     }
 

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../roles/PauserRole.sol";
+import "../access/roles/PauserRole.sol";
 
 /**
  * @title Pausable

@@ -16,12 +16,12 @@ contract PauserRole is Ownable {
     }
 
     modifier onlyPauser() {
-        require(isPauser(msg.sender));
+        require(isPauser(msg.sender), "not pauser");
         _;
     }
 
     modifier requirePauser(address account) {
-        require(isPauser(account));
+        require(isPauser(account), "not pauser");
         _;
     }
 

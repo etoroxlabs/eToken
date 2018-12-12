@@ -2,7 +2,7 @@
 
 const Accesslist = artifacts.require('Accesslist');
 const TokenManager = artifacts.require('TokenManager');
-const EToroToken = artifacts.require('EToroToken');
+const EToroToken = artifacts.require('TokenX');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 module.exports = function (deployer, _network, accounts) {
@@ -18,7 +18,7 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
     DO NOT use in production yet.
   */
 
-  const intialMintValue = '100';
+  const intialMintValue = 100;
 
   // Setup whitelists
   const accesslistContract = await Accesslist.deployed();
@@ -49,16 +49,12 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       const externalERC20Storage = await ExternalERC20Storage.new();
       const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
-        accesslistContract.address, td.whitelistEnabled,
-        externalERC20Storage.address,
-        { from: owner }
-      );
+        accesslistContract.address, td.whitelistEnabled, externalERC20Storage.address,
+        0, true,
+        { from: owner });
+
       await tokenManagerContract.addToken(td.name, token.address);
-
-      const tokenAddress = await tokenManagerContract.getToken(td.name, { from: owner });
-      await externalERC20Storage.transferImplementor(tokenAddress, { from: owner });
-
-      return EToroToken.at(tokenAddress);
+      return token;
     })
   );
 

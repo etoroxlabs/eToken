@@ -1,8 +1,5 @@
-/* global artifacts, contract, web3 */
-/* eslint-env mocha */
-
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
-// const expectEvent = require('../../../helpers/expectEvent');
+const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
 
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
@@ -16,27 +13,84 @@ require('chai')
 contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccount, thirdAccount]) {
   beforeEach(async function () {
     this.token = await ExternalERC20Storage.new({ from: owner });
+    const { logs } = await this.token.latchInitialImplementor({from: implementor});
+    expectEvent.inLogs(logs, 'StorageInitialImplementorSet', {to: implementor });
+  });
+
+  describe("setting initial implementor", function () {
+    beforeEach(async function () {
+      this.otherStorage = await ExternalERC20Storage.new({ from: owner });
+    });
+
+    it("hasImplementor should be false initially", async function () {
+      (await this.otherStorage.hasImplementor()).should.equal(false);
+    })
+
+    it("isImplementor should be false initially", async function () {
+      (await this.otherStorage.isImplementor({from: owner})).should.equal(false);
+    });
+
+    it("hasImplementor should is true after setting implementor", async function () {
+      (await this.otherStorage.hasImplementor()).should.equal(false);
+      this.otherStorage.latchInitialImplementor({from: anotherAccount});
+      (await this.otherStorage.hasImplementor()).should.equal(true);
+    });
+
+    it("latchInitialImplementor sets isImplementor correctly", async function () {
+      (await this.otherStorage.isImplementor({ from: anotherAccount })).should.equal(false);
+      this.otherStorage.latchInitialImplementor({from: anotherAccount});
+      (await this.otherStorage.isImplementor({from: anotherAccount})).should.equal(true);
+    });
+
+    it("reverts when iplementor already exists", async function () {
+      // Note: Uses this.token initialized in parent beforeEach
+      await shouldFail.reverting(this.token.latchInitialImplementor({from: owner}));
+    });
+
+    it("Should emit initial implementor event", async function () {
+      const { logs } = await this.otherStorage.latchInitialImplementor({from: implementor});
+      expectEvent.inLogs(logs, 'StorageInitialImplementorSet', {
+        to: implementor });
+    });
+
   });
 
   describe('transferring implementor', function () {
-    const commonOwnerImplementorTests = function (ownerOrImplementorAddress) {
+    const commonOwnerImplementorTests = function (ownerOrImplementorAddress, newImplementor) {
+
       it('should allow transferring of implementor', async function () {
-        (await this.token.isImplementor({ from: anotherAccount })).should.equal(false);
-        await this.token.transferImplementor(anotherAccount, { from: ownerOrImplementorAddress });
-        (await this.token.isImplementor({ from: anotherAccount })).should.equal(true);
+        (await this.token.isImplementor({ from: newImplementor })).should.equal(false);
+        await this.token.transferImplementor(newImplementor, { from: ownerOrImplementorAddress });
+        (await this.token.isImplementor({ from: newImplementor })).should.equal(true);
       });
 
       it('should require non-zero address when transferring implementor', async function () {
-        await shouldFail.reverting(this.token.transferImplementor(ZERO_ADDRESS, { from: ownerOrImplementorAddress }));
+        await shouldFail.reverting(this.token.transferImplementor(
+          ZERO_ADDRESS, { from: ownerOrImplementorAddress }));
       });
+
+      it('should emit implementor transferred event', async function () {
+        const { logs } = await this.token.transferImplementor(
+          anotherAccount, { from: ownerOrImplementorAddress });
+        expectEvent.inLogs(logs, 'StorageImplementorTransferred', {
+          from: implementor,
+          to: anotherAccount});
+      });
+
+      it('should revert when transferring to existing implementor', async function () {
+      await shouldFail.reverting(
+        this.token.transferImplementor(implementor, { from: ownerOrImplementorAddress }));
+      });
+
     };
 
     describe('when is owner', function () {
+
       it('should be owner', async function () {
         (await this.token.isOwner({ from: owner })).should.equal(true);
       });
 
-      it('should still be owner when transferring implementor', async function () {
+      it('should still be owner after transferring implementor', async function () {
         (await this.token.isOwner({ from: owner })).should.equal(true);
 
         (await this.token.isImplementor({ from: anotherAccount })).should.equal(false);
@@ -46,24 +100,20 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
         (await this.token.isOwner({ from: owner })).should.equal(true);
       });
 
-      commonOwnerImplementorTests(owner);
+      commonOwnerImplementorTests(owner, anotherAccount);
+
     });
 
     describe('when is implementor', function () {
-      beforeEach(async function () {
-        await this.token.transferImplementor(implementor, { from: owner });
-      });
-
       it('should allow transferring to new implementor', async function () {
-        await this.token.transferImplementor(implementor, { from: owner });
         (await this.token.isImplementor({ from: implementor })).should.equal(true);
-
-        await this.token.transferImplementor(anotherAccount, { from: implementor });
+        await this.token.transferImplementor(thirdAccount, { from: implementor });
         (await this.token.isImplementor({ from: implementor })).should.equal(false);
-        (await this.token.isImplementor({ from: anotherAccount })).should.equal(true);
+        (await this.token.isImplementor({ from: thirdAccount })).should.equal(true);
       });
 
-      commonOwnerImplementorTests(implementor);
+      commonOwnerImplementorTests(implementor, anotherAccount);
+
     });
 
     describe('when is not owner or implementor', function () {
@@ -90,10 +140,6 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     });
 
     describe('when is implementor', function () {
-      beforeEach(async function () {
-        await this.token.transferImplementor(implementor, { from: owner });
-      });
-
       commonOwnerImplementorTests(implementor);
     });
 
@@ -125,10 +171,6 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     });
 
     describe('when is implementor', function () {
-      beforeEach(async function () {
-        await this.token.transferImplementor(implementor, { from: owner });
-      });
-
       commonOwnerImplementorTests(implementor);
     });
 
@@ -162,10 +204,6 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     });
 
     describe('when is implementor', function () {
-      beforeEach(async function () {
-        await this.token.transferImplementor(implementor, { from: owner });
-      });
-
       commonOwnerImplementorTests(implementor);
     });
 

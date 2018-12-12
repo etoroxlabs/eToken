@@ -6,3 +6,6 @@ pragma solidity ^0.4.24;
 import "@ensdomains/ens/contracts/ENSRegistry.sol";
 import "@ensdomains/ens/contracts/PublicResolver.sol";
 import "@ensdomains/ens/contracts/ReverseRegistrar.sol";
+
+// Avoild recompiling every time
+contract ENSdummy { }

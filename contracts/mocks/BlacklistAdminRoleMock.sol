@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../roles/BlacklistAdminRole.sol";
+import "../access/roles/BlacklistAdminRole.sol";
 
 contract BlacklistAdminRoleMock is BlacklistAdminRole {
 

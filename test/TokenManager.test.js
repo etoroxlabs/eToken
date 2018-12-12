@@ -9,8 +9,8 @@ const { shouldBehaveLikeOwnable } =
 
 const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');
-const EToroToken = artifacts.require('EToroToken');
-const EToroTokenMock = artifacts.require('EToroTokenMock');
+const TokenX = artifacts.require('TokenX');
+const TokenXMock = artifacts.require('TokenXMock');
 
 const tokName = 'eUSD';
 
@@ -19,12 +19,12 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     this.tokMgr = await TokenManager.new();
     this.accesslist = await Accesslist.new();
 
-    this.eToroToken = await EToroTokenMock.new(
+    this.tokenX = await TokenXMock.new(
       tokName, 'e', 4, this.accesslist.address, true,
       { from: owner }
     );
 
-    this.eToroToken2 = await EToroTokenMock.new(
+    this.tokenX2 = await TokenXMock.new(
       tokName, 'se', 8, this.accesslist.address, true,
       { from: owner }
     );
@@ -47,14 +47,14 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   describe('When added token', () => {
     beforeEach(async () => {
       await this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
     });
 
     it('should add tokens', async () => {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
-      const tok = EToroToken.at(address);
+      const tok = TokenX.at(address);
       const contractTokName = await tok.name({ from: owner });
 
       assert(
@@ -67,26 +67,26 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
 
       assert(
-        this.eToroToken.address === address,
+        this.tokenX.address === address,
         'Created contract did not match the expected'
       );
 
       await this.tokMgr.upgradeToken(
-        tokName, this.eToroToken2.address,
+        tokName, this.tokenX2.address,
         { from: owner }
       );
 
       const address2 = await this.tokMgr.getToken(tokName, { from: owner });
 
       assert(
-        this.eToroToken2.address === address2,
+        this.tokenX2.address === address2,
         'Created contract did not match the expected'
       );
     });
 
     it('fails on duplicated names', async () => {
       await util.assertReverts(
-        this.tokMgr.addToken(tokName, this.eToroToken2.address, { from: owner })
+        this.tokMgr.addToken(tokName, this.tokenX2.address, { from: owner })
       );
     });
   });
@@ -96,7 +96,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     await util.assertReverts(this.tokMgr.getToken(tokName, { from: owner }));
 
     // Create token and add token
-    await this.tokMgr.addToken(tokName, this.eToroToken.address, { from: owner });
+    await this.tokMgr.addToken(tokName, this.tokenX.address, { from: owner });
 
     // Retrieve token. This should be successful
     await this.tokMgr.getToken(tokName, { from: owner });
@@ -108,7 +108,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     );
   });
 
-  it('should reject null IEtoroToken', async () => {
+  it('should reject null ITokenX', async () => {
     const nulltoken = util.ZERO_ADDRESS;
     await util.assertReverts(
       this.tokMgr.addToken('nulltoken', nulltoken, { from: owner })
@@ -131,23 +131,23 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       beforeEach(async () => {
         this.expected = ['tok1', 'tok2'];
 
-        this.eToroToken = await EToroTokenMock.new(
+        this.tokenX = await TokenXMock.new(
           this.expected[0], 'e', 4, this.accesslist.address, true,
           { from: owner }
         );
 
-        this.eToroToken2 = await EToroTokenMock.new(
+        this.tokenX2 = await TokenXMock.new(
           this.expected[1], 'e', 4, this.accesslist.address, true,
           { from: owner }
         );
 
         await this.tokMgr.addToken(
-          this.expected[0], this.eToroToken.address,
+          this.expected[0], this.tokenX.address,
           { from: owner }
         );
 
         await this.tokMgr.addToken(
-          this.expected[1], this.eToroToken2.address,
+          this.expected[1], this.tokenX2.address,
           { from: owner }
         );
       });
@@ -185,14 +185,14 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   describe('Permissions', () => {
     it('Rejects unauthorized newToken', async () => {
       await util.assertReverts(this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: user }
       ));
     });
 
     it('Rejects unauthorized deleteToken', async () => {
       this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
 
@@ -201,25 +201,25 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
 
       const tokenAddress = await this.tokMgr.getToken(tokName, { from: owner });
-      assert(tokenAddress === this.eToroToken.address);
+      assert(tokenAddress === this.tokenX.address);
     });
 
     it('Rejects unauthorized upgradeToken', async () => {
       await this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
 
       const address = await this.tokMgr.getToken(tokName);
 
       assert(
-        this.eToroToken.address === address,
+        this.tokenX.address === address,
         'Created contract did not match the expected'
       );
 
       await util.assertReverts(
         this.tokMgr.upgradeToken(
-          tokName, this.eToroToken2.address,
+          tokName, this.tokenX2.address,
           { from: user }
         )
       );
@@ -227,7 +227,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       const address2 = await this.tokMgr.getToken(tokName);
 
       assert(
-        this.eToroToken.address === address2,
+        this.tokenX.address === address2,
         'Created contract did not match the expected'
       );
     });
