@@ -1,8 +1,10 @@
 pragma solidity ^0.4.24;
 
+/* solium-disable max-len */
 import "etokenize-openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
 import "./token/IEToroToken.sol";
+/* solium-enable max-len */
 
 contract TokenManager is Ownable {
 
@@ -24,35 +26,22 @@ contract TokenManager is Ownable {
     event TokenUpgraded(bytes32 _name);
 
     /**
-       Returns true if the token specified in _name exists
-     */
-    function _tokenExists (bytes32 _name)
-        private
-        view
-        returns (bool)
-    {
-        return tokens[_name].exists;
-    }
-
-
-    /**
        Require that the token _name exists
     */
-    modifier tokenExists (bytes32 _name) {
+    modifier tokenExists(bytes32 _name) {
         require(_tokenExists(_name), "Token does not exist");
         _;
     }
 
-
     /**
        Require that the token _name does not exist
     */
-    modifier tokenNotExists (bytes32 _name) {
+    modifier tokenNotExists(bytes32 _name) {
         require(!(_tokenExists(_name)), "Token already exist");
         _;
     }
 
-    modifier notNullToken (IEToroToken _iEToroToken) {
+    modifier notNullToken(IEToroToken _iEToroToken) {
         require(_iEToroToken != IEToroToken(0), "Supplied token is null");
         _;
     }
@@ -60,15 +49,17 @@ contract TokenManager is Ownable {
     /**
        Adds a token to the manager
     */
-    function addToken (bytes32 _name, IEToroToken _iEToroToken)
+    function addToken(bytes32 _name, IEToroToken _iEToroToken)
         public
         onlyOwner
         tokenNotExists(_name)
-        notNullToken(_iEToroToken) 
+        notNullToken(_iEToroToken)
     {
-        tokens[_name] = TokenEntry({index: names.length,
-                                    token: _iEToroToken,
-                                    exists: true});
+        tokens[_name] = TokenEntry({
+            index: names.length,
+            token: _iEToroToken,
+            exists: true
+        });
         names.push(_name);
         emit TokenAdded(_name);
     }
@@ -76,7 +67,7 @@ contract TokenManager is Ownable {
     /**
        Deletes a token.
     */
-    function deleteToken (bytes32 _name)
+    function deleteToken(bytes32 _name)
         public
         onlyOwner
         tokenExists(_name)
@@ -90,7 +81,7 @@ contract TokenManager is Ownable {
     /**
        Upgrades a token
     */
-    function upgradeToken (bytes32 _name, IEToroToken _iEToroToken)
+    function upgradeToken(bytes32 _name, IEToroToken _iEToroToken)
         public
         onlyOwner
         tokenExists(_name)
@@ -112,7 +103,6 @@ contract TokenManager is Ownable {
         return tokens[_name].token;
     }
 
-
     /**
        Returns list of tokens
     */
@@ -124,4 +114,16 @@ contract TokenManager is Ownable {
         // TODO: Maybe filter out 0 entries (deleted names) from the list?
         return names;
     }
+
+    /**
+       Returns true if the token specified in _name exists
+     */
+    function _tokenExists (bytes32 _name)
+        private
+        view
+        returns (bool)
+    {
+        return tokens[_name].exists;
+    }
+
 }
