@@ -15,7 +15,7 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
   user4, user5, user6, ...accounts]) {
   beforeEach(async function () {
     this.accesslist = await Accesslist.new()
-    this.accesslistGuardedmock = await AccesslistGuardedMock.new(this.accesslist.address)
+    this.accesslistGuardedMock = await AccesslistGuardedMock.new(this.accesslist.address)
     const { logs } =
               await truffleAssert.createTransactionResult(this.accesslist,
                 this.accesslist.transactionHash)

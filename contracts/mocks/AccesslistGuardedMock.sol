@@ -13,7 +13,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     {
     }
 
-    function requirenotBlacklisted(address account) 
+    function requireNotBlacklisted(address account) 
         public
         view
         requireNotBlacklisted(account)
@@ -22,7 +22,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         return true;
     }
 
-    function onlynotBlacklisted() 
+    function onlyNotBlacklisted() 
         public
         view
         onlyNotBlacklisted()

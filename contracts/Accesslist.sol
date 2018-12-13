@@ -24,7 +24,6 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
         _addWhitelisted(account);
     }
 
-
     function removeWhitelisted(address account)
         public
         onlyWhitelistAdmin
@@ -39,7 +38,6 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
         _addBlacklisted(account);
     }
 
-
     function removeBlacklisted(address account)
         public
         onlyBlacklistAdmin
@@ -47,13 +45,12 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
         _removeBlacklisted(account);
     }
 
-
     function isWhitelisted(address account)
         public
         view
         returns (bool)
     {
-        return whitelist.has(account) || isWhitelistAdmin(account); 
+        return whitelist.has(account);
     }
 
     function isBlacklisted(address account)
@@ -72,12 +69,10 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
         return isWhitelisted(account) && !isBlacklisted(account);
     }
 
-
     function _addWhitelisted(address account) internal {
         whitelist.add(account);
         emit WhitelistAdded(account);
     }
-
 
     function _removeWhitelisted(address account) internal {
         whitelist.remove(account);
@@ -88,7 +83,6 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
         blacklist.add(account);
         emit BlacklistAdded(account);
     }
-
 
     function _removeBlacklisted(address account) internal {
         blacklist.remove(account);
