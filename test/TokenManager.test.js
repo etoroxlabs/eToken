@@ -1,10 +1,12 @@
+/* global artifacts, contract, assert */
+/* eslint-env mocha */
+
 'use strict'
 
 const util = require('./utils.js')
 const { shouldBehaveLikeOwnable } =
       require('etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js')
 
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
 const TokenManager = artifacts.require('TokenManager')
 const Whitelist = artifacts.require('Whitelist')
 const EToroToken = artifacts.require('EToroToken')

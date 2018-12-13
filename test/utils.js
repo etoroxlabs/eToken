@@ -1,3 +1,5 @@
+/* global assert */
+
 exports.assertReverts = async (f, includes = '') => {
   let res = false
   try {
@@ -10,8 +12,6 @@ exports.assertReverts = async (f, includes = '') => {
   }
   assert(res, 'Expected an error')
 }
-
-const tokName = 'eUSD'
 
 /**
    Assumes a hexadecimal number encoded as a string (starting with 0x)

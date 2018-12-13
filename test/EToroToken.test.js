@@ -1,13 +1,12 @@
+/* global artifacts, web3, contract, assert */
+/* eslint-env mocha */
+
 'use strict'
 
 const util = require('./utils.js')
 
 const Whitelist = artifacts.require('Whitelist')
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
 const EToroTokenMock = artifacts.require('EToroTokenMock')
-
-const ERROR = new Error('should not have reached this')
-const isSolidityError = (e) => e.message === 'VM Exception while processing transaction: revert'
 
 const BigNumber = web3.BigNumber
 
@@ -434,8 +433,6 @@ contract('EToro Token', async function (
       it('should revert transfer', async function () {
         const initialToken = this.token
 
-        const newAllowance = 80
-
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,
           this.whitelist.address,
@@ -451,8 +448,6 @@ contract('EToro Token', async function (
 
       it('should revert approve', async function () {
         const initialToken = this.token
-
-        const newAllowance = 80
 
         const upgradeToken = await EToroTokenMock.new(
           'eUSD', 'e', 1000,

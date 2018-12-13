@@ -1,3 +1,6 @@
+/* global artifacts, contract, assert */
+/* eslint-env mocha */
+
 'use strict'
 
 const util = require('./utils.js')

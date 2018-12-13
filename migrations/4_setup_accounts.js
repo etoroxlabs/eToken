@@ -1,4 +1,4 @@
-/* global artifacts, web3 */
+/* global artifacts */
 
 const Whitelist = artifacts.require('Whitelist')
 const TokenManager = artifacts.require('TokenManager')
