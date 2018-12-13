@@ -33,5 +33,6 @@ jobs:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
         
-      # run tests!
-      - run: yarn circleci
+      - run: yarn test
+      - run: yarn coverage
+      - run: yarn lint
