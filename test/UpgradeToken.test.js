@@ -1,4 +1,4 @@
-/* global artifacts, web3, contract, assert */
+/* global artifacts, web3, contract */
 /* eslint-env mocha */
 
 'use strict'
@@ -23,7 +23,7 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
     const oldTokenDecimals = 4
     const newTokenDecimals = 8
 
-    const tokenManager = await TokenManager.new({from: tokenManagerOwner});
+    const tokenManager = await TokenManager.new({ from: tokenManagerOwner })
 
     const accesslist = await Accesslist.new()
 
@@ -31,9 +31,9 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
       tokenName, 'e', oldTokenDecimals,
       accesslist.address,
       { from: oldTokenOwner }
-    );
+    )
 
-    const storage = await oldToken._externalERC20Storage();
+    const storage = await oldToken._externalERC20Storage()
 
     const newToken = await EToroToken.new(
       tokenName, 'e', newTokenDecimals,
@@ -42,17 +42,17 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
     );
 
     (await oldToken.decimals()).should.be.bignumber.equal(oldTokenDecimals);
-    (await newToken.decimals()).should.be.bignumber.equal(newTokenDecimals);
+    (await newToken.decimals()).should.be.bignumber.equal(newTokenDecimals)
     await util.assertReverts(tokenManager.getToken(tokenName));
-    
-    (await tokenManager.addToken(tokenName, oldToken.address, {from: tokenManagerOwner}));
-    (await tokenManager.getToken(tokenName)).should.be.equal(oldToken.address);
+
+    (await tokenManager.addToken(tokenName, oldToken.address, { from: tokenManagerOwner }));
+    (await tokenManager.getToken(tokenName)).should.be.equal(oldToken.address)
 
     await upgradeToken(tokenManager, oldToken, newToken, tokenManagerOwner, oldTokenOwner);
 
     // Check if upgrade successful
     (await oldToken.decimals()).should.be.bignumber.equal(newTokenDecimals);
     (await newToken.decimals()).should.be.bignumber.equal(newTokenDecimals);
-    (await tokenManager.getToken(tokenName)).should.be.equal(newToken.address);
+    (await tokenManager.getToken(tokenName)).should.be.equal(newToken.address)
   })
 })

@@ -11,8 +11,8 @@ async function upgradeToken (
     throw Error('token names are not the same')
   }
 
-  await oldToken.upgrade(newToken.address, { from: oldTokenOwner });
-  await tokenManager.upgradeToken(newTokenName, newToken.address, { from: tokenManagerOwner });
+  await oldToken.upgrade(newToken.address, { from: oldTokenOwner })
+  await tokenManager.upgradeToken(newTokenName, newToken.address, { from: tokenManagerOwner })
 }
 
 module.exports = upgradeToken
