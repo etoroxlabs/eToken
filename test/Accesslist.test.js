@@ -26,7 +26,6 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
     inLogs(logs, 'BlacklistAdminAdded', { account: owner })
   })
 
-
   it('should reject null address accesslist', async function () {
     await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS))
   })
@@ -37,8 +36,6 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
     assert(await this.accesslist.isWhitelistAdmin.call(user3, { from: owner }))
     await this.accesslist.addWhitelisted(user4, { from: user3 })
     assert(await this.accesslist.isWhitelisted(user4, { from: user3 }))
-  
-  
   })
 
   it('rejects unprivileged privilege propagation: whitelist', async function () {
@@ -66,21 +63,13 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
     await util.assertReverts(this.accesslist.addBlacklisted(user6, { from: user5 }))
   })
 
-  describe('Blacklisting', async function() { 
+  describe('Blacklisting', async function () {
     it('is initially not in blacklist from unprivileged', async function () {
       assert(!(await this.accesslist.isBlacklisted.call(user, { from: user1 })))
     })
 
     it('is initially not in blacklist from privileged', async function () {
       assert(!(await this.accesslist.isBlacklisted.call(user, { from: owner })))
-    })
-
-    it('owner (creator) is not blacklisted from privileged', async function () {
-      assert(!(await this.accesslist.isBlacklisted.call(owner, { from: owner })))
-    })
-
-    it('owner (creator) is not blacklisted from unprivileged', async function () {
-      assert(!(await this.accesslist.isBlacklisted.call(owner, { from: user1 })))
     })
 
     async function addBlacklisted (t, user, from) {
@@ -95,15 +84,15 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
     })
 
     it('rejects if user is blacklisted', async function () {
-      assert(await this.accesslistGuardedmock.requirenotBlacklisted.call(user))
+      assert(await this.accesslistGuardedMock.requireNotBlacklistedMock.call(user))
       addBlacklisted(this, user, owner)
-      await util.assertReverts(this.accesslistGuardedmock.requirenotBlacklisted.call(user))
+      await util.assertReverts(this.accesslistGuardedMock.requireNotBlacklistedMock.call(user))
     })
 
     it('rejects if caller is blacklisted', async function () {
-      assert(await this.accesslistGuardedmock.onlynotBlacklisted.call({ from: user }))
+      assert(await this.accesslistGuardedMock.onlyNotBlacklistedMock.call({ from: user }))
       addBlacklisted(this, user, owner)
-      await util.assertReverts(this.accesslistGuardedmock.onlynotBlacklisted.call({ from: user }))
+      await util.assertReverts(this.accesslistGuardedMock.onlyNotBlacklistedMock.call({ from: user }))
     })
 
     it('rejects privileged attempt to add same user to blacklist multiple times', async function () {
@@ -126,23 +115,14 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
       util.assertReverts(this.accesslist.removeBlacklisted(user3, { from: user2 }))
       assert(await this.accesslist.isBlacklisted.call(user3, { from: user2 }))
     })
-
   })
-  describe('Whitelisting', async function() {
+  describe('Whitelisting', async function () {
     it('is initially not in whitelist from unprivileged', async function () {
       assert(!(await this.accesslist.isWhitelisted.call(user, { from: user1 })))
     })
 
     it('is initially not in whitelist from privileged', async function () {
       assert(!(await this.accesslist.isWhitelisted.call(user, { from: owner })))
-    })
-
-    it('owner (creator) is whitelisted from privileged', async function () {
-      assert(await this.accesslist.isWhitelisted.call(owner, { from: owner }))
-    })
-
-    it('owner (creator) is whitelisted from unprivileged', async function () {
-      assert(await this.accesslist.isWhitelisted.call(owner, { from: user1 }))
     })
 
     async function addWhitelisted (t, user, from) {
@@ -157,15 +137,15 @@ contract('Accesslist', async function ([owner, user, user1, user2, user3,
     })
 
     it('rejects if user is not whitelisted', async function () {
-      await util.assertReverts(this.accesslistGuardedmock.requireWhitelist.call(user))
+      await util.assertReverts(this.accesslistGuardedMock.requireWhitelistedMock.call(user))
       addWhitelisted(this, user, owner)
-      assert(await this.accesslistGuardedmock.requireWhitelist.call(user))
+      assert(await this.accesslistGuardedMock.requireWhitelistedMock.call(user))
     })
 
     it('rejects if caller is whitelisted', async function () {
-      await util.assertReverts(this.accesslistGuardedmock.onlyWhitelist.call({ from: user }))
+      await util.assertReverts(this.accesslistGuardedMock.onlyWhitelistedMock.call({ from: user }))
       addWhitelisted(this, user, owner)
-      assert(await this.accesslistGuardedmock.onlyWhitelist.call({ from: user }))
+      assert(await this.accesslistGuardedMock.onlyWhitelistedMock.call({ from: user }))
     })
 
     it('rejects privileged attempt to add same user to whitelist multiple times', async function () {

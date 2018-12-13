@@ -30,6 +30,7 @@ contract('EToro Token', async function (
     await token.addPauser(pauser, { from: owner })
     await token.addBurner(burner, { from: owner })
     await accesslist.addWhitelistAdmin(whitelistAdmin, { from: owner })
+    await accesslist.addWhitelisted(owner, { from: owner })
     await accesslist.addWhitelisted(whitelisted, { from: owner })
     await accesslist.addWhitelisted(whitelisted1, { from: owner })
 
