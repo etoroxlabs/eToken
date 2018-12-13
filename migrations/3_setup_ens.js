@@ -23,14 +23,14 @@ module.exports = (deployer, network, accounts) => {
   const tld = 'eth'
   const etokenizeName = 'etokenize'
   const etokenizeTldName = etokenizeName + '.' + tld
-  const whitelistName = 'whitelist'
+  const accesslistName = 'accesslist'
   const tokenManagerName = 'manager'
 
   if (deployer.network === 'development' ||
       deployer.network === 'develop') {
     deployer.then(async () => {
       await setENS(etokenizeName, tld, dummyaddress, owner)
-      await setENS(whitelistName, etokenizeTldName, Accesslist.address, owner)
+      await setENS(accesslistName, etokenizeTldName, Accesslist.address, owner)
       await setENS(tokenManagerName, etokenizeTldName, TokenManager.address, owner)
     })
   }
