@@ -6,7 +6,6 @@ const EToroToken = artifacts.require('EToroToken')
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
 
 module.exports = function (deployer, _network, accounts) {
-
   if (deployer.network === 'development' ||
       deployer.network === 'develop') {
     deployer.then(() => setupAccounts(accounts))
@@ -14,7 +13,6 @@ module.exports = function (deployer, _network, accounts) {
 }
 
 async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccounts]) {
-
   /*
     The purpose of this is to automatically setup the test environment accounts.
     DO NOT use in production yet.

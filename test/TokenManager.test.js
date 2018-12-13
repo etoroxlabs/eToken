@@ -1,232 +1,224 @@
-'use strict';
+'use strict'
 
-const util = require("./utils.js");
-const { shouldBehaveLikeOwnable }
-      = require("etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js")
+const util = require('./utils.js')
+const { shouldBehaveLikeOwnable } =
+      require('etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js')
 
-const ExternalERC20Storage = artifacts.require("ExternalERC20Storage");
-const TokenManager = artifacts.require("TokenManager");
-const Whitelist = artifacts.require("Whitelist");
-const EToroToken = artifacts.require("EToroToken");
-const EToroTokenMock = artifacts.require("EToroTokenMock");
+const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
+const TokenManager = artifacts.require('TokenManager')
+const Whitelist = artifacts.require('Whitelist')
+const EToroToken = artifacts.require('EToroToken')
+const EToroTokenMock = artifacts.require('EToroTokenMock')
 
-const tokName = "eUSD";
+const tokName = 'eUSD'
 
-contract("TokenManager", async ([owner, user, ...accounts]) => {
+contract('TokenManager', async ([owner, user, ...accounts]) => {
+  let tokMgr
+  let whitelist
 
-    let tokMgr;
-    let whitelist;
+  beforeEach(async function () {
+    tokMgr = await TokenManager.new()
+    whitelist = await Whitelist.new()
+    this.ownable = tokMgr
+  })
 
-    beforeEach(async function () {
-        tokMgr = await TokenManager.new();
-        whitelist = await Whitelist.new();
-        this.ownable = tokMgr;
-    });
+  shouldBehaveLikeOwnable(owner, [user])
 
-    shouldBehaveLikeOwnable(owner, [user]);
+  it('Should throw on retrieving non-existing entires', async () => {
+    await util.assertReverts(tokMgr.getToken.call(tokName,
+      { from: accounts[0] }))
+  })
 
-    it("Should throw on retrieving non-existing entires", async () => {
-        await util.assertReverts(tokMgr.getToken.call(tokName,
-                                                      {from: accounts[0]}));
-    });
+  it('should add tokens', async () => {
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
-    it("should add tokens", async () => {
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
+    await tokMgr.addToken(tokName, eToroToken.address, { from: owner })
 
-        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+    const address = await tokMgr.getToken.call(tokName, { from: owner })
+    const tok = EToroToken.at(address)
+    const contractTokName = await tok.name.call({ from: owner })
 
-        const address = await tokMgr.getToken.call(tokName, {from: owner});
-        const tok = EToroToken.at(address);
-        const contractTokName = await tok.name.call({from: owner});
+    assert(contractTokName === tokName,
+      'Name of created contract did not match the expected')
+  })
 
-        assert(contractTokName === tokName,
-               "Name of created contract did not match the expected");
-    });
+  it('should upgrade token', async () => {
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
-    it("should upgrade token", async () => {
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
+    const eToroToken2 = await EToroTokenMock.new(
+      tokName, 'e', 8, whitelist.address,
+      { from: owner }
+    )
 
-        const eToroToken2 = await EToroTokenMock.new(
-          tokName, "e", 8, whitelist.address,
-          {from: owner}
-        );
+    await tokMgr.addToken(tokName, eToroToken.address, { from: owner })
+    const address = await tokMgr.getToken(tokName, { from: owner })
 
-        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
-        const address = await tokMgr.getToken(tokName, {from: owner});
+    assert(eToroToken.address === address,
+      'Created contract did not match the expected')
 
-        assert(eToroToken.address === address,
-               "Created contract did not match the expected");
+    await tokMgr.upgradeToken(tokName, eToroToken2.address, { from: owner })
+    const address2 = await tokMgr.getToken(tokName, { from: owner })
 
-        await tokMgr.upgradeToken(tokName, eToroToken2.address, {from: owner});
-        const address2 = await tokMgr.getToken(tokName, {from: owner});
+    assert(eToroToken2.address === address2,
+      'Created contract did not match the expected')
+  })
 
-        assert(eToroToken2.address === address2,
-               "Created contract did not match the expected");
-    });
+  it('fails on duplicated names', async () => {
+    const tokName = 'eEUR'
+    const eToroToken1 = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
+    const eToroToken2 = await EToroTokenMock.new(
+      tokName, 'se', 7, whitelist.address,
+      { from: owner }
+    )
 
-    it("fails on duplicated names", async () => {
-        const tokName = "eEUR";
-        const eToroToken1 = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
-        const eToroToken2 = await EToroTokenMock.new(
-          tokName, "se", 7, whitelist.address,
-          {from: owner}
-        );
+    await tokMgr.addToken(tokName, eToroToken1.address, { from: owner })
+    await util.assertReverts(tokMgr.addToken(tokName, eToroToken2.address, { from: owner }))
+  })
 
-        await tokMgr.addToken(tokName, eToroToken1.address, {from: owner});
-        await util.assertReverts(tokMgr.addToken(tokName, eToroToken2.address, {from: owner}));
-    });
+  it('should properly remove tokens', async () => {
+    let tokName = 'myTok'
+    // Token shouldn't exist before creation
+    await util.assertReverts(tokMgr.getToken.call(tokName, { from: owner }))
 
-    it("should properly remove tokens", async () => {
-        let tokName = "myTok";
-        // Token shouldn't exist before creation
-        await util.assertReverts(tokMgr.getToken.call(tokName, {from: owner}));
-        
-        // Create token and add token
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
-        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
+    // Create token and add token
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
+    await tokMgr.addToken(tokName, eToroToken.address, { from: owner })
 
-        // Retrieve token. This should be successful
-        await tokMgr.getToken.call(tokName, {from: owner});
-        // Delete token
-        await tokMgr.deleteToken(tokName, {from: owner});
-        // Token should now no longer exist
-        await util.assertReverts(tokMgr.getToken.call(tokName, {from: owner}));
-    });
-
+    // Retrieve token. This should be successful
+    await tokMgr.getToken.call(tokName, { from: owner })
+    // Delete token
+    await tokMgr.deleteToken(tokName, { from: owner })
+    // Token should now no longer exist
+    await util.assertReverts(tokMgr.getToken.call(tokName, { from: owner }))
+  })
 })
 
+contract('Token manager list retrieve', async (accounts) => {
+  let tokMgr
+  let whitelist
+  let owner = accounts[0]
 
-contract("Token manager list retrieve", async (accounts) => {
-    let tokMgr;
-    let whitelist;
-    let owner = accounts[0];
+  before(async () => {
+    tokMgr = await TokenManager.new()
+    whitelist = await Whitelist.new()
+  })
 
-    before(async () => {
-        tokMgr = await TokenManager.new();
-        whitelist = await Whitelist.new();
-    });
+  it('returns an empty list initially', async () => {
+    const expected = []
 
-    it("returns an empty list initially", async () => {
-        const expected = [];
+    const r = await tokMgr.getTokens.call({ from: owner })
 
-        const r = await tokMgr.getTokens.call({from: owner});
+    assert.deepEqual(r, expected,
+      'Token list returned does not match expected')
+  })
 
-        assert.deepEqual(r, expected,
-               "Token list returned does not match expected");
+  it('returns a list of created tokens', async () => {
+    const expected = ['tok1', 'tok2']
 
-    });
+    const eToroToken1 = await EToroTokenMock.new(
+      'tok1', 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
+    const eToroToken2 = await EToroTokenMock.new(
+      'tok2', 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
-    it("returns a list of created tokens", async () => {
-        const expected = ["tok1", "tok2"];
+    await tokMgr.addToken('tok1', eToroToken1.address, { from: owner })
+    await tokMgr.addToken('tok2', eToroToken2.address, { from: owner })
 
-        const eToroToken1 = await EToroTokenMock.new(
-          "tok1", "e", 4, whitelist.address,
-          {from: owner}
-        );
+    const r = (await tokMgr.getTokens.call({ from: owner }))
+      .map(util.bytes32ToString)
+    // Sort arrays since implementation does not require stable order of tokens
+    assert.deepEqual(r.sort(), expected.sort(),
+      'Token list returned does not match expected')
 
-        const eToroToken2 = await EToroTokenMock.new(
-          "tok2", "e", 4, whitelist.address,
-          {from: owner}
-        );
+    // Cleanup
+    expected.map(async x => { await tokMgr.deleteToken(x, { from: owner }) })
+  })
 
-        await tokMgr.addToken("tok1", eToroToken1.address, {from: owner});
-        await tokMgr.addToken("tok2", eToroToken2.address, {from: owner});
+  it('Elements are set to 0 when deleted', async () => {
+    let expected = [0, 0]
+    let actual = (await tokMgr.getTokens.call({ from: owner }))
+      .map((x) => parseInt(x))
+    assert.deepEqual(actual, expected,
+      'Token list returned does not match expected')
+  })
+})
 
-        const r = (await tokMgr.getTokens.call({from: owner}))
-            .map(util.bytes32ToString);
-        // Sort arrays since implementation does not require stable order of tokens
-        assert.deepEqual(r.sort(), expected.sort(),
-               "Token list returned does not match expected");
+contract('Token manager permissions', async (accounts) => {
+  let tokMgr
+  let whitelist
+  let owner = accounts[0]
+  let user = accounts[1]
 
-        // Cleanup
-        expected.map(async x => { await tokMgr.deleteToken(x, {from: owner}) });
-    });
+  beforeEach(async () => {
+    tokMgr = await TokenManager.new()
+    whitelist = await Whitelist.new()
+  })
 
+  it('Rejects unauthorized newToken', async () => {
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
-    it("Elements are set to 0 when deleted", async () => {
-        let expected = [0, 0];
-        let actual = (await tokMgr.getTokens.call({from: owner}))
-            .map((x) => parseInt(x));
-        assert.deepEqual(actual, expected,
-                         "Token list returned does not match expected");
+    await util.assertReverts(tokMgr.addToken(
+      tokName, eToroToken.address,
+      { from: user }
+    ))
+  })
 
-    });
+  it('Rejects unauthorized deleteToken', async () => {
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
+    tokMgr.addToken(
+      tokName, eToroToken.address,
+      { from: owner }
+    )
 
-});
+    await util.assertReverts(tokMgr.deleteToken(tokName, { from: user }))
 
-contract("Token manager permissions", async (accounts) => {
-    let tokMgr;
-    let whitelist;
-    let owner = accounts[0];
-    let user = accounts[1];
+    const tokenAddress = await tokMgr.getToken.call(tokName, { from: owner })
+    assert(tokenAddress === eToroToken.address)
+  })
 
-    beforeEach(async () => {
-        tokMgr = await TokenManager.new();
-        whitelist = await Whitelist.new();
-    });
+  it('Rejects unauthorized upgradeToken', async () => {
+    const eToroToken = await EToroTokenMock.new(
+      tokName, 'e', 4, whitelist.address,
+      { from: owner }
+    )
 
-    it("Rejects unauthorized newToken", async () => {
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
+    const eToroToken2 = await EToroTokenMock.new(
+      tokName, 'e', 8, whitelist.address,
+      { from: owner }
+    )
 
-        await util.assertReverts(tokMgr.addToken(
-          tokName, eToroToken.address,
-          {from: user}
-        ));
-    });
+    await tokMgr.addToken(tokName, eToroToken.address, { from: owner })
+    const address = await tokMgr.getToken(tokName)
 
-    it("Rejects unauthorized deleteToken", async () => {
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
-        tokMgr.addToken(
-          tokName, eToroToken.address,
-          {from: owner}
-        )
+    assert(eToroToken.address === address,
+      'Created contract did not match the expected')
 
-        await util.assertReverts(tokMgr.deleteToken(tokName, {from: user}));
-        
-        const tokenAddress = await tokMgr.getToken.call(tokName, {from: owner});
-        assert(tokenAddress === eToroToken.address);
-    });
+    await util.assertReverts(tokMgr.upgradeToken(tokName, eToroToken2.address, { from: user }))
+    const address2 = await tokMgr.getToken(tokName)
 
-    it("Rejects unauthorized upgradeToken", async () => {
-        const eToroToken = await EToroTokenMock.new(
-          tokName, "e", 4, whitelist.address,
-          {from: owner}
-        );
-
-        const eToroToken2 = await EToroTokenMock.new(
-          tokName, "e", 8, whitelist.address,
-          {from: owner}
-        );
-
-        await tokMgr.addToken(tokName, eToroToken.address, {from: owner});
-        const address = await tokMgr.getToken(tokName);
-
-        assert(eToroToken.address === address,
-               "Created contract did not match the expected");
-
-        await util.assertReverts(tokMgr.upgradeToken(tokName, eToroToken2.address, {from: user}));
-        const address2 = await tokMgr.getToken(tokName);
-
-        assert(eToroToken.address === address2,
-               "Created contract did not match the expected");
-    });
-});
+    assert(eToroToken.address === address2,
+      'Created contract did not match the expected')
+  })
+})
