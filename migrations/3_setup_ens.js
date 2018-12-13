@@ -1,6 +1,6 @@
 /* global artifacts, web3 */
 
-const Whitelist = artifacts.require('Whitelist')
+const Accesslist = artifacts.require('Accesslist')
 const TokenManager = artifacts.require('TokenManager')
 const ENSRegistry = artifacts.require('ENSRegistry.sol')
 const PublicResolver = artifacts.require('PublicResolver.sol')
@@ -23,14 +23,14 @@ module.exports = (deployer, network, accounts) => {
   const tld = 'eth'
   const etokenizeName = 'etokenize'
   const etokenizeTldName = etokenizeName + '.' + tld
-  const whitelistName = 'whitelist'
+  const accesslistName = 'accesslist'
   const tokenManagerName = 'manager'
 
   if (deployer.network === 'development' ||
       deployer.network === 'develop') {
     deployer.then(async () => {
       await setENS(etokenizeName, tld, dummyaddress, owner)
-      await setENS(whitelistName, etokenizeTldName, Whitelist.address, owner)
+      await setENS(accesslistName, etokenizeTldName, Accesslist.address, owner)
       await setENS(tokenManagerName, etokenizeTldName, TokenManager.address, owner)
     })
   }

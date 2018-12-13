@@ -8,7 +8,7 @@ const { shouldBehaveLikeOwnable } =
       require('etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js')
 
 const TokenManager = artifacts.require('TokenManager')
-const Whitelist = artifacts.require('Whitelist')
+const Accesslist = artifacts.require('Accesslist')
 const EToroToken = artifacts.require('EToroToken')
 const EToroTokenMock = artifacts.require('EToroTokenMock')
 
@@ -16,11 +16,11 @@ const tokName = 'eUSD'
 
 contract('TokenManager', async ([owner, user, ...accounts]) => {
   let tokMgr
-  let whitelist
+  let accesslist
 
   beforeEach(async function () {
     tokMgr = await TokenManager.new()
-    whitelist = await Whitelist.new()
+    accesslist = await Accesslist.new()
     this.ownable = tokMgr
   })
 
@@ -33,7 +33,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
 
   it('should add tokens', async () => {
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
 
@@ -49,12 +49,12 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
 
   it('should upgrade token', async () => {
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
 
     const eToroToken2 = await EToroTokenMock.new(
-      tokName, 'e', 8, whitelist.address,
+      tokName, 'e', 8, accesslist.address,
       { from: owner }
     )
 
@@ -74,11 +74,11 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   it('fails on duplicated names', async () => {
     const tokName = 'eEUR'
     const eToroToken1 = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
     const eToroToken2 = await EToroTokenMock.new(
-      tokName, 'se', 7, whitelist.address,
+      tokName, 'se', 7, accesslist.address,
       { from: owner }
     )
 
@@ -93,7 +93,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
 
     // Create token and add token
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
     await tokMgr.addToken(tokName, eToroToken.address, { from: owner })
@@ -105,16 +105,20 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     // Token should now no longer exist
     await util.assertReverts(tokMgr.getToken.call(tokName, { from: owner }))
   })
+  it('should reject null IEtoroToken', async () => {
+    const nulltoken = util.ZERO_ADDRESS
+    await util.assertReverts(tokMgr.addToken('nulltoken', nulltoken, { from: owner }))
+  })
 })
 
 contract('Token manager list retrieve', async (accounts) => {
   let tokMgr
-  let whitelist
+  let accesslist
   let owner = accounts[0]
 
   before(async () => {
     tokMgr = await TokenManager.new()
-    whitelist = await Whitelist.new()
+    accesslist = await Accesslist.new()
   })
 
   it('returns an empty list initially', async () => {
@@ -130,12 +134,12 @@ contract('Token manager list retrieve', async (accounts) => {
     const expected = ['tok1', 'tok2']
 
     const eToroToken1 = await EToroTokenMock.new(
-      'tok1', 'e', 4, whitelist.address,
+      'tok1', 'e', 4, accesslist.address,
       { from: owner }
     )
 
     const eToroToken2 = await EToroTokenMock.new(
-      'tok2', 'e', 4, whitelist.address,
+      'tok2', 'e', 4, accesslist.address,
       { from: owner }
     )
 
@@ -163,18 +167,18 @@ contract('Token manager list retrieve', async (accounts) => {
 
 contract('Token manager permissions', async (accounts) => {
   let tokMgr
-  let whitelist
+  let accesslist
   let owner = accounts[0]
   let user = accounts[1]
 
   beforeEach(async () => {
     tokMgr = await TokenManager.new()
-    whitelist = await Whitelist.new()
+    accesslist = await Accesslist.new()
   })
 
   it('Rejects unauthorized newToken', async () => {
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, Accesslist.address,
       { from: owner }
     )
 
@@ -186,7 +190,7 @@ contract('Token manager permissions', async (accounts) => {
 
   it('Rejects unauthorized deleteToken', async () => {
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
     tokMgr.addToken(
@@ -202,12 +206,12 @@ contract('Token manager permissions', async (accounts) => {
 
   it('Rejects unauthorized upgradeToken', async () => {
     const eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, whitelist.address,
+      tokName, 'e', 4, accesslist.address,
       { from: owner }
     )
 
     const eToroToken2 = await EToroTokenMock.new(
-      tokName, 'e', 8, whitelist.address,
+      tokName, 'e', 8, accesslist.address,
       { from: owner }
     )
 

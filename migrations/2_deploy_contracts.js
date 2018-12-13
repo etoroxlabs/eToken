@@ -1,6 +1,6 @@
 /* global artifacts, web3 */
 
-let Whitelist = artifacts.require('Whitelist')
+let Accesslist = artifacts.require('Accesslist')
 let TokenManager = artifacts.require('TokenManager')
 
 const ENS = artifacts.require('ENSRegistry')
@@ -15,7 +15,7 @@ module.exports = function (deployer, _network, accounts) {
   const tld = 'eth'
 
   // Deploy eTokenize contracts
-  deployer.deploy(Whitelist)
+  deployer.deploy(Accesslist)
   deployer.deploy(TokenManager)
 
   // Deploy local ENS when running on dev network

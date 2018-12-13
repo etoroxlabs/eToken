@@ -15,13 +15,13 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         string name,
         string symbol,
         uint8 decimals,
-        address whitelistAddress,
+        Accesslist accesslist,
         ExternalERC20Storage externalERC20Storage
     )
         public
         EToroTokenImpl(
             name, symbol, decimals,
-            whitelistAddress, externalERC20Storage
+            accesslist, externalERC20Storage
         )
     {
 
