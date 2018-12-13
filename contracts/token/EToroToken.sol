@@ -1,6 +1,8 @@
 pragma solidity ^0.4.24;
 
+/* solium-disable max-len */
 import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
+/* solium-enable max-len */
 
 import "./EToroTokenImpl.sol";
 import "./IEToroToken.sol";
@@ -9,14 +11,19 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
 
     IEToroToken public upgradedToken;
 
-    constructor(string name,
-                string symbol,
-                uint8 decimals,
-                address whitelistAddress,
-                ExternalERC20Storage externalERC20Storage)
+    constructor(
+        string name,
+        string symbol,
+        uint8 decimals,
+        address whitelistAddress,
+        ExternalERC20Storage externalERC20Storage
+    )
         public
-        EToroTokenImpl(name, symbol, decimals,
-                       whitelistAddress, externalERC20Storage) {
+        EToroTokenImpl(
+            name, symbol, decimals,
+            whitelistAddress, externalERC20Storage
+        )
+    {
 
     }
 
@@ -71,9 +78,14 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         }
     }
 
-    function allowance(address owner,
-                       address spender)
-        public view returns (uint256) {
+    function allowance(
+        address owner,
+        address spender
+    )
+        public
+        view
+        returns (uint256)
+    {
         if (isUpgraded()) {
             return upgradedToken.allowance(owner, spender);
         } else {
@@ -89,8 +101,7 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         }
     }
 
-    function approve(address spender, uint256 value)
-        public returns (bool) {
+    function approve(address spender, uint256 value) public returns (bool) {
         if (isUpgraded()) {
             revert("Can only be executed through the upgraded token");
         } else {
@@ -99,7 +110,9 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     }
 
     function transferFrom(address from, address to, uint256 value)
-        public returns (bool) {
+        public
+        returns (bool)
+    {
         if (isUpgraded()) {
             revert("Can only be executed through the upgraded token");
         } else {
@@ -131,9 +144,13 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         }
     }
 
-    function increaseAllowance(address spender,
-                               uint addedValue)
-        public returns (bool success) {
+    function increaseAllowance(
+        address spender,
+        uint addedValue
+    )
+        public
+        returns (bool success)
+    {
         if (isUpgraded()) {
             revert("Can only be executed through the upgraded token");
         } else {
@@ -141,9 +158,13 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
         }
     }
 
-    function decreaseAllowance(address spender,
-                               uint subtractedValue)
-        public returns (bool success) {
+    function decreaseAllowance(
+        address spender,
+        uint subtractedValue
+    )
+        public
+        returns (bool success)
+    {
         if (isUpgraded()) {
             revert("Can only be executed through the upgraded token");
         } else {

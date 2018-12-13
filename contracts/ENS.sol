@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 // Hack to get truffle to import ENS contracts
 // See: https://github.com/trufflesuite/truffle/issues/450

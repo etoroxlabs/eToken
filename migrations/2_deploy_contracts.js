@@ -1,56 +1,58 @@
-let Whitelist = artifacts.require('Whitelist');
-let TokenManager = artifacts.require('TokenManager');
+/* global artifacts, web3 */
 
-const ENS = artifacts.require('ENSRegistry');
-const PublicResolver = artifacts.require('PublicResolver');
-const ReverseRegistrar = artifacts.require('ReverseRegistrar');
-const namehash = require('eth-ens-namehash');
+let Whitelist = artifacts.require('Whitelist')
+let TokenManager = artifacts.require('TokenManager')
 
-module.exports = function(deployer, _network, accounts) {
-    const owner = accounts[0];
+const ENS = artifacts.require('ENSRegistry')
+const PublicResolver = artifacts.require('PublicResolver')
+const ReverseRegistrar = artifacts.require('ReverseRegistrar')
+const namehash = require('eth-ens-namehash')
 
-    // I guess?? This is elided from the tutorial, FFS
-    const tld = "eth";
+module.exports = function (deployer, _network, accounts) {
+  const owner = accounts[0]
 
-    // Deploy eTokenize contracts
-    deployer.deploy(Whitelist)
-    deployer.deploy(TokenManager)
+  // I guess?? This is elided from the tutorial, FFS
+  const tld = 'eth'
 
-    // Deploy local ENS when running on dev network
-    if (deployer.network == 'development' ||
-        deployer.network == 'develop') {
-        deployer.deploy(ENS)
-            .then(() => {
-                return deployer.deploy(
-                    PublicResolver,
-                    ENS.address);
-            })
-            .then(() => {
-                return deployer.deploy(
-                    ReverseRegistrar,
-                    ENS.address,
-                    PublicResolver.address);
-            })
-            .then(() => {
-                return ENS.at(ENS.address)
-                    .setSubnodeOwner(
-                        0,
-                        web3.sha3(tld),
-                        owner, {from: owner});
-            })
-            .then(() => {
-                return ENS.at(ENS.address)
-                    .setSubnodeOwner(
-                        0,
-                        web3.sha3('reverse'),
-                        owner, {from: owner});
-            })
-            .then(() => {
-                return ENS.at(ENS.address)
-                    .setSubnodeOwner(
-                        namehash.hash('reverse'),
-                        web3.sha3('addr'),
-                        ReverseRegistrar.address, {from: owner});
-            });
-    }
+  // Deploy eTokenize contracts
+  deployer.deploy(Whitelist)
+  deployer.deploy(TokenManager)
+
+  // Deploy local ENS when running on dev network
+  if (deployer.network === 'development' ||
+        deployer.network === 'develop') {
+    deployer.deploy(ENS)
+      .then(() => {
+        return deployer.deploy(
+          PublicResolver,
+          ENS.address)
+      })
+      .then(() => {
+        return deployer.deploy(
+          ReverseRegistrar,
+          ENS.address,
+          PublicResolver.address)
+      })
+      .then(() => {
+        return ENS.at(ENS.address)
+          .setSubnodeOwner(
+            0,
+            web3.sha3(tld),
+            owner, { from: owner })
+      })
+      .then(() => {
+        return ENS.at(ENS.address)
+          .setSubnodeOwner(
+            0,
+            web3.sha3('reverse'),
+            owner, { from: owner })
+      })
+      .then(() => {
+        return ENS.at(ENS.address)
+          .setSubnodeOwner(
+            namehash.hash('reverse'),
+            web3.sha3('addr'),
+            ReverseRegistrar.address, { from: owner })
+      })
+  }
 }

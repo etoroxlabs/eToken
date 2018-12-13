@@ -13,5 +13,4 @@ contract WhitelistGuarded {
         require(wl.isWhitelisted(msg.sender));
         _;
     }
-
 }
