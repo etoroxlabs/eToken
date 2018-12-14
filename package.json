@@ -13,7 +13,7 @@
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
     "lint": "semistandard && solium -d contracts/",
-    "beautify": "standard --fix && solium -d contracts/ --fix"
+    "beautify": "semistandard --fix && solium -d contracts/ --fix"
   },
   "dependencies": {
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
