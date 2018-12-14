@@ -12,7 +12,7 @@
     "migrate": "truffle migrate --reset --network development",
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
-    "lint": "standard && solium -d contracts/",
+    "lint": "semistandard && solium -d contracts/",
     "beautify": "standard --fix && solium -d contracts/ --fix"
   },
   "dependencies": {
@@ -28,10 +28,10 @@
     "chai-bignumber": "^3.0.0",
     "coveralls": "^3.0.2",
     "eth-gas-reporter": "^0.1.12",
+    "semistandard": "^13.0.1",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
     "solium-plugin-zeppelin": "^0.0.2",
-    "standard": "^12.0.1",
     "truffle-assertions": "^0.7.1"
   }
 }
