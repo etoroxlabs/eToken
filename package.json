@@ -12,8 +12,8 @@
     "migrate": "truffle migrate --reset --network development",
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
-    "lint": "semistandard && solium -d contracts/",
-    "beautify": "semistandard --fix && solium -d contracts/ --fix"
+    "lint": "semistandard --verbose | snazzy && solium -d contracts/",
+    "beautify": "semistandard --fix --verbose | snazzy && solium -d contracts/ --fix"
   },
   "dependencies": {
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
@@ -29,6 +29,7 @@
     "coveralls": "^3.0.2",
     "eth-gas-reporter": "^0.1.12",
     "semistandard": "^13.0.1",
+    "snazzy": "^8.0.0",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
     "solium-plugin-zeppelin": "^0.0.2",
