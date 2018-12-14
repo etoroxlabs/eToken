@@ -1,16 +1,16 @@
 /* global artifacts */
 
-const Accesslist = artifacts.require('Accesslist')
-const TokenManager = artifacts.require('TokenManager')
-const EToroToken = artifacts.require('EToroToken')
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage')
+const Accesslist = artifacts.require('Accesslist');
+const TokenManager = artifacts.require('TokenManager');
+const EToroToken = artifacts.require('EToroToken');
+const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 module.exports = function (deployer, _network, accounts) {
   if (deployer.network === 'development' ||
       deployer.network === 'develop') {
-    deployer.then(() => setupAccounts(accounts))
+    deployer.then(() => setupAccounts(accounts));
   }
-}
+};
 
 async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccounts]) {
   /*
@@ -18,16 +18,16 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
     DO NOT use in production yet.
   */
 
-  const intialMintValue = '100'
+  const intialMintValue = '100';
 
   // Setup whitelists
-  const accesslistContract = await Accesslist.deployed()
+  const accesslistContract = await Accesslist.deployed();
 
-  await accesslistContract.addWhitelistAdmin(whitelistAdmin, { from: owner })
-  await accesslistContract.addWhitelisted(whitelisted, { from: whitelistAdmin })
+  await accesslistContract.addWhitelistAdmin(whitelistAdmin, { from: owner });
+  await accesslistContract.addWhitelisted(whitelisted, { from: whitelistAdmin });
 
   // Setup tokens
-  const tokenManagerContract = await TokenManager.deployed()
+  const tokenManagerContract = await TokenManager.deployed();
 
   const tokenDetails = [
     {
@@ -40,27 +40,27 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       symbol: 'eAUD',
       decimals: 4
     }
-  ]
+  ];
 
   const tokens = await Promise.all(
     tokenDetails.map(async (td) => {
-      const externalERC20Storage = await ExternalERC20Storage.new()
+      const externalERC20Storage = await ExternalERC20Storage.new();
       const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
         accesslistContract.address, externalERC20Storage.address,
         { from: owner }
-      )
-      await tokenManagerContract.addToken(td.name, token.address)
+      );
+      await tokenManagerContract.addToken(td.name, token.address);
 
-      const tokenAddress = await tokenManagerContract.getToken(td.name, { from: owner })
-      await externalERC20Storage.transferImplementor(tokenAddress, { from: owner })
+      const tokenAddress = await tokenManagerContract.getToken(td.name, { from: owner });
+      await externalERC20Storage.transferImplementor(tokenAddress, { from: owner });
 
-      return EToroToken.at(tokenAddress)
+      return EToroToken.at(tokenAddress);
     })
-  )
+  );
 
   // Mint tokens
   await Promise.all(
     tokens.map((t) => t.mint(owner, intialMintValue, { from: owner }))
-  )
-};
+  );
+}
