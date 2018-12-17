@@ -1,10 +1,8 @@
 pragma solidity ^0.4.24;
 
-/* solium-disable max-len */
-import "etokenize-openzeppelin-solidity/contracts/access/Roles.sol";
-import "etokenize-openzeppelin-solidity/contracts/access/roles/WhitelistAdminRole.sol";
-import "etokenize-openzeppelin-solidity/contracts/access/roles/BlacklistAdminRole.sol";
-/* solium-enable max-len */
+import "openzeppelin-solidity/contracts/access/Roles.sol";
+import "./roles/WhitelistAdminRole.sol";
+import "./roles/BlacklistAdminRole.sol";
 
 contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     using Roles for Roles.Role;

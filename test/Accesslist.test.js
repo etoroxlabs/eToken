@@ -4,8 +4,7 @@
 'use strict';
 
 const util = require('./utils.js');
-const { inLogs } =
-      require('etokenize-openzeppelin-solidity/test/helpers/expectEvent.js');
+const { inLogs } = require('openzeppelin-solidity/test/helpers/expectEvent.js');
 const truffleAssert = require('truffle-assertions');
 
 const Accesslist = artifacts.require('Accesslist');

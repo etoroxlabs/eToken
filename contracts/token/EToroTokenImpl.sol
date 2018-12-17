@@ -1,13 +1,15 @@
 pragma solidity ^0.4.24;
 
 /* solium-disable max-len */
-import "etokenize-openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Burnable.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Mintable.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Pausable.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "etokenize-openzeppelin-solidity/contracts/access/roles/BurnerRole.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
+
+import "./ERC20/ExternalERC20Storage.sol";
+import "./ERC20/ExternalERC20Burnable.sol";
+import "./ERC20/ExternalERC20Mintable.sol";
+import "./ERC20/ExternalERC20Pausable.sol";
+import "../roles/BurnerRole.sol";
+
 import "../Accesslist.sol";
 import "../AccesslistGuarded.sol";
 /* solium-enable max-len */

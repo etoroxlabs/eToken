@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 /* solium-disable max-len */
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
+import "../token/ERC20/ExternalERC20Storage.sol";
 import "../AccesslistGuarded.sol";
 /* solium-enable max-len */
 

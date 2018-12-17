@@ -18,8 +18,8 @@
   "dependencies": {
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
     "eth-ens-namehash": "^2.0.8",
-    "etokenize-openzeppelin-solidity": "ssh://git@github.com:etokenize/openzeppelin-solidity-mod.git#f96982726613689b1b801962c8f66e805ee9bb84",
     "ganache-cli": "^6.2.3",
+    "openzeppelin-solidity": "^2.0.0",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "^0.0.6"
   },

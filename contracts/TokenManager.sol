@@ -1,10 +1,8 @@
 pragma solidity ^0.4.24;
 
-/* solium-disable max-len */
-import "etokenize-openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./token/ERC20/ExternalERC20Storage.sol";
 import "./token/IEToroToken.sol";
-/* solium-enable max-len */
 
 contract TokenManager is Ownable {
 
