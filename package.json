@@ -1,8 +1,8 @@
 {
-  "name": "etokenize-contracts",
+  "name": "TokenX",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "git@github.com:eTokenize/server.git",
+  "repository": "git@github.com:eTokenize/TokenX.git",
   "author": "eTokenize",
   "license": "UNLICENSED",
   "private": true,
