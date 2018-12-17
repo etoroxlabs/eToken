@@ -12,7 +12,7 @@ contract AccesslistGuarded {
     Accesslist private accesslist;
 
     constructor(Accesslist _accesslist) public {
-        require(_accesslist != Accesslist(0));
+        require(_accesslist != Accesslist(0), "Supplied accesslist is null");
         accesslist = _accesslist;
     }
 
@@ -22,7 +22,7 @@ contract AccesslistGuarded {
         @param account address to be checked
     */
     modifier requireHasAccess(address account) {
-        require(accesslist.hasAccess(account));
+        require(accesslist.hasAccess(account), "Supplied address does not have access");
         _;
     }
 
@@ -31,7 +31,7 @@ contract AccesslistGuarded {
              to be whitelisted and not blacklisted
     */
     modifier onlyHasAccess() {
-        require(accesslist.hasAccess(msg.sender));
+        require(accesslist.hasAccess(msg.sender), "Sender address does not have access");
         _;
     }
 
@@ -41,7 +41,7 @@ contract AccesslistGuarded {
         @param account address to be checked
     */
     modifier requireWhitelisted(address account) {
-        require(accesslist.isWhitelisted(account));
+        require(accesslist.isWhitelisted(account), "Supplied address is not whitelisted");
         _;
     }
 
@@ -50,7 +50,7 @@ contract AccesslistGuarded {
              to be whitelisted
     */
     modifier onlyWhitelisted() {
-        require(accesslist.isWhitelisted(msg.sender));
+        require(accesslist.isWhitelisted(msg.sender), "Sender address is not whitelisted");
         _;
     }
 
@@ -60,7 +60,7 @@ contract AccesslistGuarded {
         @param account address to be checked
     */
     modifier requireNotBlacklisted(address account) {
-        require(!accesslist.isBlacklisted(account));
+        require(!accesslist.isBlacklisted(account), "Supplied address is blacklisted");
         _;
     }
 
@@ -69,7 +69,7 @@ contract AccesslistGuarded {
              to not be blacklisted
     */
     modifier onlyNotBlacklisted() {
-        require(!accesslist.isBlacklisted(msg.sender));
+        require(!accesslist.isBlacklisted(msg.sender), "Sender address is blacklisted");
         _;
     }
 }
