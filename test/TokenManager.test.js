@@ -4,8 +4,7 @@
 'use strict';
 
 const util = require('./utils.js');
-const { shouldBehaveLikeOwnable } =
-      require('etokenize-openzeppelin-solidity/test/ownership/Ownable.behavior.js');
+const { shouldBehaveLikeOwnable } = require('openzeppelin-solidity/test/ownership/Ownable.behavior.js');
 
 const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');

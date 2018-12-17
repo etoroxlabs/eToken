@@ -1,11 +1,9 @@
 pragma solidity ^0.4.24;
 
-/* solium-disable max-len */
-import "etokenize-openzeppelin-solidity/contracts/token/ERC20/external/ExternalERC20Storage.sol";
-/* solium-enable max-len */
+import "./ERC20/ExternalERC20Storage.sol";
 
-import "./EToroTokenImpl.sol";
 import "./IEToroToken.sol";
+import "./EToroTokenImpl.sol";
 
 contract EToroToken is IEToroToken, EToroTokenImpl {
 
@@ -34,7 +32,10 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     function upgrade(IEToroToken _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
         require(_upgradedToken != IEToroToken(0), "Supplied address is null");
-        require(_upgradedToken != this, "Cannot supply itself as upgrade token");
+        require(
+            _upgradedToken != this,
+            "Cannot supply itself as upgrade token"
+        );
         upgradedToken = _upgradedToken;
     }
 

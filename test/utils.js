@@ -39,7 +39,7 @@ exports.bytes32ToString = (str) => {
   return parts.map((x) => String.fromCharCode(x)).join('');
 };
 
-const { ZERO_ADDRESS } = require('etokenize-openzeppelin-solidity/test/helpers/constants.js');
+const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants.js');
 
 exports.ZERO_ADDRESS = ZERO_ADDRESS;
 
