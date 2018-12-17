@@ -1,4 +1,7 @@
-const { shouldBehaveLikePublicRole } = require('./PublicRole.behavior');
+/* global artifacts, contract */
+/* eslint-env mocha */
+
+const { shouldBehaveLikePublicRole } = require('./behaviors/PublicRole.behavior');
 const MinterRoleMock = artifacts.require('MinterRoleMock');
 
 contract('MinterRole', function ([_, minter, otherMinter, ...otherAccounts]) {

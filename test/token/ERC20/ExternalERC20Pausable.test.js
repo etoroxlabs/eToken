@@ -1,3 +1,6 @@
+/* global artifacts, contract */
+/* eslint-env mocha */
+
 const { shouldBehaveLikeERC20Pausable } = require('./behaviors/ERC20Pausable.behavior');
 
 const ExternalERC20PausableMock = artifacts.require('ExternalERC20PausableMock');

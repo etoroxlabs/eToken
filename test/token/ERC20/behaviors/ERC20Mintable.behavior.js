@@ -1,3 +1,6 @@
+/* global web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
@@ -37,7 +40,7 @@ function shouldBehaveLikeERC20Mintable (minter, [anyone]) {
             expectEvent.inLogs(this.logs, 'Transfer', {
               from: ZERO_ADDRESS,
               to: anyone,
-              value: amount,
+              value: amount
             });
           });
         }
@@ -55,5 +58,5 @@ function shouldBehaveLikeERC20Mintable (minter, [anyone]) {
 }
 
 module.exports = {
-  shouldBehaveLikeERC20Mintable,
+  shouldBehaveLikeERC20Mintable
 };

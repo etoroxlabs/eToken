@@ -1,4 +1,7 @@
-const { shouldBehaveLikePublicRole } = require('./PublicRole.behavior');
+/* global artifacts, contract */
+/* eslint-env mocha */
+
+const { shouldBehaveLikePublicRole } = require('./behaviors/PublicRole.behavior');
 const BurnerRoleMock = artifacts.require('BurnerRoleMock');
 
 contract('BurnerRole', function ([_, burner, otherBurner, ...otherAccounts]) {

@@ -1,3 +1,6 @@
+/* global web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
@@ -32,7 +35,7 @@ function shouldBehaveLikeERC20Burnable (owner, initialBalance, [burner]) {
           expectEvent.inLogs(this.logs, 'Transfer', {
             from: owner,
             to: ZERO_ADDRESS,
-            value: amount,
+            value: amount
           });
         });
       }
@@ -78,7 +81,7 @@ function shouldBehaveLikeERC20Burnable (owner, initialBalance, [burner]) {
           expectEvent.inLogs(this.logs, 'Transfer', {
             from: owner,
             to: ZERO_ADDRESS,
-            value: amount,
+            value: amount
           });
         });
       }
@@ -103,5 +106,5 @@ function shouldBehaveLikeERC20Burnable (owner, initialBalance, [burner]) {
 }
 
 module.exports = {
-  shouldBehaveLikeERC20Burnable,
+  shouldBehaveLikeERC20Burnable
 };

@@ -1,3 +1,6 @@
+/* global web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 
@@ -247,5 +250,5 @@ function shouldBehaveLikeERC20Pausable (pauser, otherPauser, recipient, anotherA
 }
 
 module.exports = {
-  shouldBehaveLikeERC20Pausable,
+  shouldBehaveLikeERC20Pausable
 };

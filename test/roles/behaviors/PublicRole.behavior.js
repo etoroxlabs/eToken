@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
@@ -34,7 +36,6 @@ function shouldBehaveLikePublicRole (authorized, otherAuthorized, [anyone], role
         it('allows access via explicit address', async function () {
           await this.contract[`require${rolename}Mock`](from, { from });
         });
-
       });
 
       context('from unauthorized account', function () {
@@ -47,7 +48,6 @@ function shouldBehaveLikePublicRole (authorized, otherAuthorized, [anyone], role
         it('reverts via explicit address', async function () {
           await shouldFail.reverting(this.contract[`require${rolename}Mock`](from, { from }));
         });
-
       });
     });
 
@@ -77,7 +77,6 @@ function shouldBehaveLikePublicRole (authorized, otherAuthorized, [anyone], role
       it('reverts when adding from authorized non-owner account', async function () {
         await shouldFail.reverting(this.contract[`add${rolename}`](anyone, { from: otherAuthorized }));
       });
-
     });
 
     describe('remove', function () {
@@ -117,7 +116,6 @@ function shouldBehaveLikePublicRole (authorized, otherAuthorized, [anyone], role
       it('reverts when adding from authorized non-owner account', async function () {
         await shouldFail.reverting(this.contract[`remove${rolename}`](anyone, { from: otherAuthorized }));
       });
-
     });
 
     describe('renouncing roles', function () {
@@ -139,5 +137,5 @@ function shouldBehaveLikePublicRole (authorized, otherAuthorized, [anyone], role
 }
 
 module.exports = {
-  shouldBehaveLikePublicRole,
+  shouldBehaveLikePublicRole
 };

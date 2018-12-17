@@ -1,3 +1,6 @@
+/* global artifacts, contract, web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 // const expectEvent = require('../../../helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
