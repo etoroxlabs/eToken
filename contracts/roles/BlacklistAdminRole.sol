@@ -20,6 +20,11 @@ contract BlacklistAdminRole is Ownable {
     _;
   }
 
+  modifier requireBlacklistAdmin(address account) {
+    require(isBlacklistAdmin(account));
+    _;
+  }
+
   function isBlacklistAdmin(address account) public view returns (bool) {
     return blacklistAdmins.has(account);
   }
