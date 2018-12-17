@@ -7,13 +7,13 @@ import "../AccesslistGuarded.sol";
 
 contract AccesslistGuardedMock is AccesslistGuarded {
 
-    constructor(Accesslist _accesslist) 
+    constructor(Accesslist _accesslist)
         AccesslistGuarded(_accesslist)
-        public 
+        public
     {
     }
 
-    function requireNotBlacklistedMock(address account) 
+    function requireNotBlacklistedMock(address account)
         public
         view
         requireNotBlacklisted(account)
@@ -22,7 +22,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         return true;
     }
 
-    function onlyNotBlacklistedMock() 
+    function onlyNotBlacklistedMock()
         public
         view
         onlyNotBlacklisted()
@@ -31,7 +31,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         return true;
     }
 
-    function requireWhitelistedMock(address account) 
+    function requireWhitelistedMock(address account)
         public
         view
         requireWhitelisted(account)
@@ -40,7 +40,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         return true;
     }
 
-    function onlyWhitelistedMock() 
+    function onlyWhitelistedMock()
         public
         view
         onlyWhitelisted()

@@ -6,7 +6,7 @@ const ExternalERC20 = artifacts.require('ExternalERC20');
 
 const { shouldBehaveLikeERC20Mintable } = require('./behaviors/ERC20Mintable.behavior');
 const ExternalERC20MintableMock = artifacts.require('ExternalERC20MintableMock');
-const { shouldBehaveLikePublicRole } = require('../../roles/PublicRole.behavior');
+const { shouldBehaveLikePublicRole } = require('../../roles/behaviors/PublicRole.behavior');
 
 contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAccounts]) {
   beforeEach(async function () {

@@ -32,7 +32,10 @@ contract EToroToken is IEToroToken, EToroTokenImpl {
     function upgrade(IEToroToken _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
         require(_upgradedToken != IEToroToken(0), "Supplied address is null");
-        require(_upgradedToken != this, "Cannot supply itself as upgrade token");
+        require(
+            _upgradedToken != this,
+            "Cannot supply itself as upgrade token"
+        );
         upgradedToken = _upgradedToken;
     }
 

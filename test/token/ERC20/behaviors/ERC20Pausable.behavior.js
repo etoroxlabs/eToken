@@ -4,7 +4,7 @@
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 
-const { shouldBehaveLikePublicRole } = require('../../../roles/PublicRole.behavior');
+const { shouldBehaveLikePublicRole } = require('../../../roles/behaviors/PublicRole.behavior');
 
 const BigNumber = web3.BigNumber;
 
