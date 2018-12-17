@@ -38,7 +38,7 @@ contract TokenManager is Ownable {
 
     /**
        @dev Require that the token _name does not exist
-       @param _name Name of token that is looked for 
+       @param _name Name of token that is looked for
     */
     modifier tokenNotExists(bytes32 _name) {
         require(!(_tokenExists(_name)), "Token already exist");
