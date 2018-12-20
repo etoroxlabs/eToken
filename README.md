@@ -15,18 +15,17 @@ You need to have [`yarn`](https://yarnpkg.com/) and [`node`](https://nodejs.org/
 This repository has only been tested on UNIX-derived systems.
 
 ## OVERVIEW
-![overview](docs/images/contracts_overview_new.png)
-*__Figure 2:__ Design overview. To simplify the overview, aspects related to the token upgrading functionality are not shown here but are described separately in Figure 4.*
 
-![classdiagram](docs/images/class_diagram.png)
-*__Figure 3:__ Detailed interactions of the contracts*
+![overview](docs/images/contracts_overview_new.png)
+
+*__Figure 1:__ Design overview. To simplify the overview, aspects related to the token upgrading functionality are not shown here but are described separately in Figure 2.*
 
 ### TokenX - ERC20
 This document describes the design and implementation of the smart contracts comprising TokenX which is intended to be used for powering several different stablecoins representing various assets. At its core, TokenX is an ERC20 token with additional supporting infrastructure relating to token management, permission management and token upgradability. The remainder of this document gives a high-level overview of the design and implementation of the token itself and its supporting infrastructure.
 
 Initially, we intended to base our implementation entirely on the OpenZeppelin (OZ) solidity library and extend from its unmodified ERC20 implementation. However, we found that implementing a number of our desired features was impossible without modifying the underlying OZ code. Therefore, our current implementation contains several modified and extended OZ components.When modifying OZ components, we have attempted to retain major design decisions and making non-intrusive and predictable code alteration.
 
-An overview of the design is shown in Figure 2 and a detailed diagram of the interfaces of the various components is shown in Figure 3. The components of the shown design serves following purposes:
+An overview of the design is shown in Figure 1 and a detailed diagram of the interfaces of the various components is shown in Figure 3. The components of the shown design serves following purposes:
 
  * The TokenManager acts as a registry of currently deployed tokens. Its primary purpose is to serve as am on-chain registry of the tokens currently deployed which can be queried by clients.
 
@@ -46,12 +45,14 @@ Due to the immutability of Ethereum smart contracts, upgrading the functionality
 #### External ERC20 storage
 A prerequisite for making our token upgradable was to build an ERC20 implementation which held token balances and allowances in a separate and dedicated contract. To do this, we extended the OZ ERC20 implementation to make it call an external storage contract for every operation modifying or querying token balances and allowances. The storage contract is quite simple and supports a minimal set of operations. In order to prevent multiple tokens from, accidentally or intentionally, using the same storage, the storage contract will only accept requests from a single contract at a time. This contract is known as the implementor. When a token is upgraded, the implementor of the attached storage is transferred to the new token.
 
-![upgrade](docs/images/upgrade.png)
+<p align="center">
+  <img src="docs/images/upgrade.png"/>
+</p>
 
-*__Figure 4:__ Rendering of the token upgrade process. On the left side, we see the contract communications before the network upgrade. All clients and the token manager targets the token contract. The token contract use a separate contract for storing balances. On the right side, the contract organization after an upgrade is shown. The token manager is updated to point to the new, upgraded, contract. The old contract is marked as deprecated which causes it to proxy all incoming calls to the new contract. The balance storage contract now provides storage for the new token contract such that balances are transferred seamlessly.*
+*__Figure 2:__ Rendering of the token upgrade process. On the left side, we see the contract communications before the network upgrade. All clients and the token manager targets the token contract. The token contract use a separate contract for storing balances. On the right side, the contract organization after an upgrade is shown. The token manager is updated to point to the new, upgraded, contract. The old contract is marked as deprecated which causes it to proxy all incoming calls to the new contract. The balance storage contract now provides storage for the new token contract such that balances are transferred seamlessly.*
 
 #### Token upgrade
-In order to make the token upgradable all calls initially targets a proxy contract which inherits from the contract implementing the token functionality. When a non-upgraded token is called directly, the execution flow continues internally along a superclass function. When an upgraded contract is called, it makes an external call to the corresponding function in the new contract. The challenge now is, that when the new contract retrieves the call, msg.sender points to the upgraded contract rather than the original sender. In order to get around this, the new token is required to provide a set of functions, accepting an explicit sender parameter, which can be used as the entry point for the proxy calls. In order to prevent abuse of these functions they can only be called by the upgraded (old) contract. The security of this system relies on the fundamental assumption that the old contract cannot be compromised in a way which allows the sender addresses it sends to the new contract to be compromised. The upgrade process is depicted in Figure 4.
+In order to make the token upgradable all calls initially targets a proxy contract which inherits from the contract implementing the token functionality. When a non-upgraded token is called directly, the execution flow continues internally along a superclass function. When an upgraded contract is called, it makes an external call to the corresponding function in the new contract. The challenge now is, that when the new contract retrieves the call, msg.sender points to the upgraded contract rather than the original sender. In order to get around this, the new token is required to provide a set of functions, accepting an explicit sender parameter, which can be used as the entry point for the proxy calls. In order to prevent abuse of these functions they can only be called by the upgraded (old) contract. The security of this system relies on the fundamental assumption that the old contract cannot be compromised in a way which allows the sender addresses it sends to the new contract to be compromised. The upgrade process is depicted in Figure 2.
 
 ### Permission management
 
@@ -85,6 +86,12 @@ Access to token transfer functions is guarded by the AccessList. Accounts can be
 
 2. The AccessList contains a large number of addresses and it is impractical to require that this data is transferred if we need to upgrade the token contracts.
 
+## Class Diagram
+
+![classdiagram](docs/images/class_diagram.png)
+
+*__Figure 3:__ Detailed interactions of the contracts*
+
 ## FILES
 Path | Description
 ------------- | -------------
@@ -96,5 +103,3 @@ Path | Description
 `contracts/mocks` | Contracts used specifically for testing purposes
 `test/`  | Contains testing code in JavaScript
 `scripts/` | Specific scripts for testing, coverage & upgrading tokens
-
-## LICENSE
