@@ -101,6 +101,12 @@ contract AccesslistGuarded {
         _;
     }
 
+    /**
+     *  @dev Returns whether account has access.
+     *       If whitelist is enabled a whitelist check is also made,
+     *       otherwise it only checks for blacklisting.
+     *  @param account address to be checked
+     */
     function hasAccess(address account) public view returns (bool) {
         if (whitelistEnabled) {
             return accesslist.hasAccess(account);
@@ -109,10 +115,18 @@ contract AccesslistGuarded {
         }
     }
 
+    /**
+     *  @dev Returns whether account is whitelisted
+     *  @param account address to be checked
+     */
     function isWhitelisted(address account) public view returns (bool) {
         return accesslist.isWhitelisted(account);
     }
 
+    /**
+     *  @dev Returns whether account is not blacklisted
+     *  @param account address to be checked
+     */
     function isNotBlacklisted(address account) public view returns (bool) {
         return !accesslist.isBlacklisted(account);
     }

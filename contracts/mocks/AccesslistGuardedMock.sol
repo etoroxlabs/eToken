@@ -16,6 +16,11 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     {
     }
 
+    /**
+     * @dev Function that returns true if
+     *      given address has access
+     * @param account Address to check
+     */
     function requireHasAccessMock(address account)
         public
         view
@@ -25,6 +30,10 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         return true;
     }
 
+    /**
+     * @dev Function that returns true if
+     *      message sender has access
+     */
     function onlyHasAccessMock()
         public
         view
