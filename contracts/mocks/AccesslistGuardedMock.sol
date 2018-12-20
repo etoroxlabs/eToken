@@ -6,9 +6,9 @@ import "../AccesslistGuarded.sol";
 /* solium-enable max-len */
 
 /**
-    @title An AccesslistGuarded mock contract
-    @dev Contracts to test currently unused modifiers in AccesslistGuarded
-*/
+ *  @title An AccesslistGuarded mock contract
+ *  @dev Contracts to test currently unused modifiers in AccesslistGuarded
+ */
 
 contract AccesslistGuardedMock is AccesslistGuarded {
 
@@ -19,10 +19,10 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-        @dev Function that returns true if
-             given address isn't blacklisted
-        @param account Address to check
-    */
+     *  @dev Function that returns true if
+     *       given address isn't blacklisted
+     *  @param account Address to check
+     */
     function requireNotBlacklistedMock(address account)
         public
         view
@@ -33,9 +33,9 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-        @dev Function that returns true if
-             message sender isn't blacklisted
-    */
+     *  @dev Function that returns true if
+     *       message sender isn't blacklisted
+     */
     function onlyNotBlacklistedMock()
         public
         view
@@ -46,10 +46,10 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-        @dev Function that returns true if
-             given address is whitelisted
-        @param account Address to check
-    */
+     * @dev Function that returns true if
+     *      given address is whitelisted
+     * @param account Address to check
+     */
     function requireWhitelistedMock(address account)
         public
         view
@@ -60,9 +60,9 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-        @dev Function that returns true if
-             message sender is Whitelisted
-    */
+     * @dev Function that returns true if
+     *      message sender is Whitelisted
+     */
     function onlyWhitelistedMock()
         public
         view
