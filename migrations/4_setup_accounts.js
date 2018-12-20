@@ -33,12 +33,14 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
     {
       name: 'eToro US Dollar',
       symbol: 'eUSD',
-      decimals: 4
+      decimals: 4,
+      whitelistEnabled: true
     },
     {
       name: 'eToro Australian Dollar',
       symbol: 'eAUD',
-      decimals: 4
+      decimals: 4,
+      whitelistEnabled: false
     }
   ];
 
@@ -47,7 +49,8 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       const externalERC20Storage = await ExternalERC20Storage.new();
       const token = await EToroToken.new(
         td.name, td.symbol, td.decimals,
-        accesslistContract.address, externalERC20Storage.address,
+        accesslistContract.address, td.whitelistEnabled,
+        externalERC20Storage.address,
         { from: owner }
       );
       await tokenManagerContract.addToken(td.name, token.address);

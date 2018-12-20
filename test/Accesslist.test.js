@@ -10,24 +10,37 @@ const truffleAssert = require('truffle-assertions');
 const Accesslist = artifacts.require('Accesslist');
 const AccesslistGuardedMock = artifacts.require('AccesslistGuardedMock');
 
-contract('Accesslist', async function ([owner, user, user1, user2, user3,
-  user4, user5, user6, ...accounts]) {
+contract('Accesslist', async function (
+  [owner, user, user1, user2, user3, user4, user5, user6, ...accounts]
+) {
   beforeEach(async function () {
     this.accesslist = await Accesslist.new();
-    this.accesslistGuardedMock = await AccesslistGuardedMock.new(this.accesslist.address);
-    const { logs } =
-              await truffleAssert.createTransactionResult(this.accesslist,
-                this.accesslist.transactionHash);
-    inLogs(logs, 'OwnershipTransferred',
-      { previousOwner: util.ZERO_ADDRESS,
-        newOwner: owner });
+    this.accesslistGuardedMock = await AccesslistGuardedMock.new(
+      this.accesslist.address,
+      true
+    );
+
+    const { logs } = await truffleAssert.createTransactionResult(
+      this.accesslist,
+      this.accesslist.transactionHash
+    );
+
+    inLogs(
+      logs, 'OwnershipTransferred',
+      {
+        previousOwner: util.ZERO_ADDRESS,
+        newOwner: owner
+      }
+    );
+
     inLogs(logs, 'WhitelistAdminAdded', { account: owner });
     inLogs(logs, 'BlacklistAdminAdded', { account: owner });
   });
 
   it('should reject null address accesslist', async function () {
-    await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS));
+    await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS, true));
   });
+
   it('allows privileged privilege propagation: whitelist', async function () {
     assert(!(await this.accesslist.isWhitelistAdmin.call(user4, { from: owner })));
     await util.assertReverts(this.accesslist.addWhitelisted(user4, { from: user3 }));

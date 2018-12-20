@@ -1,9 +1,7 @@
 pragma solidity ^0.4.24;
 
-/* solium-disable max-len */
 import "../token/ERC20/ExternalERC20Storage.sol";
 import "../token/EToroToken.sol";
-/* solium-enable max-len */
 
 contract EToroTokenMock is EToroToken {
 
