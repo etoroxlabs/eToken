@@ -1,9 +1,7 @@
 pragma solidity ^0.4.24;
 
-/* solium-disable max-len */
 import "../token/ERC20/ExternalERC20Storage.sol";
 import "../AccesslistGuarded.sol";
-/* solium-enable max-len */
 
 /**
  *  @title An AccesslistGuarded mock contract
@@ -12,34 +10,25 @@ import "../AccesslistGuarded.sol";
 
 contract AccesslistGuardedMock is AccesslistGuarded {
 
-    constructor(Accesslist _accesslist)
-        AccesslistGuarded(_accesslist)
+    constructor(Accesslist _accesslist, bool whitelistEnabled)
+        AccesslistGuarded(_accesslist, whitelistEnabled)
         public
     {
     }
 
-    /**
-     *  @dev Function that returns true if
-     *       given address isn't blacklisted
-     *  @param account Address to check
-     */
-    function requireNotBlacklistedMock(address account)
+    function requireHasAccessMock(address account)
         public
         view
-        requireNotBlacklisted(account)
+        requireHasAccess(account)
         returns (bool)
     {
         return true;
     }
 
-    /**
-     *  @dev Function that returns true if
-     *       message sender isn't blacklisted
-     */
-    function onlyNotBlacklistedMock()
+    function onlyHasAccessMock()
         public
         view
-        onlyNotBlacklisted()
+        onlyHasAccess()
         returns (bool)
     {
         return true;
@@ -67,6 +56,33 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         public
         view
         onlyWhitelisted()
+        returns (bool)
+    {
+        return true;
+    }
+
+    /**
+     *  @dev Function that returns true if
+     *       given address isn't blacklisted
+     *  @param account Address to check
+     */
+    function requireNotBlacklistedMock(address account)
+        public
+        view
+        requireNotBlacklisted(account)
+        returns (bool)
+    {
+        return true;
+    }
+
+    /**
+     *  @dev Function that returns true if
+     *       message sender isn't blacklisted
+     */
+    function onlyNotBlacklistedMock()
+        public
+        view
+        onlyNotBlacklisted()
         returns (bool)
     {
         return true;

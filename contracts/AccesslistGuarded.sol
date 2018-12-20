@@ -10,10 +10,20 @@ import "./Accesslist.sol";
 contract AccesslistGuarded {
 
     Accesslist private accesslist;
+    bool public whitelistEnabled;
 
-    constructor(Accesslist _accesslist) public {
-        require(_accesslist != Accesslist(0), "Supplied accesslist is null");
+    constructor(
+        Accesslist _accesslist,
+        bool _whitelistEnabled
+    )
+        public
+    {
+        require(
+            _accesslist != Accesslist(0),
+            "Supplied accesslist is null"
+        );
         accesslist = _accesslist;
+        whitelistEnabled = _whitelistEnabled;
     }
 
     /**
@@ -23,7 +33,7 @@ contract AccesslistGuarded {
      */
     modifier requireHasAccess(address account) {
         require(
-            accesslist.hasAccess(account),
+            hasAccess(account),
             "Supplied address doesn't have access"
         );
         _;
@@ -35,7 +45,7 @@ contract AccesslistGuarded {
      */
     modifier onlyHasAccess() {
         require(
-            accesslist.hasAccess(msg.sender),
+            hasAccess(msg.sender),
             "Sender address doesn't have access"
         );
         _;
@@ -48,7 +58,7 @@ contract AccesslistGuarded {
      */
     modifier requireWhitelisted(address account) {
         require(
-            accesslist.isWhitelisted(account),
+            isWhitelisted(account),
             "Supplied address is not whitelisted"
         );
         _;
@@ -60,7 +70,7 @@ contract AccesslistGuarded {
      */
     modifier onlyWhitelisted() {
         require(
-            accesslist.isWhitelisted(msg.sender),
+            isWhitelisted(msg.sender),
             "Sender address is not whitelisted"
         );
         _;
@@ -73,7 +83,7 @@ contract AccesslistGuarded {
      */
     modifier requireNotBlacklisted(address account) {
         require(
-            !accesslist.isBlacklisted(account),
+            isNotBlacklisted(account),
             "Supplied address is blacklisted"
         );
         _;
@@ -85,9 +95,25 @@ contract AccesslistGuarded {
      */
     modifier onlyNotBlacklisted() {
         require(
-            !accesslist.isBlacklisted(msg.sender),
+            isNotBlacklisted(msg.sender),
             "Sender address is blacklisted"
         );
         _;
+    }
+
+    function hasAccess(address account) public view returns (bool) {
+        if (whitelistEnabled) {
+            return accesslist.hasAccess(account);
+        } else {
+            return isNotBlacklisted(account);
+        }
+    }
+
+    function isWhitelisted(address account) public view returns (bool) {
+        return accesslist.isWhitelisted(account);
+    }
+
+    function isNotBlacklisted(address account) public view returns (bool) {
+        return !accesslist.isBlacklisted(account);
     }
 }

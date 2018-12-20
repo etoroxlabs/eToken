@@ -21,18 +21,18 @@ contract EToroTokenImpl is ExternalERC20Mintable,
     AccesslistGuarded,
     BurnerRole {
 
-
     constructor(
         string name,
         string symbol,
         uint8 decimals,
         Accesslist accesslist,
+        bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage
     )
         internal
         ExternalERC20(externalERC20Storage)
         ERC20Detailed(name, symbol, decimals)
-        AccesslistGuarded(accesslist)
+        AccesslistGuarded(accesslist, whitelistEnabled)
     {
     }
 
@@ -40,7 +40,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         public
         requireHasAccess(to)
         onlyHasAccess()
-        returns (bool) 
+        returns (bool)
     {
         return super.transfer(to, value);
     }
@@ -49,7 +49,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         public
         requireHasAccess(spender)
         onlyHasAccess()
-        returns (bool) 
+        returns (bool)
     {
         return super.approve(spender, value);
     }
@@ -59,7 +59,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         requireHasAccess(from)
         requireHasAccess(to)
         onlyHasAccess()
-        returns (bool) 
+        returns (bool)
     {
         return super.transferFrom(from, to, value);
     }
@@ -68,7 +68,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         public
         requireHasAccess(spender)
         onlyHasAccess()
-        returns (bool) 
+        returns (bool)
     {
         return super.increaseAllowance(spender, addedValue);
     }
@@ -77,7 +77,7 @@ contract EToroTokenImpl is ExternalERC20Mintable,
         public
         requireHasAccess(spender)
         onlyHasAccess()
-        returns (bool) 
+        returns (bool)
     {
         return super.decreaseAllowance(spender, subtractedValue);
     }
