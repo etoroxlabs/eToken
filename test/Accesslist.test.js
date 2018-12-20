@@ -128,6 +128,7 @@ contract('Accesslist', async function (
       assert(await this.accesslist.isBlacklisted.call(user3, { from: user2 }));
     });
   });
+
   describe('Whitelisting', async function () {
     it('is initially not in whitelist from unprivileged', async function () {
       assert(!(await this.accesslist.isWhitelisted.call(user, { from: user1 })));
@@ -185,6 +186,80 @@ contract('Accesslist', async function (
       await this.accesslist.addWhitelisted(user3, { from: owner });
       util.assertReverts(this.accesslist.removeWhitelisted(user3, { from: user2 }));
       assert(await this.accesslist.isWhitelisted.call(user3, { from: user2 }));
+    });
+  });
+
+  describe('when whitelist is not enabled', function () {
+    beforeEach(async function () {
+      this.accesslistGuardedMock = await AccesslistGuardedMock.new(
+        this.accesslist.address,
+        false
+      );
+    });
+
+    describe('if whitelisted', function () {
+      beforeEach(async function () {
+        await this.accesslist.addWhitelisted(user, { from: owner });
+      });
+
+      it('should allow requireHasAccess', async function () {
+        (await this.accesslistGuardedMock.requireHasAccessMock(user))
+          .should.be.equal(true);
+      });
+
+      it('should allow onlyHasAccess', async function () {
+        (await this.accesslistGuardedMock.onlyHasAccessMock({ from: user }))
+          .should.be.equal(true);
+      });
+    });
+
+    describe('if not whitelisted', function () {
+      it('should allow requireHasAccess', async function () {
+        (await this.accesslistGuardedMock.requireHasAccessMock(user))
+          .should.be.equal(true);
+      });
+
+      it('should allow onlyHasAccess', async function () {
+        (await this.accesslistGuardedMock.onlyHasAccessMock({ from: user }))
+          .should.be.equal(true);
+      });
+    });
+
+    describe('if blacklisted', function () {
+      beforeEach(async function () {
+        await this.accesslist.addBlacklisted(user, { from: owner });
+      });
+
+      it('should revert requireHasAccess', async function () {
+        await util.assertReverts(
+          this.accesslistGuardedMock.requireHasAccessMock(user)
+        );
+      });
+
+      it('should revert onlyHasAccess', async function () {
+        await util.assertReverts(
+          this.accesslistGuardedMock.onlyHasAccessMock({ from: user })
+        );
+      });
+    });
+
+    describe('if blacklisted and whitelisted', function () {
+      beforeEach(async function () {
+        await this.accesslist.addWhitelisted(user, { from: owner });
+        await this.accesslist.addBlacklisted(user, { from: owner });
+      });
+
+      it('should revert requireHasAccess', async function () {
+        await util.assertReverts(
+          this.accesslistGuardedMock.requireHasAccessMock(user)
+        );
+      });
+
+      it('should revert onlyHasAccess', async function () {
+        await util.assertReverts(
+          this.accesslistGuardedMock.onlyHasAccessMock({ from: user })
+        );
+      });
     });
   });
 });
