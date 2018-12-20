@@ -85,11 +85,6 @@ Access to token transfer functions is guarded by the AccessList. Accounts can be
 
 2. The AccessList contains a large number of addresses and it is impractical to require that this data is transferred if we need to upgrade the token contracts.
 
-#### Whitelist - KYC
-#### Blacklist
-
-### Token Manager
-
 ## FILES
 Path | Description
 ------------- | -------------
