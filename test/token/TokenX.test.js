@@ -93,57 +93,57 @@ function ERC20Permissions (owner, whitelisted, other, other1, blacklisted, black
 
     it('Rejects unprivileged transfer when both are non-whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(other, 1, { from: other }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transfer when receiver are non-whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(other, 10, { from: whitelisted }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
      it('Rejects unprivileged transfer when sender are non-whitelisted', async function () {
        await util.assertRevertsReason(this.token.transfer(whitelisted, 10, { from: other }),
-                                     'not hasAccess');
+                                     'no access');
      });
 
     it('Rejects unprivileged transfer when both are blacklisted and none are whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(blacklisted, 1, { from: blacklisted1 }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transfer when receiver is only blacklisted', async function () {
       await util.assertRevertsReason(this.token.transfer(blacklisted, 1, { from: whitelisted }),
-                               'not hasAccess');
+                               'no access');
     });
 
     it('Rejects unprivileged transfer when sender is only blacklisted', async function () {
       await util.assertRevertsReason(this.token.transfer(whitelisted, 1, { from: other }),
-                               'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transfer when sender and reciever are blacklisted and whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(blackwhite1, 1, { from: blackwhite }),
-                               'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transfer when receiver is both blacklisted and whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(blackwhite1, 1, { from: whitelisted }),
-                               'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transfer when sender is both blacklisted and whitelisted', async function () {
       await util.assertRevertsReason(this.token.transfer(whitelisted, 1, { from: blackwhite }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged approve', async function () {
       await util.assertRevertsReason(this.token.approve(other, 1, { from: other }),
-                               'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged transferFrom', async function () {
       await util.assertRevertsReason(this.token.transferFrom(other, other1, 1, { from: other }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged burn', async function () {
@@ -158,12 +158,12 @@ function ERC20Permissions (owner, whitelisted, other, other1, blacklisted, black
 
     it('Rejects unprivileged increaseAllowance', async function () {
       await util.assertRevertsReason(this.token.increaseAllowance(whitelisted, 5, { from: other }),
-                                     'not hasAccess');
+                                     'no access');
     });
 
     it('Rejects unprivileged decreaseAllowance', async function () {
       await util.assertRevertsReason(this.token.decreaseAllowance(whitelisted, 5, { from: other }),
-                                     'not hasAccess');
+                                     'no access');
     });
   });
 
