@@ -11,6 +11,7 @@ const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');
 const TokenX = artifacts.require('TokenX');
 const TokenXMock = artifacts.require('TokenXMock');
+const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 const tokName = 'eUSD';
 
@@ -18,6 +19,8 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   beforeEach(async () => {
     this.tokMgr = await TokenManager.new();
     this.accesslist = await Accesslist.new();
+    const stor1 = await ExternalERC20Storage.new();
+    const stor2 = await ExternalERC20Storage.new();
 
     this.tokenX = await TokenXMock.new(
       tokName, 'e', 4, this.accesslist.address, true, stor1.address,
@@ -28,7 +31,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       0, true, owner, 0, { from: owner });
   });
 
-  describe('OpenZeppelin ownable behavior', () => {
+  describe('ownable behavior', () => {
     beforeEach(async function () {
       this.ownable = await TokenManager.new();
     });
@@ -128,16 +131,6 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     describe('when tokens are added', () => {
       beforeEach(async () => {
         this.expected = ['tok1', 'tok2'];
-
-        this.tokenX = await TokenXMock.new(
-          this.expected[0], 'e', 4, this.accesslist.address, true,
-          { from: owner }
-        );
-
-        this.tokenX2 = await TokenXMock.new(
-          this.expected[1], 'e', 4, this.accesslist.address, true,
-          { from: owner }
-        );
 
         await this.tokMgr.addToken(
           this.expected[0], this.tokenX.address,
