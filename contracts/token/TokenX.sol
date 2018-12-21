@@ -16,6 +16,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         string symbol,
         uint8 decimals,
         Accesslist accesslist,
+        bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
         address upgradedFrom,
         bool initialDeployment
@@ -26,6 +27,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
             symbol,
             decimals,
             accesslist,
+            whitelistEnabled,
             externalERC20Storage,
             upgradedFrom,
             initialDeployment

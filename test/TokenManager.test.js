@@ -20,14 +20,12 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     this.accesslist = await Accesslist.new();
 
     this.tokenX = await TokenXMock.new(
-      tokName, 'e', 4, this.accesslist.address, true,
-      { from: owner }
-    );
+      tokName, 'e', 4, this.accesslist.address, true, stor1.address,
+      0, true, owner, 0, { from: owner });
 
     this.tokenX2 = await TokenXMock.new(
-      tokName, 'se', 8, this.accesslist.address, true,
-      { from: owner }
-    );
+      tokName, 'se', 8, this.accesslist.address, true, stor2.address,
+      0, true, owner, 0, { from: owner });
   });
 
   describe('OpenZeppelin ownable behavior', () => {

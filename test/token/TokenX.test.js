@@ -191,11 +191,11 @@ contract('TokenX', async function (
     storage = await ExternalERC20Storage.new({ from: owner });
 
     token = await TokenXMock.new(
-      tokNameOrig, symbolOrig, 10, accesslist.address, storage.address, 0, true, owner, 100,
+      tokNameOrig, symbolOrig, 10, accesslist.address, true, storage.address, 0, true, owner, 100,
       { from: owner });
     upgradeToken = await TokenXMock.new(
       tokNameUpgraded, symbolUpgraded, 20,
-      accesslist.address, storage.address, token.address, false, 0, 0,
+      accesslist.address, true, storage.address, token.address, false, 0, 0,
       { from: owner });
     [token, upgradeToken].forEach(async function(f) {
       await f.addMinter(minter, { from: owner });

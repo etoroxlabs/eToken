@@ -13,7 +13,7 @@ contract TokenXMock is TokenX, PauserRoleMock {
         string symbol,
         uint8 decimals,
         Accesslist accesslist,
-        bool whitelistEnabled
+        bool whitelistEnabled,
         ExternalERC20Storage stor,
         IUpgradableTokenX upgradedFrom,
         bool initialDeployment,

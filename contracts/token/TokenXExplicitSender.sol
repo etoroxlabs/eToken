@@ -52,6 +52,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         string symbol,
         uint8 decimals,
         Accesslist accesslist,
+        bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
         address upgradedFrom,
         bool initialDeployment
@@ -59,7 +60,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         internal
         ExternalERC20(externalERC20Storage)
         ERC20Detailed(name, symbol, decimals)
-        AccesslistGuarded(accesslist)
+        AccesslistGuarded(accesslist, whitelistEnabled)
     {
 
         require((upgradedFrom != address(0) && (! initialDeployment)) ||
