@@ -10,37 +10,24 @@ const truffleAssert = require('truffle-assertions');
 const Accesslist = artifacts.require('Accesslist');
 const AccesslistGuardedMock = artifacts.require('AccesslistGuardedMock');
 
-contract('Accesslist', async function (
-  [owner, user, user1, user2, user3, user4, user5, user6, ...accounts]
-) {
+contract('Accesslist', async function ([owner, user, user1, user2, user3,
+  user4, user5, user6, ...accounts]) {
   beforeEach(async function () {
     this.accesslist = await Accesslist.new();
-    this.accesslistGuardedMock = await AccesslistGuardedMock.new(
-      this.accesslist.address,
-      true
-    );
-
-    const { logs } = await truffleAssert.createTransactionResult(
-      this.accesslist,
-      this.accesslist.transactionHash
-    );
-
-    inLogs(
-      logs, 'OwnershipTransferred',
-      {
-        previousOwner: util.ZERO_ADDRESS,
-        newOwner: owner
-      }
-    );
-
+    this.accesslistGuardedMock = await AccesslistGuardedMock.new(this.accesslist.address);
+    const { logs } =
+              await truffleAssert.createTransactionResult(this.accesslist,
+                this.accesslist.transactionHash);
+    inLogs(logs, 'OwnershipTransferred',
+      { previousOwner: util.ZERO_ADDRESS,
+        newOwner: owner });
     inLogs(logs, 'WhitelistAdminAdded', { account: owner });
     inLogs(logs, 'BlacklistAdminAdded', { account: owner });
   });
 
   it('should reject null address accesslist', async function () {
-    await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS, true));
+    await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS));
   });
-
   it('allows privileged privilege propagation: whitelist', async function () {
     assert(!(await this.accesslist.isWhitelistAdmin.call(user4, { from: owner })));
     await util.assertReverts(this.accesslist.addWhitelisted(user4, { from: user3 }));
@@ -128,7 +115,6 @@ contract('Accesslist', async function (
       assert(await this.accesslist.isBlacklisted.call(user3, { from: user2 }));
     });
   });
-
   describe('Whitelisting', async function () {
     it('is initially not in whitelist from unprivileged', async function () {
       assert(!(await this.accesslist.isWhitelisted.call(user, { from: user1 })));
@@ -186,80 +172,6 @@ contract('Accesslist', async function (
       await this.accesslist.addWhitelisted(user3, { from: owner });
       util.assertReverts(this.accesslist.removeWhitelisted(user3, { from: user2 }));
       assert(await this.accesslist.isWhitelisted.call(user3, { from: user2 }));
-    });
-  });
-
-  describe('when whitelist is not enabled', function () {
-    beforeEach(async function () {
-      this.accesslistGuardedMock = await AccesslistGuardedMock.new(
-        this.accesslist.address,
-        false
-      );
-    });
-
-    describe('if whitelisted', function () {
-      beforeEach(async function () {
-        await this.accesslist.addWhitelisted(user, { from: owner });
-      });
-
-      it('should allow requireHasAccess', async function () {
-        (await this.accesslistGuardedMock.requireHasAccessMock(user))
-          .should.be.equal(true);
-      });
-
-      it('should allow onlyHasAccess', async function () {
-        (await this.accesslistGuardedMock.onlyHasAccessMock({ from: user }))
-          .should.be.equal(true);
-      });
-    });
-
-    describe('if not whitelisted', function () {
-      it('should allow requireHasAccess', async function () {
-        (await this.accesslistGuardedMock.requireHasAccessMock(user))
-          .should.be.equal(true);
-      });
-
-      it('should allow onlyHasAccess', async function () {
-        (await this.accesslistGuardedMock.onlyHasAccessMock({ from: user }))
-          .should.be.equal(true);
-      });
-    });
-
-    describe('if blacklisted', function () {
-      beforeEach(async function () {
-        await this.accesslist.addBlacklisted(user, { from: owner });
-      });
-
-      it('should revert requireHasAccess', async function () {
-        await util.assertReverts(
-          this.accesslistGuardedMock.requireHasAccessMock(user)
-        );
-      });
-
-      it('should revert onlyHasAccess', async function () {
-        await util.assertReverts(
-          this.accesslistGuardedMock.onlyHasAccessMock({ from: user })
-        );
-      });
-    });
-
-    describe('if blacklisted and whitelisted', function () {
-      beforeEach(async function () {
-        await this.accesslist.addWhitelisted(user, { from: owner });
-        await this.accesslist.addBlacklisted(user, { from: owner });
-      });
-
-      it('should revert requireHasAccess', async function () {
-        await util.assertReverts(
-          this.accesslistGuardedMock.requireHasAccessMock(user)
-        );
-      });
-
-      it('should revert onlyHasAccess', async function () {
-        await util.assertReverts(
-          this.accesslistGuardedMock.onlyHasAccessMock({ from: user })
-        );
-      });
     });
   });
 });

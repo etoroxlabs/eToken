@@ -15,21 +15,15 @@ require('chai')
   .should();
 
 contract('EToro Token', async function (
-  [
-    owner, minter, pauser, burner, whitelistAdmin,
-    whitelisted, whitelisted1, user, user1,
-    ...restAccounts
-  ]
-) {
+  [owner, minter, pauser, burner, whitelistAdmin,
+    whitelisted, whitelisted1, user, user1, ...restAccounts]) {
   beforeEach(async function () {
     const accesslist = await Accesslist.new({ from: owner });
 
     // Create a token token
-    const token = await EToroTokenMock.new(
-      'eUSD', 'e', 8,
-      accesslist.address, true,
-      { from: owner }
-    );
+    const token = await EToroTokenMock.new('eUSD', 'e', 1000,
+      accesslist.address,
+      { from: owner });
 
     // Setup permissions
     await token.addMinter(minter, { from: owner });
@@ -311,20 +305,6 @@ contract('EToro Token', async function (
   });
 
   describe('upgradability', function () {
-    beforeEach(async function () {
-      this.upgradeToken = await EToroTokenMock.new(
-        'upgrade', 'symbolUpgrade', 1,
-        this.accesslist.address, true,
-        { from: owner }
-      );
-
-      this.upgradeToken2 = await EToroTokenMock.new(
-        'upgrade', 'symbolUpgrade', 1,
-        this.accesslist.address, true,
-        { from: owner }
-      );
-    });
-
     async function upgradeAndCheck (initialToken, upgradeToken, checks) {
       (await initialToken.isUpgraded()).should.be.equal(false);
       (await upgradeToken.isUpgraded()).should.be.equal(false);
@@ -348,21 +328,39 @@ contract('EToro Token', async function (
         const initialToken = this.token;
         await initialToken.mint(owner, 80, { from: owner });
 
-        (await initialToken.balanceOf(owner)).should.be.bignumber.equal(80);
-        (await this.upgradeToken.balanceOf(owner)).should.be.bignumber.equal(0);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        (await initialToken.balanceOf(owner)).should.be.bignumber.equal(80);
+        (await upgradeToken.balanceOf(owner)).should.be.bignumber.equal(0);
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.balanceOf(owner)).should.be.bignumber.equal(0);
-        (await this.upgradeToken.balanceOf(owner)).should.be.bignumber.equal(0);
+        (await upgradeToken.balanceOf(owner)).should.be.bignumber.equal(0);
       });
 
       it('reject if already upgraded', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
-        await util.assertReverts(initialToken.upgrade(this.upgradeToken2.address, { from: owner }));
-        (await initialToken.upgradedToken()).should.be.equal(this.upgradeToken.address);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        const upgradeToken2 = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
+        await util.assertReverts(initialToken.upgrade(upgradeToken2.address, { from: owner }));
+        (await initialToken.upgradedToken()).should.be.equal(upgradeToken.address);
       });
 
       it('reject if upgrading itself', async function () {
@@ -382,46 +380,64 @@ contract('EToro Token', async function (
       it('should upgrade name', async function () {
         const initialToken = this.token;
 
-        const newName = 'upgrade';
+        const newName = 'new';
+
+        const upgradeToken = await EToroTokenMock.new(
+          newName, 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
 
         (await this.token.name()).should.not.be.equal(newName);
         (await initialToken.name()).should.be.equal(await this.token.name());
-        (await this.upgradeToken.name()).should.be.equal(newName);
+        (await upgradeToken.name()).should.be.equal(newName);
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.name()).should.be.equal(newName);
-        (await this.upgradeToken.name()).should.be.equal(newName);
+        (await upgradeToken.name()).should.be.equal(newName);
       });
 
       it('should upgrade symbol', async function () {
         const initialToken = this.token;
 
-        const newSymbol = 'symbolUpgrade';
+        const newSymbol = 'new';
+
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', newSymbol, 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
 
         (await this.token.symbol()).should.not.be.equal(newSymbol);
         (await initialToken.symbol()).should.be.equal(await this.token.symbol());
-        (await this.upgradeToken.symbol()).should.be.equal(newSymbol);
+        (await upgradeToken.symbol()).should.be.equal(newSymbol);
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.symbol()).should.be.equal(newSymbol);
-        (await this.upgradeToken.symbol()).should.be.equal(newSymbol);
+        (await upgradeToken.symbol()).should.be.equal(newSymbol);
       });
 
       it('should upgrade decimals', async function () {
         const initialToken = this.token;
 
-        const newDecimals = 1;
+        const newDecimals = 8;
+
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', newDecimals,
+          this.accesslist.address,
+          { from: owner }
+        );
 
         (await this.token.decimals()).should.not.be.bignumber.equal(newDecimals);
         (await initialToken.decimals()).should.be.bignumber.equal(await this.token.decimals());
-        (await this.upgradeToken.decimals()).should.be.bignumber.equal(newDecimals);
+        (await upgradeToken.decimals()).should.be.bignumber.equal(newDecimals);
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.decimals()).should.be.bignumber.equal(newDecimals);
-        (await this.upgradeToken.decimals()).should.be.bignumber.equal(newDecimals);
+        (await upgradeToken.decimals()).should.be.bignumber.equal(newDecimals);
       });
 
       it('should upgrade totalSupply', async function () {
@@ -429,16 +445,22 @@ contract('EToro Token', async function (
 
         const newTotalSupply = 80;
 
-        await this.upgradeToken.mint(owner, newTotalSupply, { from: owner });
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeToken.mint(owner, newTotalSupply, { from: owner });
 
         (await this.token.totalSupply()).should.not.be.bignumber.equal(newTotalSupply);
         (await initialToken.totalSupply()).should.be.bignumber.equal(await this.token.totalSupply());
-        (await this.upgradeToken.totalSupply()).should.be.bignumber.equal(newTotalSupply);
+        (await upgradeToken.totalSupply()).should.be.bignumber.equal(newTotalSupply);
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.totalSupply()).should.be.bignumber.equal(newTotalSupply);
-        (await this.upgradeToken.totalSupply()).should.be.bignumber.equal(newTotalSupply);
+        (await upgradeToken.totalSupply()).should.be.bignumber.equal(newTotalSupply);
       });
 
       it('should upgrade allowance', async function () {
@@ -446,23 +468,35 @@ contract('EToro Token', async function (
 
         const newAllowance = 80;
 
-        await this.upgradeToken.mint(owner, newAllowance, { from: owner });
-        await this.upgradeToken.approve(whitelisted, newAllowance, { from: owner });
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeToken.mint(owner, newAllowance, { from: owner });
+        await upgradeToken.approve(whitelisted, newAllowance, { from: owner });
 
         (await this.token.allowance(owner, whitelisted)).should.not.be.bignumber.equal(newAllowance);
         (await initialToken.allowance(owner, whitelisted)).should.be.bignumber.equal(0);
-        (await this.upgradeToken.allowance(owner, whitelisted)).should.be.bignumber.equal(newAllowance);
+        (await upgradeToken.allowance(owner, whitelisted)).should.be.bignumber.equal(newAllowance);
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         (await initialToken.allowance(owner, whitelisted)).should.be.bignumber.equal(newAllowance);
-        (await this.upgradeToken.allowance(owner, whitelisted)).should.be.bignumber.equal(newAllowance);
+        (await upgradeToken.allowance(owner, whitelisted)).should.be.bignumber.equal(newAllowance);
       });
 
       it('should revert transfer', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.transfer(owner, 2000, { from: whitelisted })
@@ -472,7 +506,13 @@ contract('EToro Token', async function (
       it('should revert approve', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.approve(owner, 2000, { from: whitelisted })
@@ -482,7 +522,13 @@ contract('EToro Token', async function (
       it('should revert transferFrom', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.transferFrom(owner, whitelisted1, 80, { from: whitelisted })
@@ -492,7 +538,13 @@ contract('EToro Token', async function (
       it('should revert mint', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.mint(owner, 80, { from: owner })
@@ -502,7 +554,13 @@ contract('EToro Token', async function (
       it('should revert burn', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.burn(80, { from: owner })
@@ -512,7 +570,13 @@ contract('EToro Token', async function (
       it('should revert burnFrom', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.burnFrom(owner, 80, { from: owner })
@@ -522,7 +586,13 @@ contract('EToro Token', async function (
       it('should revert increaseAllowance', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.increaseAllowance(owner, 80, { from: owner })
@@ -532,7 +602,13 @@ contract('EToro Token', async function (
       it('should revert decreaseAllowance', async function () {
         const initialToken = this.token;
 
-        await upgradeAndCheck(initialToken, this.upgradeToken);
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
+        await upgradeAndCheck(initialToken, upgradeToken);
 
         await util.assertReverts(
           initialToken.decreaseAllowance(owner, 80, { from: owner })
@@ -544,12 +620,16 @@ contract('EToro Token', async function (
       it('should reject upgrading', async function () {
         const initialToken = this.token;
 
+        const upgradeToken = await EToroTokenMock.new(
+          'eUSD', 'e', 1000,
+          this.accesslist.address,
+          { from: owner }
+        );
+
         (await initialToken.isUpgraded()).should.be.equal(false);
         (await initialToken.upgradedToken()).should.be.equal(util.ZERO_ADDRESS);
 
-        await util.assertReverts(
-          initialToken.upgrade(this.upgradeToken.address, { from: whitelisted })
-        );
+        await util.assertReverts(initialToken.upgrade(upgradeToken.address, { from: whitelisted }));
 
         (await initialToken.isUpgraded()).should.be.equal(false);
         (await initialToken.upgradedToken()).should.be.equal(util.ZERO_ADDRESS);

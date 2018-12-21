@@ -1,7 +1,9 @@
 pragma solidity ^0.4.24;
 
+/* solium-disable max-len */
 import "../token/ERC20/ExternalERC20Storage.sol";
 import "../AccesslistGuarded.sol";
+/* solium-enable max-len */
 
 /**
  *  @title An AccesslistGuarded mock contract
@@ -10,34 +12,34 @@ import "../AccesslistGuarded.sol";
 
 contract AccesslistGuardedMock is AccesslistGuarded {
 
-    constructor(Accesslist _accesslist, bool whitelistEnabled)
-        AccesslistGuarded(_accesslist, whitelistEnabled)
+    constructor(Accesslist _accesslist)
+        AccesslistGuarded(_accesslist)
         public
     {
     }
 
     /**
-     * @dev Function that returns true if
-     *      given address has access
-     * @param account Address to check
+     *  @dev Function that returns true if
+     *       given address isn't blacklisted
+     *  @param account Address to check
      */
-    function requireHasAccessMock(address account)
+    function requireNotBlacklistedMock(address account)
         public
         view
-        requireHasAccess(account)
+        requireNotBlacklisted(account)
         returns (bool)
     {
         return true;
     }
 
     /**
-     * @dev Function that returns true if
-     *      message sender has access
+     *  @dev Function that returns true if
+     *       message sender isn't blacklisted
      */
-    function onlyHasAccessMock()
+    function onlyNotBlacklistedMock()
         public
         view
-        onlyHasAccess()
+        onlyNotBlacklisted()
         returns (bool)
     {
         return true;
@@ -65,33 +67,6 @@ contract AccesslistGuardedMock is AccesslistGuarded {
         public
         view
         onlyWhitelisted()
-        returns (bool)
-    {
-        return true;
-    }
-
-    /**
-     *  @dev Function that returns true if
-     *       given address isn't blacklisted
-     *  @param account Address to check
-     */
-    function requireNotBlacklistedMock(address account)
-        public
-        view
-        requireNotBlacklisted(account)
-        returns (bool)
-    {
-        return true;
-    }
-
-    /**
-     *  @dev Function that returns true if
-     *       message sender isn't blacklisted
-     */
-    function onlyNotBlacklistedMock()
-        public
-        view
-        onlyNotBlacklisted()
         returns (bool)
     {
         return true;
