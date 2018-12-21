@@ -37,7 +37,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyHasAccessMock()
         public
         view
-        onlyHasAccess()
+        onlyHasAccess
         returns (bool)
     {
         return true;
@@ -64,7 +64,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyWhitelistedMock()
         public
         view
-        onlyWhitelisted()
+        onlyWhitelisted
         returns (bool)
     {
         return true;
@@ -91,7 +91,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyNotBlacklistedMock()
         public
         view
-        onlyNotBlacklisted()
+        onlyNotBlacklisted
         returns (bool)
     {
         return true;
