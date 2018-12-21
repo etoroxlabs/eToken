@@ -16,7 +16,8 @@ const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 const tokName = 'eUSD';
 
 contract('TokenManager', async ([owner, user, ...accounts]) => {
-  beforeEach(async () => {
+
+  beforeEach(async function () {
     this.tokMgr = await TokenManager.new();
     this.accesslist = await Accesslist.new();
     const stor1 = await ExternalERC20Storage.new();
@@ -31,7 +32,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       0, true, owner, 0, { from: owner });
   });
 
-  describe('ownable behavior', () => {
+  describe('ownable behavior', function () {
     beforeEach(async function () {
       this.ownable = await TokenManager.new();
     });
@@ -39,21 +40,21 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     shouldBehaveLikeOwnable(owner, [user]);
   });
 
-  it('Should throw on retrieving non-existing entires', async () => {
+  it('Should throw on retrieving non-existing entires', async function () {
     await util.assertReverts(
       this.tokMgr.getToken(tokName, { from: accounts[0] })
     );
   });
 
-  describe('When added token', () => {
-    beforeEach(async () => {
+  describe('When added token', function () {
+    beforeEach(async function () {
       await this.tokMgr.addToken(
         tokName, this.tokenX.address,
         { from: owner }
       );
     });
 
-    it('should add tokens', async () => {
+    it('should add tokens', async function () {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
       const tok = TokenX.at(address);
       const contractTokName = await tok.name({ from: owner });
@@ -64,7 +65,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
     });
 
-    it('should upgrade token', async () => {
+    it('should upgrade token', async function () {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
 
       assert(
@@ -85,14 +86,14 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
     });
 
-    it('fails on duplicated names', async () => {
+    it('fails on duplicated names', async function () {
       await util.assertReverts(
         this.tokMgr.addToken(tokName, this.tokenX2.address, { from: owner })
       );
     });
   });
 
-  it('should properly remove tokens', async () => {
+  it('should properly remove tokens', async function () {
     // Token shouldn't exist before creation
     await util.assertReverts(this.tokMgr.getToken(tokName, { from: owner }));
 
@@ -109,7 +110,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     );
   });
 
-  it('should reject null ITokenX', async () => {
+  it('should reject null ITokenX', async function (){
     const nulltoken = util.ZERO_ADDRESS;
     await util.assertReverts(
       this.tokMgr.addToken('nulltoken', nulltoken, { from: owner })
@@ -117,7 +118,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   });
 
   describe('Get Tokens', () => {
-    it('returns an empty list initially', async () => {
+    it('returns an empty list initially', async function () {
       const expected = [];
 
       const r = await this.tokMgr.getTokens({ from: owner });
@@ -128,8 +129,8 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
     });
 
-    describe('when tokens are added', () => {
-      beforeEach(async () => {
+    describe('when tokens are added', function () {
+      beforeEach(async function () {
         this.expected = ['tok1', 'tok2'];
 
         await this.tokMgr.addToken(
@@ -143,7 +144,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
         );
       });
 
-      it('returns a list of created tokens', async () => {
+      it('returns a list of created tokens', async function () {
         const r = (await this.tokMgr.getTokens({ from: owner }))
           .map(util.bytes32ToString);
 
@@ -155,7 +156,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
         );
       });
 
-      it('Elements are set to 0 when deleted', async () => {
+      it('Elements are set to 0 when deleted', async function () {
         // Delete existing tokens
         await Promise.all(
           this.expected.map(x => this.tokMgr.deleteToken(x, { from: owner }))
@@ -174,14 +175,14 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   });
 
   describe('Permissions', () => {
-    it('Rejects unauthorized newToken', async () => {
+    it('Rejects unauthorized newToken', async function () {
       await util.assertReverts(this.tokMgr.addToken(
         tokName, this.tokenX.address,
         { from: user }
       ));
     });
 
-    it('Rejects unauthorized deleteToken', async () => {
+    it('Rejects unauthorized deleteToken', async function () {
       this.tokMgr.addToken(
         tokName, this.tokenX.address,
         { from: owner }
@@ -195,7 +196,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       assert(tokenAddress === this.tokenX.address);
     });
 
-    it('Rejects unauthorized upgradeToken', async () => {
+    it('Rejects unauthorized upgradeToken', async function () {
       await this.tokMgr.addToken(
         tokName, this.tokenX.address,
         { from: owner }
