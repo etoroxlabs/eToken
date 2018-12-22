@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 
-import "../token/ERC20/ExternalERC20Storage.sol";
 import "../access/AccesslistGuarded.sol";
 
 /**

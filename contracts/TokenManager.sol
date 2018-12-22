@@ -1,7 +1,6 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./token/ERC20/ExternalERC20Storage.sol";
 import "./token/ITokenX.sol";
 
 /**
