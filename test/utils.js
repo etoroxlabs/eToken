@@ -33,17 +33,17 @@ const _assertReverts = async (f, reason = '', invertMatch = false) => {
 };
 
 exports.assertReverts = async (f) => {
-  _assertReverts(f);
+  await _assertReverts(f);
 };
 
 // Asserts that the transaction reverts for a specific reason.
 exports.assertRevertsReason = async (f, reason) => {
-  _assertReverts(f, reason = reason);
+  await  _assertReverts(f, reason = reason);
 };
 
 // Asserts that the transaction reverts for any reason except the one provided.
 exports.assertRevertsNotReason = async (f, reason) => {
-  _assertReverts(f, reason, true);
+  await _assertReverts(f, reason, true);
 };
 
 /**
