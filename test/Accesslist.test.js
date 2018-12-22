@@ -23,7 +23,7 @@ contract('Accesslist', async function (
   });
 
   describe('constructor', function () {
-    beforeEach( async function () {
+    beforeEach(async function () {
       const { logs } =
             await truffleAssert.createTransactionResult(
               accesslist, accesslist.transactionHash);
@@ -33,8 +33,8 @@ contract('Accesslist', async function (
     it('emits OwnershipTransferred event', function () {
       inLogs(this.logs, 'OwnershipTransferred',
              { previousOwner: util.ZERO_ADDRESS,
-               newOwner: owner});
-    })
+               newOwner: owner });
+    });
 
     it('emits BlacklistAdminAdded event', function () {
       inLogs(this.logs, 'BlacklistAdminAdded', { account: owner });
@@ -44,7 +44,6 @@ contract('Accesslist', async function (
       inLogs(this.logs, 'WhitelistAdminAdded', { account: owner });
     });
   });
-
 
   it('should reject null address accesslist', async function () {
     await util.assertReverts(AccesslistGuardedMock.new(util.ZERO_ADDRESS, true));

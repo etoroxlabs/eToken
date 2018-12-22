@@ -1,3 +1,6 @@
+/* global web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
@@ -42,7 +45,7 @@ function shouldBehaveLikeERC20InternalAPI (owner, recipient, anotherAccount) {
       it('emits Transfer event', async function () {
         const event = expectEvent.inLogs(this.logs, 'Transfer', {
           from: ZERO_ADDRESS,
-          to: recipient,
+          to: recipient
         });
 
         event.args.value.should.be.bignumber.equal(amount);
@@ -82,7 +85,7 @@ function shouldBehaveLikeERC20InternalAPI (owner, recipient, anotherAccount) {
           it('emits Transfer event', async function () {
             const event = expectEvent.inLogs(this.logs, 'Transfer', {
               from: owner,
-              to: ZERO_ADDRESS,
+              to: ZERO_ADDRESS
             });
 
             event.args.value.should.be.bignumber.equal(amount);
@@ -143,7 +146,7 @@ function shouldBehaveLikeERC20InternalAPI (owner, recipient, anotherAccount) {
           it('emits Transfer event', async function () {
             const event = expectEvent.inLogs(this.logs, 'Transfer', {
               from: owner,
-              to: ZERO_ADDRESS,
+              to: ZERO_ADDRESS
             });
 
             event.args.value.should.be.bignumber.equal(amount);
@@ -158,5 +161,5 @@ function shouldBehaveLikeERC20InternalAPI (owner, recipient, anotherAccount) {
 }
 
 module.exports = {
-  shouldBehaveLikeERC20InternalAPI,
+  shouldBehaveLikeERC20InternalAPI
 };

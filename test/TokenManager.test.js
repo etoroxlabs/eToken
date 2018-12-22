@@ -16,7 +16,6 @@ const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 const tokName = 'eUSD';
 
 contract('TokenManager', async ([owner, user, ...accounts]) => {
-
   beforeEach(async function () {
     this.tokMgr = await TokenManager.new();
     this.accesslist = await Accesslist.new();
@@ -110,7 +109,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     );
   });
 
-  it('should reject null ITokenX', async function (){
+  it('should reject null ITokenX', async function () {
     const nulltoken = util.ZERO_ADDRESS;
     await util.assertReverts(
       this.tokMgr.addToken('nulltoken', nulltoken, { from: owner })

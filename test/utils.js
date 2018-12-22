@@ -37,8 +37,8 @@ exports.assertReverts = async (f) => {
 };
 
 // Asserts that the transaction reverts for a specific reason.
-exports.assertRevertsReason = async (f, reason) => {
-  await  _assertReverts(f, reason = reason);
+exports.assertRevertsReason = async (f, _reason) => {
+  await _assertReverts(f, reason = _reason);
 };
 
 // Asserts that the transaction reverts for any reason except the one provided.

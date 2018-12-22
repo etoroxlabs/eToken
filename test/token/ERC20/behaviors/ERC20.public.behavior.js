@@ -1,3 +1,6 @@
+/* global web3 */
+/* eslint-env mocha */
+
 const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
 const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
@@ -45,7 +48,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
         const amount = 100;
 
         it('transfers the requested amount', async function () {
-          const res = await this.token.transfer(to, amount, { from: owner });
+          await this.token.transfer(to, amount, { from: owner });
 
           (await this.token.balanceOf(owner)).should.be.bignumber.equal(0);
 
@@ -57,7 +60,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           expectEvent.inLogs(logs, 'Transfer', {
             from: owner,
             to: to,
-            value: amount,
+            value: amount
           });
         });
       });
@@ -85,7 +88,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           expectEvent.inLogs(logs, 'Approval', {
             owner: owner,
             spender: spender,
-            value: amount,
+            value: amount
           });
         });
 
@@ -119,7 +122,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           expectEvent.inLogs(logs, 'Approval', {
             owner: owner,
             spender: spender,
-            value: amount,
+            value: amount
           });
         });
 
@@ -189,7 +192,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
             expectEvent.inLogs(logs, 'Transfer', {
               from: owner,
               to: to,
-              value: amount,
+              value: amount
             });
           });
         });
@@ -200,8 +203,8 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           it('reverts', async function () {
             await shouldFail.reverting(this.token.transferFrom(owner, to, amount, { from: spender }));
           });
-         });
-       });
+        });
+      });
 
       describe('when the spender does not have enough approved balance', function () {
         beforeEach(async function () {
@@ -264,7 +267,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
             expectEvent.inLogs(logs, 'Approval', {
               owner: owner,
               spender: spender,
-              value: 0,
+              value: 0
             });
           });
 
@@ -321,7 +324,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           expectEvent.inLogs(logs, 'Approval', {
             owner: owner,
             spender: spender,
-            value: amount,
+            value: amount
           });
         });
 
@@ -355,7 +358,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
           expectEvent.inLogs(logs, 'Approval', {
             owner: owner,
             spender: spender,
-            value: amount,
+            value: amount
           });
         });
 
@@ -389,9 +392,8 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
       });
     });
   });
-
 }
 
 module.exports = {
-  shouldBehaveLikeERC20PublicAPI,
+  shouldBehaveLikeERC20PublicAPI
 };
