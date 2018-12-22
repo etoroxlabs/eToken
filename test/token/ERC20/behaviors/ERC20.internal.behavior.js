@@ -40,7 +40,6 @@ function shouldBehaveLikeERC20InternalAPI (owner, recipient, anotherAccount) {
       });
 
       it('emits Transfer event', async function () {
-        console.log(this.logs);
         const event = expectEvent.inLogs(this.logs, 'Transfer', {
           from: ZERO_ADDRESS,
           to: recipient,
