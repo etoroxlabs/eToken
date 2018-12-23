@@ -15,17 +15,20 @@ const _assertReverts = async (f, reason = '', invertMatch = false) => {
   } catch (e) {
     const msg = e.message;
     if (msg.startsWith(msgPrefix)) {
-      // TODO: Check if we're running in coverage checking mode using process.env
-      if (specificReason && invertMatch) {
-        assert(msg !== expectedMsg,
-          `Transaction reverted for the explicitly disallowed reason: ${msg}`);
-      } else if (specificReason) {
-        assert(msg === expectedMsg,
-          `Transaction reverted as expected, but for the wrong reason: ${msg}`);
+      // testrpc-sc is required for coverage checking and does not include
+      // revert reason in revert messages
+      if (process.env.SOLIDITY_COVERAGE !== 'true') {
+        if (specificReason && invertMatch) {
+          assert(msg !== expectedMsg,
+                 `Transaction reverted for the explicitly disallowed reason: ${msg}`);
+        } else if (specificReason) {
+          assert(msg === expectedMsg,
+                 `Transaction reverted as expected, but for the wrong reason: ${msg}`);
+        }
+      } else {
+        assert(false,
+               `Transaction failed, but it did not revert as expected: ${msg}`);
       }
-    } else {
-      assert(false,
-        `Transaction failed, but it did not revert as expected: ${msg}`);
     }
     res = true;
   }
