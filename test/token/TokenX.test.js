@@ -59,13 +59,15 @@ function unopgradedTokenBehavior () {
   });
 }
 
-function proxyTokenBehavior (newToken) {
-  it('claims to be upgraded', async function () {
-    (await this.token.isUpgraded()).should.be.equal(true);
-  });
+function proxyTokenBehavior () {
+  describe('proxy contract behavior', async function () {
+    it('claims to be upgraded', async function () {
+      (await this.token.isUpgraded()).should.be.equal(true);
+    });
 
-  it("should return zero address for upgrade token'", async function () {
-    (await this.token.upgradedToken()).should.be.equal(newToken.address);
+    it("should return zero address for upgrade token'", async function () {
+      (await this.token.upgradedToken()).should.be.equal(this.newToken.address);
+    });
   });
 }
 
@@ -353,9 +355,11 @@ contract('TokenX', async function (
       beforeEach(async function () {
         await token.upgrade(upgradeToken.address, { from: owner });
         this.token = token;
+        this.newToken = upgradeToken;
       });
       afterEach(async function () {
         this.token = undefined;
+        this.newToken = undefined;
       });
       shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
       shouldBehaveLikeERC20Mintable(minter, [user]);

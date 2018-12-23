@@ -25,12 +25,12 @@ const _assertReverts = async (f, reason = '', invertMatch = false) => {
           assert(msg === expectedMsg,
                  `Transaction reverted as expected, but for the wrong reason: ${msg}`);
         }
-      } else {
-        assert(false,
-               `Transaction failed, but it did not revert as expected: ${msg}`);
       }
+      res = true;
+    } else {
+      assert(false,
+             `Transaction failed, but it did not revert as expected: ${msg}`);
     }
-    res = true;
   }
   assert(res, 'Transaction succeeded, but it was expected to fail');
 };
@@ -41,7 +41,7 @@ exports.assertReverts = async (f) => {
 
 // Asserts that the transaction reverts for a specific reason.
 exports.assertRevertsReason = async (f, _reason) => {
-  await _assertReverts(f, reason = _reason);
+  await _assertReverts(f, _reason);
 };
 
 // Asserts that the transaction reverts for any reason except the one provided.
