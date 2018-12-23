@@ -1,0 +1,6 @@
+{
+    "extends": "semistandard",
+    "rules": {
+        "indent": "off"
+    }
+}
