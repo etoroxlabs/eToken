@@ -19,7 +19,6 @@ contract TokenXMock is TokenX, PauserRoleMock {
         bool initialDeployment,
         address initialAccount,
         uint256 initialBalance
-
     )
         TokenX(
             name, symbol, decimals,

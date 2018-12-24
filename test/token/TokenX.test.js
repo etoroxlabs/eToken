@@ -235,6 +235,36 @@ contract('TokenX', async function (
     await accesslist.addBlacklisted(blackwhite1, { from: owner });
   });
 
+  describe('Constructor', function () {
+    it('reverts when both upgradedFrom and initialDeployment are set', async function () {
+      await util.assertRevertsReason(
+        TokenXMock.new(tokNameOrig, symbolOrig, 10,
+                       accesslist.address, true, storage.address,
+                       0xf00f, true, owner, 100, { from: owner }),
+        'Cannot both be upgraded and initial deployment.');
+    });
+
+    it('reverts when niether upgradedFrom or initialDeployment are set', async function () {
+      await util.assertRevertsReason(
+        TokenXMock.new(tokNameOrig, symbolOrig, 10,
+                       accesslist.address, true, storage.address,
+                       0, false, owner, 100, { from: owner }),
+        'Cannot both be upgraded and initial deployment.');
+    });
+
+    it('creates when only upgradedFrom is set', async function () {
+      TokenXMock.new(tokNameOrig, symbolOrig, 10,
+                     accesslist.address, true, storage.address,
+                     0xf00f, false, owner, 100, { from: owner });
+    });
+
+    it('creates when only initialDeployment is set', async function () {
+      TokenXMock.new(tokNameOrig, symbolOrig, 10,
+                     accesslist.address, true, storage.address,
+                     0, true, owner, 100, { from: owner });
+    });
+  });
+
   describe('Pre-upgrade', function () {
     beforeEach(function () {
       this.token = token;

@@ -64,7 +64,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     {
 
         require((upgradedFrom != address(0) && (! initialDeployment)) ||
-                (upgradedFrom == address(0) && initialDeployment));
+                (upgradedFrom == address(0) && initialDeployment),
+                "Cannot both be upgraded and initial deployment.");
 
         if (! initialDeployment) {
             // Pause until explicitly unpaused by upgraded contract
