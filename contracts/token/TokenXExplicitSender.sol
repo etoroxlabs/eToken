@@ -82,9 +82,9 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     */
     function finalizeUpgrade() external {
         require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
-        emit UpgradeFinalized(_upgradedFrom, msg.sender);
         require(msg.sender == _upgradedFrom, "Sender is not old contract");
         enabled = true;
+        emit UpgradeFinalized(_upgradedFrom, msg.sender);
     }
 
     /**
