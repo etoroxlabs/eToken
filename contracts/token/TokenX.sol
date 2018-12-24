@@ -47,9 +47,12 @@ contract TokenX is ITokenX, TokenXExplicitSender {
 
     function upgrade(IUpgradableTokenX _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
-        require(_upgradedToken != IUpgradableTokenX(0), "Cannot upgrade to null address");
-        require(_upgradedToken != IUpgradableTokenX(this), "Cannot upgrade to myself");
-        require(externalStorage.isImplementor(), "I don't own my storage. This will end badly.");
+        require(_upgradedToken != IUpgradableTokenX(0),
+                "Cannot upgrade to null address");
+        require(_upgradedToken != IUpgradableTokenX(this),
+                "Cannot upgrade to myself");
+        require(externalStorage.isImplementor(),
+                "I don't own my storage. This will end badly.");
 
         upgradedToken = _upgradedToken;
         externalStorage.transferImplementor(_upgradedToken);
