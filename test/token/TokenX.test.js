@@ -189,57 +189,23 @@ contract('TokenX', async function (
   [owner, minter, pauser, otherPauser, burner, whitelistAdmin,
     whitelisted, whitelisted1, blacklisted, blacklisted1,
     blackwhite, blackwhite1, user, user1, ...restAccounts]) {
-  // Tokens used during tests
-  let token;
-  let storage;
-  let accesslist;
-  let upgradeToken;
-
   const tokNameOrig = 'USDx';
   const tokNameUpgraded = 'USDxUp';
 
   const symbolOrig = 'e';
   const symbolUpgraded = 'f';
 
-  beforeEach(async function () {
-    accesslist = await Accesslist.new({ from: owner });
-    storage = await ExternalERC20Storage.new({ from: owner });
+  describe('constructor', function () {
+    let storage;
 
-    token = await TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                                 accesslist.address, true, storage.address,
-                                 0, true, owner, 100, { from: owner });
-    upgradeToken = await TokenXMock.new(
-      tokNameUpgraded, symbolUpgraded, 20,
-      accesslist.address, true, storage.address, token.address, false, 0, 0,
-      { from: owner });
-    [token, upgradeToken].forEach(async function (f) {
-      await f.addMinter(minter, { from: owner });
-      await f.addPauser(pauser, { from: owner });
-      await f.addBurner(burner, { from: owner });
+    beforeEach(async function () {
+      storage = await ExternalERC20Storage.new({ from: owner });
     });
-    await accesslist.addWhitelistAdmin(whitelistAdmin, { from: owner });
-    await accesslist.addWhitelisted(owner, { from: owner });
-    // Required by the burnFrom test
-    await accesslist.addWhitelisted(burner, { from: owner });
-    // // Required by the pauser test
-    await accesslist.addWhitelisted(otherPauser, { from: owner });
-    await accesslist.addWhitelisted(pauser, { from: owner });
-    await accesslist.addWhitelisted(whitelisted, { from: owner });
-    await accesslist.addWhitelisted(whitelisted1, { from: owner });
-    await accesslist.addBlacklisted(blacklisted, { from: owner });
-    await accesslist.addBlacklisted(blacklisted1, { from: owner });
 
-    await accesslist.addWhitelisted(blackwhite, { from: owner });
-    await accesslist.addWhitelisted(blackwhite1, { from: owner });
-    await accesslist.addBlacklisted(blackwhite, { from: owner });
-    await accesslist.addBlacklisted(blackwhite1, { from: owner });
-  });
-
-  describe('Constructor', function () {
     it('reverts when both upgradedFrom and initialDeployment are set', async function () {
       await util.assertRevertsReason(
         TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                       accesslist.address, true, storage.address,
+                       0xf00f, true, storage.address,
                        0xf00f, true, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
     });
@@ -247,164 +213,195 @@ contract('TokenX', async function (
     it('reverts when niether upgradedFrom or initialDeployment are set', async function () {
       await util.assertRevertsReason(
         TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                       accesslist.address, true, storage.address,
+                       0xf00f, true, storage.address,
                        0, false, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
     });
-
-    it('creates when only upgradedFrom is set', async function () {
-      TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                     accesslist.address, true, storage.address,
-                     0xf00f, false, owner, 100, { from: owner });
-    });
-
-    it('creates when only initialDeployment is set', async function () {
-      TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                     accesslist.address, true, storage.address,
-                     0, true, owner, 100, { from: owner });
-    });
   });
 
-  describe('Pre-upgrade', function () {
-    beforeEach(function () {
-      this.token = token;
+  describe('functionality', function () {
+    // Tokens used during tests
+    let token;
+    let storage;
+    let accesslist;
+    let upgradeToken;
+
+    beforeEach(async function () {
+      accesslist = await Accesslist.new({ from: owner });
+      storage = await ExternalERC20Storage.new({ from: owner });
+
+      token = await TokenXMock.new(tokNameOrig, symbolOrig, 10,
+                                   accesslist.address, true, storage.address,
+                                   0, true, owner, 100, { from: owner });
+      upgradeToken = await TokenXMock.new(
+        tokNameUpgraded, symbolUpgraded, 20,
+        accesslist.address, true, storage.address, token.address, false, 0, 0,
+        { from: owner });
+      [token, upgradeToken].forEach(async function (f) {
+        await f.addMinter(minter, { from: owner });
+        await f.addPauser(pauser, { from: owner });
+        await f.addBurner(burner, { from: owner });
+      });
+      await accesslist.addWhitelistAdmin(whitelistAdmin, { from: owner });
+      await accesslist.addWhitelisted(owner, { from: owner });
+      // Required by the burnFrom test
+      await accesslist.addWhitelisted(burner, { from: owner });
+      // // Required by the pauser test
+      await accesslist.addWhitelisted(otherPauser, { from: owner });
+      await accesslist.addWhitelisted(pauser, { from: owner });
+      await accesslist.addWhitelisted(whitelisted, { from: owner });
+      await accesslist.addWhitelisted(whitelisted1, { from: owner });
+      await accesslist.addBlacklisted(blacklisted, { from: owner });
+      await accesslist.addBlacklisted(blacklisted1, { from: owner });
+
+      await accesslist.addWhitelisted(blackwhite, { from: owner });
+      await accesslist.addWhitelisted(blackwhite1, { from: owner });
+      await accesslist.addBlacklisted(blackwhite, { from: owner });
+      await accesslist.addBlacklisted(blackwhite1, { from: owner });
     });
 
-    describe('Original token', function () {
-      unopgradedTokenBehavior();
-      shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-      shouldBehaveLikeERC20Mintable(minter, [user]);
-      shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
-      shouldBehaveLikeERC20Pausable(owner, otherPauser,
-                                    whitelisted, whitelisted1,
-                                    restAccounts);
-      ERC20Permissions(owner, whitelisted, user, user1, blacklisted,
-                       blacklisted1, blackwhite, blackwhite1);
-
-      it('rejects upgrade to null address', async function () {
-        await util.assertRevertsReason(
-          token.upgrade(util.ZERO_ADDRESS, { from: owner }),
-          'Cannot upgrade to null address');
+    describe('Pre-upgrade', function () {
+      beforeEach(function () {
+        this.token = token;
       });
 
-      it('rejects upgrade to itself', async function () {
-        await util.assertRevertsReason(
-          token.upgrade(token.address, { from: owner }),
-          'Cannot upgrade to myself');
-      });
-      it('reverts when doesn\'t own storage', async function () {
-        await storage.transferImplementor(0xf00f);
+      describe('Original token', function () {
+        unopgradedTokenBehavior();
+        shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
+        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
+        shouldBehaveLikeERC20Pausable(owner, otherPauser,
+                                      whitelisted, whitelisted1,
+                                      restAccounts);
+        ERC20Permissions(owner, whitelisted, user, user1, blacklisted,
+                         blacklisted1, blackwhite, blackwhite1);
 
-        await util.assertRevertsReason(token.upgrade(
-          upgradeToken.address, { from: owner }),
-          'I don\'t own my storage. This will end badly.');
+        it('rejects upgrade to null address', async function () {
+          await util.assertRevertsReason(
+            token.upgrade(util.ZERO_ADDRESS, { from: owner }),
+            'Cannot upgrade to null address');
+        });
+
+        it('rejects upgrade to itself', async function () {
+          await util.assertRevertsReason(
+            token.upgrade(token.address, { from: owner }),
+            'Cannot upgrade to myself');
+        });
+
+        it('reverts when doesn\'t own storage', async function () {
+          await storage.transferImplementor(0xf00f);
+
+          await util.assertRevertsReason(token.upgrade(
+            upgradeToken.address, { from: owner }),
+                                         'I don\'t own my storage. This will end badly.');
+        });
+
+        it('rejects upgrade from non-owner', async function () {
+          await util.assertReverts(token.upgrade(
+            upgradeToken.address, { from: whitelisted }));
+        });
+
+        it('Returns orig token name', async function () {
+          (await this.token.name()).should.be.equal(tokNameOrig);
+        });
+
+        it('Returns orig token symbol', async function () {
+          (await this.token.symbol()).should.be.equal(symbolOrig);
+        });
+
+        it('Returns orig token decimals', async function () {
+          (await this.token.decimals()).should.be.bignumber.equal(10);
+        });
       });
 
-      it('rejects upgrade from non-owner', async function () {
-        await util.assertReverts(token.upgrade(
-          upgradeToken.address, { from: whitelisted }));
-      });
-
-      it('Returns orig token name', async function () {
-        (await this.token.name()).should.be.equal(tokNameOrig);
-      });
-
-      it('Returns orig token symbol', async function () {
-        (await this.token.symbol()).should.be.equal(symbolOrig);
-      });
-
-      it('Returns orig token decimals', async function () {
-        (await this.token.decimals()).should.be.bignumber.equal(10);
-      });
-    });
-
-    describe('New token', function () {
-      describe('function permissions', function () {
-        describe('unopgraded token is disabled', function () {
-          const allOps = explicitSenderOps.concat(otherOps);
-          allOps.forEach(function (op) {
-            it(`${op[0]} reverts`, async function () {
-              await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
-                'Token disabled');
+      describe('New token', function () {
+        describe('function permissions', function () {
+          describe('unopgraded token is disabled', function () {
+            const allOps = explicitSenderOps.concat(otherOps);
+            allOps.forEach(function (op) {
+              it(`${op[0]} reverts`, async function () {
+                await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
+                                               'Token disabled');
+              });
             });
           });
         });
       });
     });
-  });
 
-  describe('Post-upgrade', function () {
-    function identifiesAsNewToken () {
-      it('Returns new token name', async function () {
-        (await this.token.name()).should.be.equal(tokNameUpgraded);
-      });
+    describe('Post-upgrade', function () {
+      function identifiesAsNewToken () {
+        it('Returns new token name', async function () {
+          (await this.token.name()).should.be.equal(tokNameUpgraded);
+        });
 
-      it('Returns new token symbol', async function () {
-        (await this.token.symbol()).should.be.equal(symbolUpgraded);
-      });
+        it('Returns new token symbol', async function () {
+          (await this.token.symbol()).should.be.equal(symbolUpgraded);
+        });
 
-      it('Returns new token decimals', async function () {
-        (await this.token.decimals()).should.be.bignumber.equal(20);
-      });
+        it('Returns new token decimals', async function () {
+          (await this.token.decimals()).should.be.bignumber.equal(20);
+        });
 
-      // TODO: Test other query funtions?
-    }
+        // TODO: Test other query funtions?
+      }
 
-    describe('Upgraded token', function () {
-      beforeEach(async function () {
-        await token.upgrade(upgradeToken.address, { from: owner });
-        this.token = upgradeToken;
-      });
-      afterEach(async function () {
-        this.token = undefined;
-      });
+      describe('Upgraded token', function () {
+        beforeEach(async function () {
+          await token.upgrade(upgradeToken.address, { from: owner });
+          this.token = upgradeToken;
+        });
+        afterEach(async function () {
+          this.token = undefined;
+        });
 
-      shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-      shouldBehaveLikeERC20Mintable(minter, [user]);
-      shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
-      shouldBehaveLikeERC20Pausable(owner, otherPauser,
-                                    whitelisted, whitelisted1,
-                                    restAccounts);
+        shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
+        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
+        shouldBehaveLikeERC20Pausable(owner, otherPauser,
+                                      whitelisted, whitelisted1,
+                                      restAccounts);
 
-      ERC20Permissions(owner, whitelisted, user, user1,
-                       blacklisted, blacklisted1,
-                       blackwhite, blackwhite1);
-      identifiesAsNewToken();
+        ERC20Permissions(owner, whitelisted, user, user1,
+                         blacklisted, blacklisted1,
+                         blackwhite, blackwhite1);
+        identifiesAsNewToken();
 
-      describe('Upgraded token rejects unauthorized for explicit sender functions', function () {
-        explicitSenderOps.forEach(function (op) {
-          it(`${op[0]} reverts`, async function () {
-            await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
-              'Proxy is the only allowed caller');
+        describe('Upgraded token rejects unauthorized for explicit sender functions', function () {
+          explicitSenderOps.forEach(function (op) {
+            it(`${op[0]} reverts`, async function () {
+              await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
+                                             'Proxy is the only allowed caller');
+            });
           });
         });
       });
-    });
 
-    describe('Old token (proxy)', function () {
-      beforeEach(async function () {
-        await token.upgrade(upgradeToken.address, { from: owner });
-        this.token = token;
-        this.newToken = upgradeToken;
-      });
-      afterEach(async function () {
-        this.token = undefined;
-        this.newToken = undefined;
-      });
-      shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-      shouldBehaveLikeERC20Mintable(minter, [user]);
-      shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
-      proxyPausableBehavior();
-      ERC20Permissions(owner, whitelisted, user, user1,
-                       blacklisted, blacklisted1,
-                       blackwhite, blackwhite1);
-      identifiesAsNewToken();
-      proxyTokenBehavior(upgradeToken);
+      describe('Old token (proxy)', function () {
+        beforeEach(async function () {
+          await token.upgrade(upgradeToken.address, { from: owner });
+          this.token = token;
+          this.newToken = upgradeToken;
+        });
+        afterEach(async function () {
+          this.token = undefined;
+          this.newToken = undefined;
+        });
+        shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
+        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
+        proxyPausableBehavior();
+        ERC20Permissions(owner, whitelisted, user, user1,
+                         blacklisted, blacklisted1,
+                         blackwhite, blackwhite1);
+        identifiesAsNewToken();
+        proxyTokenBehavior(upgradeToken);
 
-      it('reject if already upgraded', async function () {
-        await util.assertRevertsReason(
-          token.upgrade(upgradeToken.address, { from: owner }),
-          'Token is already upgraded');
+        it('reject if already upgraded', async function () {
+          await util.assertRevertsReason(
+            token.upgrade(upgradeToken.address, { from: owner }),
+            'Token is already upgraded');
+        });
       });
     });
   });
