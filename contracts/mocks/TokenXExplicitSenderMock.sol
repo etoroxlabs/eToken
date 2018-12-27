@@ -19,8 +19,4 @@ contract TokenXExplicitSenderMock is TokenXExplicitSender {
             name, symbol, decimals, accesslist, whitelistEnabled,
             stor, upgradedFrom, initialDeployment)
     {}
-
-    /* function finalizeUpgrade() external { */
-    /*     super.finalizeUpgrade(); */
-    /* } */
 }
