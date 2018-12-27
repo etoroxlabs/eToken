@@ -8,6 +8,7 @@ const util = require('./../utils.js');
 const Accesslist = artifacts.require('Accesslist');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 const TokenXExplicitSender = artifacts.require('TokenXExplicitSenderMock');
+const TokenXExplicitSenderE = require('./TokenXExplicitSender.events.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -39,6 +40,16 @@ contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
                                              0xf00f, false, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
                                      'Sender is not old contract');
+    });
+
+    it('emits UpgradeFinalized event', async function () {
+      const token = await TokenXExplicitSender.new(
+        'tok', 't', 10, accesslist.address, true, storage.address,
+        owner, false, { from: owner });
+
+      const tokenE = TokenXExplicitSenderE.wrap(token);
+
+      await tokenE.finalizeUpgrade(owner, owner, { from: owner });
     });
   });
   // Remainder of contract tested through TokenX.
