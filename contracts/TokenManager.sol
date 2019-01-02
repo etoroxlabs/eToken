@@ -1,8 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./token/ERC20/ExternalERC20Storage.sol";
-import "./token/IEToroToken.sol";
+import "./token/ITokenX.sol";
 
 /**
  * @title The Token Manager contract
@@ -11,13 +10,13 @@ import "./token/IEToroToken.sol";
 contract TokenManager is Ownable {
 
     /**
-     * @dev A TokenEntry defines a relation between an EToroToken instance and the
+     * @dev A TokenEntry defines a relation between a TokenX instance and the
      * index of the names list containing the name of the token.
      */
     struct TokenEntry {
         bool exists;
         uint index;
-        IEToroToken token;
+        ITokenX token;
     }
 
     mapping (bytes32 => TokenEntry) private tokens;
@@ -46,28 +45,28 @@ contract TokenManager is Ownable {
     }
 
     /**
-     * @dev Require that the token _iEToroToken is not null
-     * @param _iEToroToken Token that is checked for
+     * @dev Require that the token _iTokenX is not null
+     * @param _iTokenX Token that is checked for
      */
-    modifier notNullToken(IEToroToken _iEToroToken) {
-        require(_iEToroToken != IEToroToken(0), "Supplied token is null");
+    modifier notNullToken(ITokenX _iTokenX) {
+        require(_iTokenX != ITokenX(0), "Supplied token is null");
         _;
     }
 
     /**
      * @dev Adds a token to the tokenmanager
      * @param _name Name of the token to be added
-     * @param _iEToroToken Token to be added
+     * @param _iTokenX Token to be added
      */
-    function addToken(bytes32 _name, IEToroToken _iEToroToken)
+    function addToken(bytes32 _name, ITokenX _iTokenX)
         public
         onlyOwner
         tokenNotExists(_name)
-        notNullToken(_iEToroToken)
+        notNullToken(_iTokenX)
     {
         tokens[_name] = TokenEntry({
             index: names.length,
-            token: _iEToroToken,
+            token: _iTokenX,
             exists: true
         });
         names.push(_name);
@@ -92,15 +91,15 @@ contract TokenManager is Ownable {
     /**
      * @dev Upgrades a token
      * @param _name Name of token to be upgraded
-     * @param _iEToroToken Upgraded version of token
+     * @param _iTokenX Upgraded version of token
      */
-    function upgradeToken(bytes32 _name, IEToroToken _iEToroToken)
+    function upgradeToken(bytes32 _name, ITokenX _iTokenX)
         public
         onlyOwner
         tokenExists(_name)
-        notNullToken(_iEToroToken)
+        notNullToken(_iTokenX)
     {
-        tokens[_name].token = _iEToroToken;
+        tokens[_name].token = _iTokenX;
         emit TokenUpgraded(_name);
     }
 
@@ -112,7 +111,7 @@ contract TokenManager is Ownable {
         public
         tokenExists(_name)
         view
-        returns (IEToroToken)
+        returns (ITokenX)
     {
         return tokens[_name].token;
     }

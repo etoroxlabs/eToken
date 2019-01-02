@@ -2,7 +2,7 @@
 
 const Whitelist = artifacts.require('Whitelist');
 const TokenManager = artifacts.require('TokenManager');
-const EToroToken = artifacts.require('EToroToken');
+const TokenX = artifacts.require('TokenX');
 
 async function setupAccounts (deployer, _network, accounts) {
   /*
@@ -47,7 +47,7 @@ async function setupAccounts (deployer, _network, accounts) {
 
     const tokens = await Promise.all(
       tokenDetails.map(async (td) =>
-        EToroToken.at(await tokenManagerContract.getToken(td.name, { from: owner }))
+        TokenX.at(await tokenManagerContract.getToken(td.name, { from: owner }))
       )
     );
 

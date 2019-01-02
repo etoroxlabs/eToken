@@ -9,28 +9,29 @@ const { shouldBehaveLikeOwnable } =
 
 const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');
-const EToroToken = artifacts.require('EToroToken');
-const EToroTokenMock = artifacts.require('EToroTokenMock');
+const TokenX = artifacts.require('TokenX');
+const TokenXMock = artifacts.require('TokenXMock');
+const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 const tokName = 'eUSD';
 
 contract('TokenManager', async ([owner, user, ...accounts]) => {
-  beforeEach(async () => {
+  beforeEach(async function () {
     this.tokMgr = await TokenManager.new();
     this.accesslist = await Accesslist.new();
+    const stor1 = await ExternalERC20Storage.new();
+    const stor2 = await ExternalERC20Storage.new();
 
-    this.eToroToken = await EToroTokenMock.new(
-      tokName, 'e', 4, this.accesslist.address, true,
-      { from: owner }
-    );
+    this.tokenX = await TokenXMock.new(
+      tokName, 'e', 4, this.accesslist.address, true, stor1.address,
+      0, true, owner, 0, { from: owner });
 
-    this.eToroToken2 = await EToroTokenMock.new(
-      tokName, 'se', 8, this.accesslist.address, true,
-      { from: owner }
-    );
+    this.tokenX2 = await TokenXMock.new(
+      tokName, 'se', 8, this.accesslist.address, true, stor2.address,
+      0, true, owner, 0, { from: owner });
   });
 
-  describe('OpenZeppelin ownable behavior', () => {
+  describe('ownable behavior', function () {
     beforeEach(async function () {
       this.ownable = await TokenManager.new();
     });
@@ -38,23 +39,23 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     shouldBehaveLikeOwnable(owner, [user]);
   });
 
-  it('Should throw on retrieving non-existing entires', async () => {
+  it('Should throw on retrieving non-existing entires', async function () {
     await util.assertReverts(
       this.tokMgr.getToken(tokName, { from: accounts[0] })
     );
   });
 
-  describe('When added token', () => {
-    beforeEach(async () => {
+  describe('When added token', function () {
+    beforeEach(async function () {
       await this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
     });
 
-    it('should add tokens', async () => {
+    it('should add tokens', async function () {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
-      const tok = EToroToken.at(address);
+      const tok = TokenX.at(address);
       const contractTokName = await tok.name({ from: owner });
 
       assert(
@@ -63,40 +64,40 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
     });
 
-    it('should upgrade token', async () => {
+    it('should upgrade token', async function () {
       const address = await this.tokMgr.getToken(tokName, { from: owner });
 
       assert(
-        this.eToroToken.address === address,
+        this.tokenX.address === address,
         'Created contract did not match the expected'
       );
 
       await this.tokMgr.upgradeToken(
-        tokName, this.eToroToken2.address,
+        tokName, this.tokenX2.address,
         { from: owner }
       );
 
       const address2 = await this.tokMgr.getToken(tokName, { from: owner });
 
       assert(
-        this.eToroToken2.address === address2,
+        this.tokenX2.address === address2,
         'Created contract did not match the expected'
       );
     });
 
-    it('fails on duplicated names', async () => {
+    it('fails on duplicated names', async function () {
       await util.assertReverts(
-        this.tokMgr.addToken(tokName, this.eToroToken2.address, { from: owner })
+        this.tokMgr.addToken(tokName, this.tokenX2.address, { from: owner })
       );
     });
   });
 
-  it('should properly remove tokens', async () => {
+  it('should properly remove tokens', async function () {
     // Token shouldn't exist before creation
     await util.assertReverts(this.tokMgr.getToken(tokName, { from: owner }));
 
     // Create token and add token
-    await this.tokMgr.addToken(tokName, this.eToroToken.address, { from: owner });
+    await this.tokMgr.addToken(tokName, this.tokenX.address, { from: owner });
 
     // Retrieve token. This should be successful
     await this.tokMgr.getToken(tokName, { from: owner });
@@ -108,7 +109,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
     );
   });
 
-  it('should reject null IEtoroToken', async () => {
+  it('should reject null ITokenX', async function () {
     const nulltoken = util.ZERO_ADDRESS;
     await util.assertReverts(
       this.tokMgr.addToken('nulltoken', nulltoken, { from: owner })
@@ -116,7 +117,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   });
 
   describe('Get Tokens', () => {
-    it('returns an empty list initially', async () => {
+    it('returns an empty list initially', async function () {
       const expected = [];
 
       const r = await this.tokMgr.getTokens({ from: owner });
@@ -127,32 +128,22 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
     });
 
-    describe('when tokens are added', () => {
-      beforeEach(async () => {
+    describe('when tokens are added', function () {
+      beforeEach(async function () {
         this.expected = ['tok1', 'tok2'];
 
-        this.eToroToken = await EToroTokenMock.new(
-          this.expected[0], 'e', 4, this.accesslist.address, true,
-          { from: owner }
-        );
-
-        this.eToroToken2 = await EToroTokenMock.new(
-          this.expected[1], 'e', 4, this.accesslist.address, true,
+        await this.tokMgr.addToken(
+          this.expected[0], this.tokenX.address,
           { from: owner }
         );
 
         await this.tokMgr.addToken(
-          this.expected[0], this.eToroToken.address,
-          { from: owner }
-        );
-
-        await this.tokMgr.addToken(
-          this.expected[1], this.eToroToken2.address,
+          this.expected[1], this.tokenX2.address,
           { from: owner }
         );
       });
 
-      it('returns a list of created tokens', async () => {
+      it('returns a list of created tokens', async function () {
         const r = (await this.tokMgr.getTokens({ from: owner }))
           .map(util.bytes32ToString);
 
@@ -164,7 +155,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
         );
       });
 
-      it('Elements are set to 0 when deleted', async () => {
+      it('Elements are set to 0 when deleted', async function () {
         // Delete existing tokens
         await Promise.all(
           this.expected.map(x => this.tokMgr.deleteToken(x, { from: owner }))
@@ -183,16 +174,16 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
   });
 
   describe('Permissions', () => {
-    it('Rejects unauthorized newToken', async () => {
+    it('Rejects unauthorized newToken', async function () {
       await util.assertReverts(this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: user }
       ));
     });
 
-    it('Rejects unauthorized deleteToken', async () => {
+    it('Rejects unauthorized deleteToken', async function () {
       this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
 
@@ -201,25 +192,25 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       );
 
       const tokenAddress = await this.tokMgr.getToken(tokName, { from: owner });
-      assert(tokenAddress === this.eToroToken.address);
+      assert(tokenAddress === this.tokenX.address);
     });
 
-    it('Rejects unauthorized upgradeToken', async () => {
+    it('Rejects unauthorized upgradeToken', async function () {
       await this.tokMgr.addToken(
-        tokName, this.eToroToken.address,
+        tokName, this.tokenX.address,
         { from: owner }
       );
 
       const address = await this.tokMgr.getToken(tokName);
 
       assert(
-        this.eToroToken.address === address,
+        this.tokenX.address === address,
         'Created contract did not match the expected'
       );
 
       await util.assertReverts(
         this.tokMgr.upgradeToken(
-          tokName, this.eToroToken2.address,
+          tokName, this.tokenX2.address,
           { from: user }
         )
       );
@@ -227,7 +218,7 @@ contract('TokenManager', async ([owner, user, ...accounts]) => {
       const address2 = await this.tokMgr.getToken(tokName);
 
       assert(
-        this.eToroToken.address === address2,
+        this.tokenX.address === address2,
         'Created contract did not match the expected'
       );
     });

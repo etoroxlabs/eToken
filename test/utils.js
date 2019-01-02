@@ -1,16 +1,52 @@
 /* global assert */
 
-exports.assertReverts = async (f, includes = '') => {
+const _assertReverts = async (f, reason = '', invertMatch = false) => {
   let res = false;
+  assert(typeof (reason) === 'string');
+  assert(typeof (invertMatch) === 'boolean');
+  const specificReason = reason !== '';
+  if (reason !== '') {
+    reason = ' ' + reason;
+  }
+  const msgPrefix = 'VM Exception while processing transaction: revert';
+  const expectedMsg = `${msgPrefix}${reason}`;
   try {
     await f;
   } catch (e) {
-    assert(e.message.includes('VM Exception while processing transaction: revert') &&
-               e.message.includes(includes),
-    `Got an error as expected, but it was of the wrong kind: ${e.message}`);
-    res = true;
+    const msg = e.message;
+    if (msg.startsWith(msgPrefix)) {
+      // testrpc-sc is required for coverage checking and does not include
+      // revert reason in revert messages
+      if (process.env.SOLIDITY_COVERAGE !== 'true') {
+        if (specificReason && invertMatch) {
+          assert(msg !== expectedMsg,
+                 `Transaction reverted for the explicitly disallowed reason: ${msg}`);
+        } else if (specificReason) {
+          assert(msg === expectedMsg,
+                 `Transaction reverted as expected, but for the wrong reason: ${msg}`);
+        }
+      }
+      res = true;
+    } else {
+      assert(false,
+             `Transaction failed, but it did not revert as expected: ${msg}`);
+    }
   }
-  assert(res, 'Expected an error');
+  assert(res, 'Transaction succeeded, but it was expected to fail');
+};
+
+exports.assertReverts = async (f) => {
+  await _assertReverts(f);
+};
+
+// Asserts that the transaction reverts for a specific reason.
+exports.assertRevertsReason = async (f, _reason) => {
+  await _assertReverts(f, _reason);
+};
+
+// Asserts that the transaction reverts for any reason except the one provided.
+exports.assertRevertsNotReason = async (f, reason) => {
+  await _assertReverts(f, reason, true);
 };
 
 /**
@@ -39,9 +75,4 @@ exports.bytes32ToString = (str) => {
   return parts.map((x) => String.fromCharCode(x)).join('');
 };
 
-const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants.js');
-
-exports.ZERO_ADDRESS = ZERO_ADDRESS;
-
-// exports = {assertReverts: true, bytes32ToString: true}
-// module.exports = [assertReverts, bytes32ToString]
+exports.ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

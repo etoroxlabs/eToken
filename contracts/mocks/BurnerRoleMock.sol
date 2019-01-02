@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../roles/BurnerRole.sol";
+import "../access/roles/BurnerRole.sol";
 
 contract BurnerRoleMock is BurnerRole {
 

@@ -16,12 +16,12 @@ contract BlacklistAdminRole is Ownable {
     }
 
     modifier onlyBlacklistAdmin() {
-        require(isBlacklistAdmin(msg.sender));
+        require(isBlacklistAdmin(msg.sender), "not blacklistAdmin");
         _;
     }
 
     modifier requireBlacklistAdmin(address account) {
-        require(isBlacklistAdmin(account));
+        require(isBlacklistAdmin(account), "not blacklistAdmin");
         _;
     }
 

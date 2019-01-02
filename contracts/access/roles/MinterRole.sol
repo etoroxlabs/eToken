@@ -16,12 +16,12 @@ contract MinterRole is Ownable {
     }
 
     modifier onlyMinter() {
-        require(isMinter(msg.sender));
+        require(isMinter(msg.sender), "not minter");
         _;
     }
 
     modifier requireMinter(address account) {
-        require(isMinter(account));
+        require(isMinter(account), "not minter");
         _;
     }
 

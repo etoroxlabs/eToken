@@ -1,7 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../token/ERC20/ExternalERC20Storage.sol";
-import "../AccesslistGuarded.sol";
+import "../access/AccesslistGuarded.sol";
 
 /**
  *  @title An AccesslistGuarded mock contract
@@ -37,7 +36,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyHasAccessMock()
         public
         view
-        onlyHasAccess()
+        onlyHasAccess
         returns (bool)
     {
         return true;
@@ -64,7 +63,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyWhitelistedMock()
         public
         view
-        onlyWhitelisted()
+        onlyWhitelisted
         returns (bool)
     {
         return true;
@@ -91,7 +90,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     function onlyNotBlacklistedMock()
         public
         view
-        onlyNotBlacklisted()
+        onlyNotBlacklisted
         returns (bool)
     {
         return true;

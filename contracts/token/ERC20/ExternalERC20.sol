@@ -84,16 +84,6 @@ contract ExternalERC20 is IERC20 {
     }
 
     /**
-     * @dev Internal function implementing the functionality of approve
-     */
-    function _approve(address originSender, address spender, uint256 value) internal {
-        require(spender != address(0));
-
-        _externalERC20Storage.setAllowed(originSender, spender, value);
-        emit Approval(originSender, spender, value);
-    }
-
-    /**
      * @dev Transfer tokens from one address to another
      * @param from address The address which you want to send tokens from
      * @param to address The address which you want to transfer to
@@ -109,6 +99,50 @@ contract ExternalERC20 is IERC20 {
             value
         );
         return true;
+    }
+
+    /**
+     * @dev Increase the amount of tokens that an owner allowed to a spender.
+     * approve should be called when allowed_[_spender] == 0. To increment
+     * allowed value is better to use this function to avoid 2 calls (and wait until
+     * the first transaction is mined)
+     * From MonolithDAO Token.sol
+     * @param spender The address which will spend the funds.
+     * @param addedValue The amount of tokens to increase the allowance by.
+     */
+    function increaseAllowance(address spender, uint256 addedValue)
+        public
+        returns (bool)
+    {
+        _increaseAllowance(msg.sender, spender, addedValue);
+        return true;
+    }
+
+    /**
+     * @dev Decrease the amount of tokens that an owner allowed to a spender.
+     * approve should be called when allowed_[_spender] == 0. To decrement
+     * allowed value is better to use this function to avoid 2 calls (and wait until
+     * the first transaction is mined)
+     * From MonolithDAO Token.sol
+     * @param spender The address which will spend the funds.
+     * @param subtractedValue The amount of tokens to decrease the allowance by.
+     */
+    function decreaseAllowance(address spender, uint256 subtractedValue)
+        public
+        returns (bool)
+    {
+        _decreaseAllowance(msg.sender, spender, subtractedValue);
+        return true;
+    }
+
+    /**
+     * @dev Internal function implementing the functionality of approve
+     */
+    function _approve(address originSender, address spender, uint256 value) internal {
+        require(spender != address(0));
+
+        _externalERC20Storage.setAllowed(originSender, spender, value);
+        emit Approval(originSender, spender, value);
     }
 
     /**
@@ -132,23 +166,6 @@ contract ExternalERC20 is IERC20 {
     }
 
     /**
-     * @dev Increase the amount of tokens that an owner allowed to a spender.
-     * approve should be called when allowed_[_spender] == 0. To increment
-     * allowed value is better to use this function to avoid 2 calls (and wait until
-     * the first transaction is mined)
-     * From MonolithDAO Token.sol
-     * @param spender The address which will spend the funds.
-     * @param addedValue The amount of tokens to increase the allowance by.
-     */
-    function increaseAllowance(address spender, uint256 addedValue)
-        public
-        returns (bool)
-    {
-        _increaseAllowance(msg.sender, spender, addedValue);
-        return true;
-    }
-
-    /**
      * @dev Internal function implementing the functionality of increaseAllowance
      */
     function _increaseAllowance(address originSender, address spender, uint256 addedValue)
@@ -164,23 +181,6 @@ contract ExternalERC20 is IERC20 {
             originSender, spender,
             _externalERC20Storage.allowed(originSender, spender)
         );
-    }
-
-    /**
-     * @dev Decrease the amount of tokens that an owner allowed to a spender.
-     * approve should be called when allowed_[_spender] == 0. To decrement
-     * allowed value is better to use this function to avoid 2 calls (and wait until
-     * the first transaction is mined)
-     * From MonolithDAO Token.sol
-     * @param spender The address which will spend the funds.
-     * @param subtractedValue The amount of tokens to decrease the allowance by.
-     */
-    function decreaseAllowance(address spender, uint256 subtractedValue)
-        public
-        returns (bool)
-    {
-        _decreaseAllowance(msg.sender, spender, subtractedValue);
-        return true;
     }
 
     /**

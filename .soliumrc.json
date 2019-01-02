@@ -1,11 +1,10 @@
-
 {
   "extends": "solium:all",
   "plugins": ["security", "zeppelin"],
   "rules": {
     "blank-lines": "off",
     "error-reason": "off",
-    "indentation": ["error", 4],
+    "indentation": "off",
     "lbrace": "off",
     "linebreak-style": ["error", "unix"],
     "max-len": ["error", 79],

@@ -16,12 +16,12 @@ contract BurnerRole is Ownable {
     }
 
     modifier onlyBurner() {
-        require(isBurner(msg.sender));
+        require(isBurner(msg.sender), "not burner");
         _;
     }
 
     modifier requireBurner(address account) {
-        require(isBurner(account));
+        require(isBurner(account), "not burner");
         _;
     }
 

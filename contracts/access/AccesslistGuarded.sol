@@ -32,10 +32,7 @@ contract AccesslistGuarded {
      *  @param account address to be checked
      */
     modifier requireHasAccess(address account) {
-        require(
-            hasAccess(account),
-            "Supplied address doesn't have access"
-        );
+        require(hasAccess(account), "no access");
         _;
     }
 
@@ -44,10 +41,7 @@ contract AccesslistGuarded {
      *       to be whitelisted and not blacklisted
      */
     modifier onlyHasAccess() {
-        require(
-            hasAccess(msg.sender),
-            "Sender address doesn't have access"
-        );
+        require(hasAccess(msg.sender), "no access");
         _;
     }
 
@@ -57,10 +51,7 @@ contract AccesslistGuarded {
      *  @param account address to be checked
      */
     modifier requireWhitelisted(address account) {
-        require(
-            isWhitelisted(account),
-            "Supplied address is not whitelisted"
-        );
+        require(isWhitelisted(account), "no access");
         _;
     }
 
@@ -69,10 +60,7 @@ contract AccesslistGuarded {
      *       to be whitelisted
      */
     modifier onlyWhitelisted() {
-        require(
-            isWhitelisted(msg.sender),
-            "Sender address is not whitelisted"
-        );
+        require(isWhitelisted(msg.sender), "no access");
         _;
     }
 
@@ -82,10 +70,7 @@ contract AccesslistGuarded {
      *  @param account address to be checked
      */
     modifier requireNotBlacklisted(address account) {
-        require(
-            isNotBlacklisted(account),
-            "Supplied address is blacklisted"
-        );
+        require(isNotBlacklisted(account), "no access");
         _;
     }
 
@@ -94,10 +79,7 @@ contract AccesslistGuarded {
      *       to not be blacklisted
      */
     modifier onlyNotBlacklisted() {
-        require(
-            isNotBlacklisted(msg.sender),
-            "Sender address is blacklisted"
-        );
+        require(isNotBlacklisted(msg.sender), "no access");
         _;
     }
 

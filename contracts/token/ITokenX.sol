@@ -1,6 +1,25 @@
 pragma solidity ^0.4.24;
 
-interface IEToroToken {
+import "./IUpgradableTokenX.sol";
+
+interface ITokenX {
+
+    function upgrade(IUpgradableTokenX upgradedToken) external;
+
+    /* Taken from ERC20Detailed in openzeppelin-solidity */
+    function name() external view returns(string);
+
+    function symbol() external view returns(string);
+
+    function decimals() external view returns(uint8);
+
+    /* Taken from IERC20 in openzeppelin-solidity */
+    function totalSupply() external view returns (uint256);
+
+    function balanceOf(address who) external view returns (uint256);
+
+    function allowance(address owner, address spender)
+        external view returns (uint256);
 
     function transfer(address to, uint256 value) external returns (bool);
 
@@ -47,20 +66,4 @@ interface IEToroToken {
         uint256 value
     );
 
-    /* Taken from ERC20Detailed in openzeppelin-solidity */
-    function name() external view returns(string);
-
-    function symbol() external view returns(string);
-
-    function decimals() external view returns(uint8);
-
-    /* Taken from IERC20 in openzeppelin-solidity */
-    function totalSupply() external view returns (uint256);
-
-    function balanceOf(address who) external view returns (uint256);
-
-    function allowance(address owner, address spender)
-        external
-        view
-        returns (uint256);
 }
