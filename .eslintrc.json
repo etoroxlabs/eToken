@@ -1,6 +1,26 @@
 {
-    "extends": "semistandard",
-    "rules": {
-        "indent": "off"
-    }
+  "extends": "semistandard",
+  "rules": {
+    "indent": [
+      "error", 2, {
+        "CallExpression": {
+          "arguments": "first"
+        },
+        "FunctionDeclaration": {
+          "body": 1,
+          "parameters": "first"
+        },
+        "FunctionExpression": {
+          "body": 1,
+          "parameters": "first"
+        },
+        "MemberExpression": 1,
+        "ObjectExpression": "first",
+        "SwitchCase": 1,
+        "ignoredNodes": [
+          "ConditionalExpression"
+        ]
+      }
+    ]
+  }
 }
