@@ -16,7 +16,7 @@ This repository has only been tested on UNIX-derived systems.
 
 ## OVERVIEW
 
-![overview](docs/images/contracts_overview_new.png)
+![overview](docs/images/contracts_overview.svg)
 
 *__Figure 1:__ Design overview. To simplify the overview, aspects related to the token upgrading functionality are not shown here but are described separately in Figure 2.*
 
@@ -46,7 +46,7 @@ Due to the immutability of Ethereum smart contracts, upgrading the functionality
 A prerequisite for making our token upgradable was to build an ERC20 implementation which held token balances and allowances in a separate and dedicated contract. To do this, we extended the OZ ERC20 implementation to make it call an external storage contract for every operation modifying or querying token balances and allowances. The storage contract is quite simple and supports a minimal set of operations. In order to prevent multiple tokens from, accidentally or intentionally, using the same storage, the storage contract will only accept requests from a single contract at a time. This contract is known as the implementor. When a token is upgraded, the implementor of the attached storage is transferred to the new token.
 
 <p align="center">
-  <img src="docs/images/upgrade.png"/>
+  <img src="docs/images/token_upgrade.svg"/>
 </p>
 
 *__Figure 2:__ Rendering of the token upgrade process. On the left side, we see the contract communications before the network upgrade. All clients and the token manager targets the token contract. The token contract use a separate contract for storing balances. On the right side, the contract organization after an upgrade is shown. The token manager is updated to point to the new, upgraded, contract. The old contract is marked as deprecated which causes it to proxy all incoming calls to the new contract. The balance storage contract now provides storage for the new token contract such that balances are transferred seamlessly.*
@@ -88,7 +88,7 @@ Access to token transfer functions is guarded by the AccessList. Accounts can be
 
 ## Class Diagram
 
-![classdiagram](docs/images/class_diagram.png)
+![classdiagram](docs/images/class_diagram.svg)
 
 *__Figure 3:__ Detailed interactions of the contracts*
 
