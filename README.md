@@ -16,7 +16,7 @@ This repository has only been tested on UNIX-derived systems.
 
 ## OVERVIEW
 
-![overview](docs/images/contracts_overview_new.png)
+![overview](docs/images/contracts_overview.png)
 
 *__Figure 1:__ Design overview. To simplify the overview, aspects related to the token upgrading functionality are not shown here but are described separately in Figure 2.*
 
