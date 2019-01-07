@@ -23,8 +23,8 @@ contract('TokenManager', async ([owner, otherAccount, ...accounts]) => {
 
   const tokens = [{ address: new BigNumber(0xf00d),
                     name: 'tok1' },
-                  { address: new BigNumber(0xf00e),
-                    name: 'tok2' }];
+  { address: new BigNumber(0xf00e),
+    name: 'tok2' }];
   const otherToken = { address: new BigNumber(0xf00f),
                        name: 'tok3' };
 
@@ -95,7 +95,7 @@ contract('TokenManager', async ([owner, otherAccount, ...accounts]) => {
 
       const newExpected = [0, 0];
       const actual = (await tokMgr.getTokens({ from: owner }))
-            .map((x) => parseInt(x));
+        .map((x) => parseInt(x));
 
       assert.deepEqual(
         actual, newExpected,
@@ -119,7 +119,7 @@ contract('TokenManager', async ([owner, otherAccount, ...accounts]) => {
     it('returns a list of created tokens', async function () {
       const expected = tokens.map((x) => x.name);
       const r = (await tokMgr.getTokens({ from: owner }))
-            .map(util.bytes32ToString);
+        .map(util.bytes32ToString);
 
       // Sort arrays since implementation
       // does not require stable order of tokens

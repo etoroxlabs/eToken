@@ -28,16 +28,16 @@ contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
 
     it('reverts when no upgradeFrom contract is set', async function () {
       const token = await TokenXExplicitSender.new('tok', 't', 10,
-                                             accesslist.address, true, storage.address,
-                                             0, true, { from: owner });
+                                                   accesslist.address, true, storage.address,
+                                                   0, true, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
                                      'Must have a contract to upgrade from');
     });
 
     it('reverts when wrong contract finalizes upgrade', async function () {
       const token = await TokenXExplicitSender.new('tok', 't', 10,
-                                             accesslist.address, true, storage.address,
-                                             0xf00f, false, { from: owner });
+                                                   accesslist.address, true, storage.address,
+                                                   0xf00f, false, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
                                      'Sender is not old contract');
     });

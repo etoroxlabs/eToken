@@ -50,7 +50,7 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     it('reverts when iplementor already exists', async function () {
       // Note: Uses this.token initialized in parent beforeEach
       await utils.assertRevertsReason(this.token.latchInitialImplementor({ from: owner }),
-                                'Storage implementor is already set');
+                                      'Storage implementor is already set');
     });
 
     it('Should emit initial implementor event', async function () {
@@ -116,7 +116,7 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     describe('when is not owner or implementor', function () {
       it('should not allow transfer implementor', async function () {
         await utils.assertRevertsReason(this.token.transferImplementor(anotherAccount, { from: thirdAccount }),
-                                  'Is not implementor or owner');
+                                        'Is not implementor or owner');
         (await this.token.isImplementor({ from: anotherAccount })).should.equal(false);
       });
     });

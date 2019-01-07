@@ -114,7 +114,7 @@ function ERC20Permissions (owner, whitelisted, other, other1, blacklisted, black
          await util.assertRevertsReason(
            this.token.transfer(blacklisted, 1, { from: blacklisted1 }),
            'no access');
-    });
+       });
 
     it('Rejects unprivileged transfer when receiver is only blacklisted', async function () {
       await util.assertRevertsReason(
@@ -140,7 +140,7 @@ function ERC20Permissions (owner, whitelisted, other, other1, blacklisted, black
          await util.assertRevertsReason(
            this.token.transfer(blackwhite1, 1, { from: whitelisted }),
            'no access');
-    });
+       });
 
     it('Rejects unprivileged transfer when sender is both blacklisted and whitelisted',
        async function () {

@@ -5,5 +5,5 @@ module.exports = utils.makeEventMap({
     [{ eventName: 'UpgradeFinalized',
        paramMap: { c: oldContract,
                    sender: oldContract } },
-     { eventName: 'Upgraded',
-       paramMap: { to: contract } }] });
+    { eventName: 'Upgraded',
+      paramMap: { to: contract } }] });
