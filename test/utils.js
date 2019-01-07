@@ -6,10 +6,12 @@ require('chai')
   .should();
 const truffleAssert = require('truffle-assertions');
 
+const nodeAssert = require('assert');
+
 const _assertReverts = async (f, reason = '', invertMatch = false) => {
   let res = false;
-  assert(typeof (reason) === 'string');
-  assert(typeof (invertMatch) === 'boolean');
+  nodeAssert(typeof (reason) === 'string');
+  nodeAssert(typeof (invertMatch) === 'boolean');
   const specificReason = reason !== '';
   if (reason !== '') {
     reason = ' ' + reason;
@@ -83,11 +85,11 @@ function bytes32ToString (str) {
 exports.bytes32ToString = bytes32ToString;
 
 function stringToBytes32 (str) {
-  assert(typeof str === 'string');
-  assert(str.length <= 32);
+  nodeAssert(typeof str === 'string');
+  nodeAssert(str.length <= 32);
   const cs = str.split('');
   // Ensure that all chars in string are printable ASCII
-  assert(cs.every(x => x.charCodeAt(0) >= 32 && x.charCodeAt(0) <= 126));
+  nodeAssert(cs.every(x => x.charCodeAt(0) >= 32 && x.charCodeAt(0) <= 126));
   return '0x'.concat(cs.map(x => x.charCodeAt(0).toString(16)).join('')).padEnd(66, '0');
 }
 exports.stringToBytes32 = stringToBytes32;
@@ -104,8 +106,8 @@ exports.ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
    parameters and their expected events.
 */
 let emittedEvents = (log, expectedEvents) => {
-  assert(log !== undefined);
-  assert(expectedEvents !== undefined);
+  nodeAssert(log !== undefined);
+  nodeAssert(expectedEvents !== undefined);
   log.sort((a, b) => a.logIndex - a.logIndex);
   (log.length).should.be.equal(expectedEvents.length);
   for (let i = 0; i < log.length; i++) {
@@ -174,7 +176,7 @@ exports.makeEventMap = function (eventMap) {
         }];
       } else {
         const fa = c.contract.abi.find(x => x.name === k);
-        assert(fa !== undefined);
+        nodeAssert(fa !== undefined);
         const f = c[k];
         const fl = fa.inputs.length;
         const e = eventMap[k];
