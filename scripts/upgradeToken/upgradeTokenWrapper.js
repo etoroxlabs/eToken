@@ -2,8 +2,8 @@
 
 'use strict';
 
-const TokenManager = artifacts.require('./TokenManager.sol');
-const EToroToken = artifacts.require('./EToroToken.sol');
+const TokenManager = artifacts.require('TokenManager.sol');
+const TokenX = artifacts.require('./TokenX.sol');
 
 const argv = require('optimist')
   .usage('Usage: --network [name] --tokenManager [address] --oldToken [address] --newToken [address] --tokenManagerOwner [address] --oldTokenOwner [address]')
@@ -15,8 +15,8 @@ const upgradeToken = require('./upgradeToken');
 
 async function upgradeTokenWrapper () {
   const tokenManager = TokenManager.at(argv.tokenManager);
-  const oldToken = EToroToken.at(argv.oldToken);
-  const newToken = EToroToken.at(argv.newToken);
+  const oldToken = TokenX.at(argv.oldToken);
+  const newToken = TokenX.at(argv.newToken);
 
   const tokenManagerOwner = argv.tokenManagerOwner;
   const oldTokenOwner = argv.oldTokenOwner;

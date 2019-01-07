@@ -13,7 +13,7 @@
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
     "lint": "eslint . | snazzy && solium -d contracts/",
-    "beautify": "eslint .  --fix | snazzy && solium -d contracts/ --fix"
+    "beautify": "eslint .  --fix | snazzy && solium -d contracts/ --fix",
     "upgradeToken": "yarn truffle exec scripts/upgradeToken/upgradeTokenWrapper.js $@"
   },
   "dependencies": {
