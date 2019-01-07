@@ -16,6 +16,7 @@ const util = require('./../utils.js');
 
 const Accesslist = artifacts.require('Accesslist');
 const TokenXMock = artifacts.require('TokenXMock');
+const TokenXE = require('./TokenX.events.js');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 const BigNumber = web3.BigNumber;
@@ -222,6 +223,7 @@ contract('TokenX', async function (
   describe('functionality', function () {
     // Tokens used during tests
     let token;
+    let tokenE;
     let storage;
     let accesslist;
     let upgradeToken;
@@ -233,6 +235,7 @@ contract('TokenX', async function (
       token = await TokenXMock.new(tokNameOrig, symbolOrig, 10,
                                    accesslist.address, true, storage.address,
                                    0, true, owner, 100, { from: owner });
+      tokenE = TokenXE.wrap(token);
       upgradeToken = await TokenXMock.new(
         tokNameUpgraded, symbolUpgraded, 20,
         accesslist.address, true, storage.address, token.address, false, 0, 0,
@@ -242,20 +245,22 @@ contract('TokenX', async function (
         await f.addPauser(pauser, { from: owner });
         await f.addBurner(burner, { from: owner });
       });
+
       await accesslist.addWhitelistAdmin(whitelistAdmin, { from: owner });
+
       await accesslist.addWhitelisted(owner, { from: owner });
       // Required by the burnFrom test
       await accesslist.addWhitelisted(burner, { from: owner });
-      // // Required by the pauser test
+      // Required by the pauser test
       await accesslist.addWhitelisted(otherPauser, { from: owner });
       await accesslist.addWhitelisted(pauser, { from: owner });
       await accesslist.addWhitelisted(whitelisted, { from: owner });
       await accesslist.addWhitelisted(whitelisted1, { from: owner });
-      await accesslist.addBlacklisted(blacklisted, { from: owner });
-      await accesslist.addBlacklisted(blacklisted1, { from: owner });
-
       await accesslist.addWhitelisted(blackwhite, { from: owner });
       await accesslist.addWhitelisted(blackwhite1, { from: owner });
+
+      await accesslist.addBlacklisted(blacklisted, { from: owner });
+      await accesslist.addBlacklisted(blacklisted1, { from: owner });
       await accesslist.addBlacklisted(blackwhite, { from: owner });
       await accesslist.addBlacklisted(blackwhite1, { from: owner });
     });
@@ -291,14 +296,18 @@ contract('TokenX', async function (
         it('reverts when doesn\'t own storage', async function () {
           await storage.transferImplementor(0xf00f);
 
-          await util.assertRevertsReason(token.upgrade(
-            upgradeToken.address, { from: owner }),
-                                         'I don\'t own my storage. This will end badly.');
+          await util.assertRevertsReason(
+            token.upgrade(upgradeToken.address, { from: owner }),
+            'I don\'t own my storage. This will end badly.');
         });
 
         it('rejects upgrade from non-owner', async function () {
           await util.assertReverts(token.upgrade(
             upgradeToken.address, { from: whitelisted }));
+        });
+
+        it('upgrade emits event', async function () {
+          await tokenE.upgrade(upgradeToken.address, token.address, { from: owner });
         });
 
         it('Returns orig token name', async function () {
@@ -342,8 +351,6 @@ contract('TokenX', async function (
         it('Returns new token decimals', async function () {
           (await this.token.decimals()).should.be.bignumber.equal(20);
         });
-
-        // TODO: Test other query funtions?
       }
 
       describe('Upgraded token', function () {

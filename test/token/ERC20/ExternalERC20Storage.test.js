@@ -1,13 +1,14 @@
 /* global artifacts, contract, web3 */
 /* eslint-env mocha */
 
-const shouldFail = require('openzeppelin-solidity/test/helpers/shouldFail');
-const expectEvent = require('openzeppelin-solidity/test/helpers/expectEvent');
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
 
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
+const ExternalERC20StorageE = require('./ExternalERC20Storage.events.js');
 
 const BigNumber = web3.BigNumber;
+
+const utils = require('./../../utils.js');
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
@@ -16,13 +17,14 @@ require('chai')
 contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccount, thirdAccount]) {
   beforeEach(async function () {
     this.token = await ExternalERC20Storage.new({ from: owner });
-    const { logs } = await this.token.latchInitialImplementor({ from: implementor });
-    expectEvent.inLogs(logs, 'StorageInitialImplementorSet', { to: implementor });
+    this.tokenE = ExternalERC20StorageE.wrap(this.token);
+    await this.token.latchInitialImplementor({ from: implementor });
   });
 
   describe('setting initial implementor', function () {
     beforeEach(async function () {
       this.otherStorage = await ExternalERC20Storage.new({ from: owner });
+      this.otherStorageE = ExternalERC20StorageE.wrap(this.otherStorage);
     });
 
     it('hasImplementor should be false initially', async function () {
@@ -47,13 +49,12 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
 
     it('reverts when iplementor already exists', async function () {
       // Note: Uses this.token initialized in parent beforeEach
-      await shouldFail.reverting(this.token.latchInitialImplementor({ from: owner }));
+      await utils.assertRevertsReason(this.token.latchInitialImplementor({ from: owner }),
+                                'Storage implementor is already set');
     });
 
     it('Should emit initial implementor event', async function () {
-      const { logs } = await this.otherStorage.latchInitialImplementor({ from: implementor });
-      expectEvent.inLogs(logs, 'StorageInitialImplementorSet', {
-        to: implementor });
+      await this.otherStorageE.latchInitialImplementor(implementor, { from: implementor });
     });
   });
 
@@ -66,21 +67,20 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
       });
 
       it('should require non-zero address when transferring implementor', async function () {
-        await shouldFail.reverting(this.token.transferImplementor(
-          ZERO_ADDRESS, { from: ownerOrImplementorAddress }));
+        await utils.assertRevertsReason(
+          this.token.transferImplementor(ZERO_ADDRESS, { from: ownerOrImplementorAddress }),
+          'Expected a non-zero address');
       });
 
       it('should emit implementor transferred event', async function () {
-        const { logs } = await this.token.transferImplementor(
-          anotherAccount, { from: ownerOrImplementorAddress });
-        expectEvent.inLogs(logs, 'StorageImplementorTransferred', {
-          from: implementor,
-          to: anotherAccount });
+        await this.tokenE.transferImplementor(
+          anotherAccount, implementor, { from: ownerOrImplementorAddress });
       });
 
       it('should revert when transferring to existing implementor', async function () {
-        await shouldFail.reverting(
-          this.token.transferImplementor(implementor, { from: ownerOrImplementorAddress }));
+        await utils.assertRevertsReason(
+          this.token.transferImplementor(implementor, { from: ownerOrImplementorAddress }),
+          'Cannot transfer to same implementor as existing');
       });
     };
 
@@ -115,7 +115,8 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
 
     describe('when is not owner or implementor', function () {
       it('should not allow transfer implementor', async function () {
-        await shouldFail.reverting(this.token.transferImplementor(anotherAccount, { from: thirdAccount }));
+        await utils.assertRevertsReason(this.token.transferImplementor(anotherAccount, { from: thirdAccount }),
+                                  'Is not implementor or owner');
         (await this.token.isImplementor({ from: anotherAccount })).should.equal(false);
       });
     });
@@ -146,7 +147,9 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
         const oldBalance = await this.token.balances(anotherAccount);
 
         oldBalance.should.not.be.bignumber.equal(newBalance);
-        await shouldFail.reverting(this.token.setBalance(anotherAccount, newBalance, { from: thirdAccount }));
+        await utils.assertRevertsReason(
+          this.token.setBalance(anotherAccount, newBalance, { from: thirdAccount }),
+          'Is not implementor or owner');
         (await this.token.balances(anotherAccount)).should.be.bignumber.equal(oldBalance);
       });
     });
@@ -177,9 +180,9 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
         const oldAllowance = (await this.token.allowed(anotherAccount, thirdAccount));
 
         oldAllowance.should.not.be.bignumber.equal(newAllowance);
-        await shouldFail.reverting(
-          this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: anotherAccount })
-        );
+        await utils.assertRevertsReason(
+          this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: anotherAccount }),
+          'Is not implementor or owner');
         (await this.token.allowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(oldAllowance);
       });
     });
@@ -210,7 +213,9 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
         const oldTotalSupply = await this.token.totalSupply();
 
         oldTotalSupply.should.not.be.bignumber.equal(newTotalSupply);
-        await shouldFail.reverting(this.token.setTotalSupply(newTotalSupply, { from: thirdAccount }));
+        await utils.assertRevertsReason(
+          this.token.setTotalSupply(newTotalSupply, { from: thirdAccount }),
+          'Is not implementor or owner');
         (await this.token.totalSupply()).should.be.bignumber.equal(oldTotalSupply);
       });
     });

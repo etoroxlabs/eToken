@@ -22,9 +22,9 @@ contract TokenManager is Ownable {
     mapping (bytes32 => TokenEntry) private tokens;
     bytes32[] private names;
 
-    event TokenAdded(bytes32 _name);
-    event TokenDeleted(bytes32 _name);
-    event TokenUpgraded(bytes32 _name);
+    event TokenAdded(bytes32 name, ITokenX addr);
+    event TokenDeleted(bytes32 name, ITokenX addr);
+    event TokenUpgraded(bytes32 name, ITokenX from, ITokenX to);
 
     /**
      * @dev Require that the token _name exists
@@ -70,7 +70,7 @@ contract TokenManager is Ownable {
             exists: true
         });
         names.push(_name);
-        emit TokenAdded(_name);
+        emit TokenAdded(_name, _iTokenX);
     }
 
     /**
@@ -82,10 +82,11 @@ contract TokenManager is Ownable {
         onlyOwner
         tokenExists(_name)
     {
+        ITokenX prev = tokens[_name].token;
         delete names[tokens[_name].index];
         delete tokens[_name].token;
         delete tokens[_name];
-        emit TokenDeleted(_name);
+        emit TokenDeleted(_name, prev);
     }
 
     /**
@@ -99,8 +100,9 @@ contract TokenManager is Ownable {
         tokenExists(_name)
         notNullToken(_iTokenX)
     {
+        ITokenX prev = tokens[_name].token;
         tokens[_name].token = _iTokenX;
-        emit TokenUpgraded(_name);
+        emit TokenUpgraded(_name, prev, _iTokenX);
     }
 
     /**

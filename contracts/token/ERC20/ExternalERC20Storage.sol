@@ -93,7 +93,7 @@ contract ExternalERC20Storage is Ownable {
     onlyImplementorOrOwner
   {
     require(newImplementor != _implementor,
-            "Cannot transfer to same implementor as existsing");
+            "Cannot transfer to same implementor as existing");
     address curImplementor = _implementor;
     _implementor = newImplementor;
     emit StorageImplementorTransferred(curImplementor, newImplementor);
