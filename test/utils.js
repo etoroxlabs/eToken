@@ -153,8 +153,8 @@ exports.emittedEventsContract = async (contract, expectedEvents) => {
 function fromEntries (it) {
   let o = {};
   for (let [k, v] of it) {
-      o[k] = v;
-    }
+    o[k] = v;
+  }
   return o;
 }
 
@@ -184,19 +184,19 @@ exports.makeEventMap = function (eventMap) {
         // TODO: Find a clever way to deal with type conversions between the
         // param map and the emitted events
         return [k,
-                async function (...params) {
-                  if ((params.length < el || params.length > (el + 1))) {
-                    throw Error(
-                      `Event wrapper for ${k} called with the wrong number of parameters`);
-                  }
-                  const lastPar = params.length > el ? 1 : 0;
-                  const expectedEvents = e(...(params.slice(0, el)));
-                  const pars = params.slice(0, fl)
-                        .concat(lastPar ? [params[params.length - 1]] : []);
-                  const res = await f(...pars);
-                  const { logs } = res;
-                  emittedEvents(logs, expectedEvents);
-                }];
+          async function (...params) {
+            if ((params.length < el || params.length > (el + 1))) {
+              throw Error(
+                `Event wrapper for ${k} called with the wrong number of parameters`);
+            }
+            const lastPar = params.length > el ? 1 : 0;
+            const expectedEvents = e(...(params.slice(0, el)));
+            const pars = params.slice(0, fl)
+              .concat(lastPar ? [params[params.length - 1]] : []);
+            const res = await f(...pars);
+            const { logs } = res;
+            emittedEvents(logs, expectedEvents);
+          }];
       }
     }));
   } };

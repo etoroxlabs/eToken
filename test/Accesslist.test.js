@@ -1,4 +1,4 @@
-/* global artifacts, contract, assert */
+/* global artifacts, contract */
 /* eslint-env mocha */
 
 'use strict';
