@@ -11,6 +11,8 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
     address private mintingRecipientAccount;
 
+    event MintingRecipientAccountChanged(address prev, address next);
+
     constructor(address _mintingRecipientAccount) internal {
         changeMintingRecipient(_mintingRecipientAccount);
     }
@@ -43,6 +45,8 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
         onlyOwner
     {
         require(_mintingRecipientAccount != address(0));
+        address prev = mintingRecipientAccount;
         mintingRecipientAccount = _mintingRecipientAccount;
+        emit MintingRecipientAccountChanged(prev, mintingRecipientAccount);
     }
 }
