@@ -18,6 +18,20 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
     }
 
     /**
+     * @dev Allows the owner to change the current minting recipient account
+     * @param _mintingRecipientAccount address of new minting recipient
+     */
+    function changeMintingRecipient(address _mintingRecipientAccount)
+        public
+        onlyOwner
+    {
+        require(_mintingRecipientAccount != address(0));
+        address prev = mintingRecipientAccount;
+        mintingRecipientAccount = _mintingRecipientAccount;
+        emit MintingRecipientAccountChanged(prev, mintingRecipientAccount);
+    }
+
+    /**
      * @dev Function to mint tokens
      * @param to The address that will receive the minted tokens.
      * @param value The amount of tokens to mint.
@@ -34,19 +48,5 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
         require(to == mintingRecipientAccount,
                 "not minting to mintingRecipientAccount");
         _mint(to, value);
-    }
-
-    /**
-     * @dev Allows the owner to change the current minting recipient account
-     * @param _mintingRecipientAccount address of new minting recipient
-     */
-    function changeMintingRecipient(address _mintingRecipientAccount)
-        public
-        onlyOwner
-    {
-        require(_mintingRecipientAccount != address(0));
-        address prev = mintingRecipientAccount;
-        mintingRecipientAccount = _mintingRecipientAccount;
-        emit MintingRecipientAccountChanged(prev, mintingRecipientAccount);
     }
 }
