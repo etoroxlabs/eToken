@@ -22,7 +22,7 @@ contract TokenXMock is TokenX, PauserRoleMock {
     )
         TokenX(
             name, symbol, decimals,
-            accesslist, whitelistEnabled, stor, upgradedFrom,
+            accesslist, whitelistEnabled, stor, address(0xf00f), upgradedFrom,
             initialDeployment
         )
         public

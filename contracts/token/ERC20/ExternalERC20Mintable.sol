@@ -8,6 +8,13 @@ import "../../access/roles/MinterRole.sol";
  * @dev ERC20 minting logic
  */
 contract ExternalERC20Mintable is ExternalERC20, MinterRole {
+
+    address private mintingRecipientAccount;
+
+    constructor(address _mintingRecipientAccount) internal {
+        changeMintingRecipient(_mintingRecipientAccount);
+    }
+
     /**
      * @dev Function to mint tokens
      * @param to The address that will receive the minted tokens.
@@ -22,7 +29,17 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
         onlyMinter
         returns (bool)
     {
+        require(to == mintingRecipientAccount,
+                "not minting to mintingRecipientAccount");
         _mint(to, value);
         return true;
+    }
+
+    function changeMintingRecipient(address _mintingRecipientAccount)
+        public
+        onlyOwner
+    {
+        require(_mintingRecipientAccount != address(0));
+        mintingRecipientAccount = _mintingRecipientAccount;
     }
 }

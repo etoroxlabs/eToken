@@ -18,6 +18,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
+        address mintingRecipientAccount,
         address upgradedFrom,
         bool initialDeployment
     )
@@ -29,6 +30,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
             accesslist,
             whitelistEnabled,
             externalERC20Storage,
+            mintingRecipientAccount,
             upgradedFrom,
             initialDeployment
         ) {

@@ -18,9 +18,9 @@ import "./IUpgradableTokenX.sol";
 contract TokenXExplicitSender is IUpgradableTokenX,
     ExternalERC20,
     ExternalERC20Burnable,
+    ExternalERC20Mintable,
     ERC20Detailed,
     AccesslistGuarded,
-    MinterRole,
     BurnerRole,
     Pausable
 {
@@ -54,11 +54,13 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
+        address mintingRecipientAccount,
         address upgradedFrom,
         bool initialDeployment
     )
         internal
         ExternalERC20(externalERC20Storage)
+        ExternalERC20Mintable(mintingRecipientAccount)
         ERC20Detailed(name, symbol, decimals)
         AccesslistGuarded(accesslist, whitelistEnabled)
     {
@@ -356,10 +358,9 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     function mint(address to, uint256 value)
         public
         isEnabled
-        onlyMinter
         returns (bool)
     {
-        super._mint(to, value);
+        super.mint(to, value);
         return true;
     }
 
