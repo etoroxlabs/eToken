@@ -284,10 +284,9 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         public
         isEnabled
         senderIsProxy
-        requireMinter(sender)
         returns (bool success)
     {
-        super._mint(to, value);
+        super._mintExplicitSender(sender, to, value);
         return true;
     }
 
@@ -360,9 +359,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         isEnabled
         returns (bool)
     {
-        super.mint(to, value);
+        super._mintExplicitSender(msg.sender, to, value);
         return true;
     }
-
-
 }
