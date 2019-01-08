@@ -5,8 +5,11 @@ import "./ERC20/ExternalERC20Storage.sol";
 import "./TokenXExplicitSender.sol";
 import "./ITokenX.sol";
 import "./IUpgradableTokenX.sol";
+import "../ENSResolver.sol";
+import "../utils/bytes32utils.sol";
 
-contract TokenX is ITokenX, TokenXExplicitSender {
+contract TokenX is ITokenX, TokenXExplicitSender, ENSResolver {
+    using bytes32utils for bytes32;
 
     ExternalERC20Storage private externalStorage;
     IUpgradableTokenX public upgradedToken;
@@ -19,7 +22,8 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
         address upgradedFrom,
-        bool initialDeployment
+        bool initialDeployment,
+        address ensAddress
     )
         public
         TokenXExplicitSender(
@@ -31,7 +35,9 @@ contract TokenX is ITokenX, TokenXExplicitSender {
             externalERC20Storage,
             upgradedFrom,
             initialDeployment
-        ) {
+        )
+        ENSResolver(ensAddress)
+        {
         externalStorage = externalERC20Storage;
 
         if (initialDeployment) {
@@ -45,8 +51,15 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         return upgradedToken != IUpgradableTokenX(0);
     }
 
-    function upgrade(IUpgradableTokenX _upgradedToken) public onlyOwner {
+    function upgrade(bytes32 tokENSName) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
+
+        bytes32 domain = "etokenize.eth";
+        require(tokENSName.endsWith(domain), "Not our subdomain");
+        require(tokENSName.strLen() > domain.strLen(),
+                "must be a subdomain");
+        IUpgradableTokenX _upgradedToken = IUpgradableTokenX(resolve(tokENSName));
+
         require(_upgradedToken != IUpgradableTokenX(0),
                 "Cannot upgrade to null address");
         require(_upgradedToken != IUpgradableTokenX(this),
