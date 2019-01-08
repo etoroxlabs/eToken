@@ -21,10 +21,11 @@ contract('TokenManager', async ([owner, otherAccount, ...accounts]) => {
   let tokMgr;
   let tokMgrE;
 
-  const tokens = [{ address: new BigNumber(0xf00d),
-                    name: 'tok1' },
-  { address: new BigNumber(0xf00e),
-    name: 'tok2' }];
+  const tokens = [
+    { address: new BigNumber(0xf00d),
+      name: 'tok1' },
+    { address: new BigNumber(0xf00e),
+      name: 'tok2' }];
   const otherToken = { address: new BigNumber(0xf00f),
                        name: 'tok3' };
 
