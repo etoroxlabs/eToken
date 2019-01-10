@@ -2,13 +2,13 @@ pragma solidity ^0.4.24;
 
 library bytes32utils {
     function strLen(bytes32 self) pure returns (uint256) {
-        uint256 len;
-        for (; len < 32; len++) {
-            if (self[len] == 0) {
+        uint256 pos;
+        for (pos = 0; pos < 32; pos++) {
+            if (self[pos] == 0) {
                 break;
             }
         }
-        return len;
+        return pos;
     }
 
     function endsWith(bytes32 self, bytes32 str) pure returns (bool) {
