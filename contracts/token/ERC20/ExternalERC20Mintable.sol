@@ -27,7 +27,6 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
     )
         internal
     {
-        // XXX: Why doesn't Ownable provide a requireOwner modofier?
         require(owner() == sender, "is not owner");
         require(_mintingRecipientAccount != address(0),
                 "zero minting recipient");
