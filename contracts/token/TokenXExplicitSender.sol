@@ -32,7 +32,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
 
     bool private enabled;
 
-    event UpgradeFinalized(address c, address sender);
+    event UpgradeFinalized(address upgradedFrom, address sender);
 
     /**
      * @param name The name of the token
