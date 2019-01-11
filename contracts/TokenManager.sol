@@ -24,7 +24,9 @@ contract TokenManager is Ownable {
 
     event TokenAdded(bytes32 indexed name, ITokenX indexed addr);
     event TokenDeleted(bytes32 indexed name, ITokenX indexed addr);
-    event TokenUpgraded(bytes32 indexed name, ITokenX indexed from, ITokenX indexed to);
+    event TokenUpgraded(bytes32 indexed name,
+                        ITokenX indexed from,
+                        ITokenX indexed to);
 
     /**
      * @dev Require that the token _name exists

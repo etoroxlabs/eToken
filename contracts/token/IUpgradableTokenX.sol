@@ -16,9 +16,15 @@ interface IUpgradableTokenX {
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function nameExplicitSender(address sender) external view returns(string);
 
-    function symbolExplicitSender(address sender) external view returns(string);
+    function symbolExplicitSender(address sender)
+        external
+        view
+        returns(string);
 
-    function decimalsExplicitSender(address sender) external view returns(uint8);
+    function decimalsExplicitSender(address sender)
+        external
+        view
+        returns(uint8);
 
     /* Taken from IERC20 in openzeppelin-solidity */
     function totalSupplyExplicitSender(address sender)
