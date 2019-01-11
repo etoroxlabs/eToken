@@ -18,6 +18,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage externalERC20Storage,
+        address mintingRecipientAccount,
         address upgradedFrom,
         bool initialDeployment
     )
@@ -29,6 +30,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
             accesslist,
             whitelistEnabled,
             externalERC20Storage,
+            mintingRecipientAccount,
             upgradedFrom,
             initialDeployment
         ) {
@@ -196,6 +198,14 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         }
     }
 
+    function changeMintingRecipient(address mintingRecip) public {
+        if (isUpgraded()) {
+            upgradedToken.changeMintingRecipientExplicitSender(msg.sender, mintingRecip);
+        } else {
+            super.changeMintingRecipient(mintingRecip);
+        }
+    }
+
     function pause () public {
         if (isUpgraded()) {
             revert("Token is upgraded. Call pause from new token.");
@@ -211,4 +221,5 @@ contract TokenX is ITokenX, TokenXExplicitSender {
             super.unpause();
         }
     }
+
 }

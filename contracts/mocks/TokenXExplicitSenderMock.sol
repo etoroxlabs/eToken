@@ -17,6 +17,6 @@ contract TokenXExplicitSenderMock is TokenXExplicitSender {
         public
         TokenXExplicitSender(
             name, symbol, decimals, accesslist, whitelistEnabled,
-            stor, upgradedFrom, initialDeployment)
+            stor, address(0xf00f), upgradedFrom, initialDeployment)
     {}
 }

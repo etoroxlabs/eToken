@@ -12,13 +12,16 @@ module.exports = function (deployer, _network, accounts) {
   }
 };
 
-async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccounts]) {
+async function setupAccounts ([owner, whitelistAdmin, whitelisted, minter, ...restAccounts]) {
   /*
     The purpose of this is to automatically setup the test environment accounts.
     DO NOT use in production yet.
   */
 
   const intialMintValue = 100;
+
+  // FIXME: Use some real address here
+  const mintTargetAccount = 0xd00f;
 
   // Setup whitelists
   const accesslistContract = await Accesslist.deployed();
@@ -50,16 +53,16 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, ...restAccoun
       const token = await TokenX.new(
         td.name, td.symbol, td.decimals,
         accesslistContract.address, td.whitelistEnabled, externalERC20Storage.address,
-        0, true,
+        mintTargetAccount, 0, true,
         { from: owner });
 
+      token.addMinter(minter, { from: owner });
       await tokenManagerContract.addToken(td.name, token.address);
       return token;
-    })
-  );
+    }));
 
   // Mint tokens
   await Promise.all(
-    tokens.map((t) => t.mint(owner, intialMintValue, { from: owner }))
+    tokens.map((t) => t.mint(mintTargetAccount, intialMintValue, { from: minter }))
   );
 }

@@ -32,14 +32,14 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
 
        const oldToken = await TokenX.new(
          tokenName, 'e', oldTokenDecimals,
-         accesslist.address, true, storage.address, 0, true,
+         accesslist.address, true, storage.address, 0xf00f, 0, true,
          { from: oldTokenOwner }
        );
 
        const newToken = await TokenX.new(
          tokenName, 'e', newTokenDecimals,
          accesslist.address, true,
-         storage.address, oldToken.address, false,
+         storage.address, 0xf00f, oldToken.address, false,
          { from: newTokenOwner }
        );
 

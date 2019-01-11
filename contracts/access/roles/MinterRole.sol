@@ -11,10 +11,6 @@ contract MinterRole is Ownable {
 
     Roles.Role private minters;
 
-    constructor() internal {
-        _addMinter(msg.sender);
-    }
-
     modifier onlyMinter() {
         require(isMinter(msg.sender), "not minter");
         _;

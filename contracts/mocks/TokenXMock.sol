@@ -15,6 +15,7 @@ contract TokenXMock is TokenX, PauserRoleMock {
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage stor,
+        address mintingRecip,
         IUpgradableTokenX upgradedFrom,
         bool initialDeployment,
         address initialAccount,
@@ -22,7 +23,7 @@ contract TokenXMock is TokenX, PauserRoleMock {
     )
         TokenX(
             name, symbol, decimals,
-            accesslist, whitelistEnabled, stor, upgradedFrom,
+            accesslist, whitelistEnabled, stor, mintingRecip, upgradedFrom,
             initialDeployment
         )
         public
