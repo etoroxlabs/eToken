@@ -61,7 +61,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
     event Upgraded(address to);
 
     /**
-      * @returns Is this token upgraded
+      * @return Is this token upgraded
       */
     function isUpgraded() public view returns (bool) {
         return upgradedToken != IUpgradableTokenX(0);
@@ -111,10 +111,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
     }
 
     /**
-     * @dev Gets the balance of the specified address.
-     * @dev Proxies call to new token if this token is upgraded
-     * @param owner The address to query the balance of.
-     * @return An uint256 representing the amount owned by the passed address.
+     * @return the number of decimals of the token.
      */
     function decimals() public view returns(uint8) {
         if (isUpgraded()) {
@@ -139,7 +136,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
     /**
      * @dev Gets the balance of the specified address.
      * @dev Proxies call to new token if this token is upgraded
-     * @param owner The address to query the balance of.
+     * @param who The address to query the balance of.
      * @return An uint256 representing the amount owned by the passed address.
      */
     function balanceOf(address who) public view returns (uint256) {
@@ -317,8 +314,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
 
     /**
      * @dev Allows the owner to change the current minting recipient account
-     * @param sender The sender address of the request
-     * @param _mintingRecipientAccount address of new minting recipient
+     * @param mintingRecip address of new minting recipient
      */
     function changeMintingRecipient(address mintingRecip) public {
         if (isUpgraded()) {
