@@ -13,12 +13,10 @@
     "quotes": ["error", "double"],
     "uppercase": "off",
     "visibility-first": "error",
-    "missing-natspec-comments": "off",
 
     "security/enforce-explicit-visibility": ["error"],
     "security/no-block-members": ["warning"],
-    "security/no-inline-assembly": ["warning"],
-
-    "zeppelin/missing-natspec-comments": ["off"]
+    "zeppelin/missing-natspec-comments": ["warning"],
+    "security/no-inline-assembly": ["warning"]
   }
 }
