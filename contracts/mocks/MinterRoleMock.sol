@@ -13,7 +13,7 @@ contract MinterRoleMock is MinterRole {
 
     /** Tests the requireMinter modifier which checks if the
       * given address is a minter
-     * @param a The address to be checked
+      * @param a The address to be checked
      */
     function requireMinterMock(address a) public view requireMinter(a) {
     }
