@@ -6,7 +6,6 @@ import "../access/AccesslistGuarded.sol";
  *  @title An AccesslistGuarded mock contract
  *  @dev Contracts to test currently unused modifiers in AccesslistGuarded
  */
-
 contract AccesslistGuardedMock is AccesslistGuarded {
 
     constructor(Accesslist _accesslist, bool whitelistEnabled)
