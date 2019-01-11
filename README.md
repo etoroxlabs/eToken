@@ -86,6 +86,9 @@ Access to token transfer functions is guarded by the AccessList. Accounts can be
 
 2. The AccessList contains a large number of addresses and it is impractical to require that this data is transferred if we need to upgrade the token contracts.
 
+### Restricted Minting
+In order to limit the damage which can be caused by a compromised minter account, we have implemented the concept of a restricted minting. In restricted minting, a minter is only allowed to mint to a predetermined account which is specified by the owner. This prevents an attacker from minting new supply directly to their account, since new supply can only be minted to the dedicated minting account and is subsequently transferred to its final destination as an independent action.
+
 ## Class Diagram
 
 ![classdiagram](docs/images/class_diagram.svg)
