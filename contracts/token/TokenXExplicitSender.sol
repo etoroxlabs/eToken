@@ -290,6 +290,14 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
+    function changeMintingRecipientExplicitSender(address sender, address mintingRecip)
+        public
+        isEnabled
+        senderIsProxy
+    {
+        super._changeMintingRecipient(sender, mintingRecip);
+    }
+
     function transfer(address to, uint256 value)
         public
         isEnabled
@@ -362,4 +370,14 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         super._mintExplicitSender(msg.sender, to, value);
         return true;
     }
+
+    function changeMintingRecipient(address _mintingRecipientAddress)
+        public
+        isEnabled
+        onlyOwner
+    {
+        super._changeMintingRecipient(msg.sender, _mintingRecipientAddress);
+    }
+
+
 }

@@ -38,7 +38,8 @@ const explicitSenderOps = [
   ['increaseAllowanceExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
   ['decreaseAllowanceExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
   ['burnExplicitSender', [util.ZERO_ADDRESS, 0]],
-  ['burnFromExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]]
+  ['burnFromExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['changeMintingRecipientExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]]
 ];
 const otherOps = [
   ['transfer', [util.ZERO_ADDRESS, 0]],
@@ -47,7 +48,9 @@ const otherOps = [
   ['increaseAllowance', [util.ZERO_ADDRESS, 0]],
   ['decreaseAllowance', [util.ZERO_ADDRESS, 0]],
   ['burn', [0]],
-  ['burnFrom', [util.ZERO_ADDRESS, 0]]
+  ['burnFrom', [util.ZERO_ADDRESS, 0]],
+  ['mint', [util.ZERO_ADDRESS, 0]],
+  ['changeMintingRecipient', [util.ZERO_ADDRESS]]
 ];
 
 function unopgradedTokenBehavior () {
@@ -196,6 +199,8 @@ contract('TokenX', async function (
   const symbolOrig = 'e';
   const symbolUpgraded = 'f';
 
+  const mintingRecipientAccount = '0x000000000000000000000000000000000000d00f';
+
   describe('constructor', function () {
     let storage;
 
@@ -206,7 +211,7 @@ contract('TokenX', async function (
     it('reverts when both upgradedFrom and initialDeployment are set', async function () {
       await util.assertRevertsReason(
         TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                       0xf00f, true, storage.address,
+                       0xf00f, true, storage.address, mintingRecipientAccount,
                        0xf00f, true, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
     });
@@ -214,7 +219,7 @@ contract('TokenX', async function (
     it('reverts when niether upgradedFrom or initialDeployment are set', async function () {
       await util.assertRevertsReason(
         TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                       0xf00f, true, storage.address,
+                       0xf00f, true, storage.address, mintingRecipientAccount,
                        0, false, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
     });
@@ -233,13 +238,13 @@ contract('TokenX', async function (
       storage = await ExternalERC20Storage.new({ from: owner });
 
       token = await TokenXMock.new(tokNameOrig, symbolOrig, 10,
-                                   accesslist.address, true, storage.address,
+                                   accesslist.address, true, storage.address, mintingRecipientAccount,
                                    0, true, owner, 100, { from: owner });
       tokenE = TokenXE.wrap(token);
       upgradeToken = await TokenXMock.new(
         tokNameUpgraded, symbolUpgraded, 20,
-        accesslist.address, true, storage.address, token.address, false, 0, 0,
-        { from: owner });
+        accesslist.address, true, storage.address, mintingRecipientAccount,
+        token.address, false, 0, 0, { from: owner });
       [token, upgradeToken].forEach(async function (f) {
         await f.addMinter(minter, { from: owner });
         await f.addPauser(pauser, { from: owner });
@@ -273,7 +278,7 @@ contract('TokenX', async function (
       describe('Original token', function () {
         unopgradedTokenBehavior();
         shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Mintable(owner, minter, [user], mintingRecipientAccount);
         shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
         shouldBehaveLikeERC20Pausable(owner, otherPauser,
                                       whitelisted, whitelisted1,
@@ -363,7 +368,7 @@ contract('TokenX', async function (
         });
 
         shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Mintable(owner, minter, [user], mintingRecipientAccount);
         shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
         shouldBehaveLikeERC20Pausable(owner, otherPauser,
                                       whitelisted, whitelisted1,
@@ -395,7 +400,7 @@ contract('TokenX', async function (
           this.newToken = undefined;
         });
         shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
-        shouldBehaveLikeERC20Mintable(minter, [user]);
+        shouldBehaveLikeERC20Mintable(owner, minter, [user], mintingRecipientAccount);
         shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
         proxyPausableBehavior();
         ERC20Permissions(owner, whitelisted, user, user1,

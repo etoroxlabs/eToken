@@ -9,20 +9,22 @@ const ExternalERC20MintableMock = artifacts.require('ExternalERC20MintableMock')
 const { shouldBehaveLikePublicRole } = require('../../roles/behaviors/PublicRole.behavior');
 
 contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAccounts]) {
+  const mintingRecipientAccount = '0x000000000000000000000000000000000000d00f';
   beforeEach(async function () {
-    this.token = await ExternalERC20MintableMock.new({ from: minter });
+    this.token = await ExternalERC20MintableMock.new(mintingRecipientAccount, { from: minter });
+    this.token.addMinter(minter, { from: minter });
   });
 
   describe('minter role', function () {
     beforeEach(async function () {
       this.contract = this.token;
-      await this.contract.addMinter(otherMinter, { from: minter });
+      this.token.addMinter(otherMinter, { from: minter });
     });
 
     shouldBehaveLikePublicRole(minter, otherMinter, otherAccounts, 'minter');
   });
 
-  shouldBehaveLikeERC20Mintable(minter, otherAccounts);
+  shouldBehaveLikeERC20Mintable(minter, minter, otherAccounts, mintingRecipientAccount);
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
@@ -37,7 +39,7 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
       (await this.token.totalSupply()).should.be.bignumber.equal(0);
       (await this.token2.totalSupply()).should.be.bignumber.equal(0);
 
-      await this.token.mint(minter, 100, { from: minter });
+      await this.token.mint(mintingRecipientAccount, 100, { from: minter });
 
       (await this.token.totalSupply()).should.be.bignumber.equal(100);
       (await this.token2.totalSupply()).should.be.bignumber.equal(100);

@@ -1,4 +1,4 @@
-const utils = require('./utils.js');
+const utils = require('./../..//utils.js');
 
 module.exports = utils.makeEventMap({
   changeMintingRecipient: (prevAddr, nextAddr) => [

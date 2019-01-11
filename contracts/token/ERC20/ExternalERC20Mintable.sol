@@ -14,18 +14,23 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
     event MintingRecipientAccountChanged(address prev, address next);
 
     constructor(address _mintingRecipientAccount) internal {
-        changeMintingRecipient(_mintingRecipientAccount);
+        _changeMintingRecipient(msg.sender, _mintingRecipientAccount);
     }
 
     /**
      * @dev Allows the owner to change the current minting recipient account
      * @param _mintingRecipientAccount address of new minting recipient
      */
-    function changeMintingRecipient(address _mintingRecipientAccount)
-        public
-        onlyOwner
+    function _changeMintingRecipient(
+        address sender,
+        address _mintingRecipientAccount
+    )
+        internal
     {
-        require(_mintingRecipientAccount != address(0));
+        // XXX: Why doesn't Ownable provide a requireOwner modofier?
+        require(owner() == sender, "is not owner");
+        require(_mintingRecipientAccount != address(0),
+                "zero minting recipient");
         address prev = mintingRecipientAccount;
         mintingRecipientAccount = _mintingRecipientAccount;
         emit MintingRecipientAccountChanged(prev, mintingRecipientAccount);

@@ -59,6 +59,10 @@ contract IUpgradableTokenX {
         public
         returns (bool);
 
+    function changeMintingRecipientExplicitSender(address sender,
+                                                  address mintingRecip)
+        public;
+
     function burnExplicitSender(address sender, uint256 value) public;
 
     function burnFromExplicitSender(address sender,
