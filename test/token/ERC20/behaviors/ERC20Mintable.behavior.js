@@ -81,6 +81,13 @@ function shouldBehaveLikeERC20Mintable (owner, minter, [anyone], mintingRecip) {
 
         shouldMint(amount, newMintingRecip);
 
+        describe('when minting to previous recipient', function () {
+          it('reverts', async function () {
+            await shouldFail.reverting(
+              this.token.mint(mintingRecip, amount, { from: minter }));
+          });
+        });
+
         it('emits a minting recipient changed event', async function () {
           expectEvent.inLogs(this.logs2, 'MintingRecipientAccountChanged', {
             prev: mintingRecip,
