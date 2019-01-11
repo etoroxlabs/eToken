@@ -18,8 +18,8 @@ contract ExternalERC20Storage is Ownable {
 
   address private _implementor;
 
-  event StorageInitialImplementorSet(address to);
-  event StorageImplementorTransferred(address from, address to);
+  event StorageInitialImplementorSet(address indexed to);
+  event StorageImplementorTransferred(address indexed from, address indexed to);
 
   /**
    * @dev Returns whether the sender is an implementor.
