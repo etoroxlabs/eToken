@@ -8,7 +8,6 @@ import "./roles/BlacklistAdminRole.sol";
  *  @title The Accesslist contract
  *  @dev Contract that contains a whitelist and a blacklist and manages them
  */
-
 contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     using Roles for Roles.Role;
 
@@ -22,7 +21,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
 
     /**
      *  @dev Calls internal function _addWhitelisted
-     *       to add given address to whitelist
+     *  to add given address to whitelist
      *  @param account Address to be added
      */
     function addWhitelisted(address account)
@@ -34,7 +33,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
 
     /**
      *  @dev Calls internal function _removeWhitelisted
-     *       to remove given address from the whitelist
+     *  to remove given address from the whitelist
      *  @param account Address to be removed
      */
     function removeWhitelisted(address account)
@@ -46,7 +45,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
 
     /**
      *  @dev Calls internal function _addBlacklisted
-     *       to add given address to blacklist
+     *  to add given address to blacklist
      *  @param account Address to be added
      */
     function addBlacklisted(address account)
@@ -58,7 +57,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
 
     /**
      *  @dev Calls internal function _removeBlacklisted
-     *       to remove given address from blacklist
+     *  to remove given address from blacklist
      *  @param account Address to be removed
      */
     function removeBlacklisted(address account)
