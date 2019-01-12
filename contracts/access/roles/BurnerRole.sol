@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
+/** @title Contract managing the burner role */
 contract BurnerRole is Ownable {
     using Roles for Roles.Role;
 
@@ -25,27 +26,42 @@ contract BurnerRole is Ownable {
         _;
     }
 
+    /** Checks if account is burner
+     * @param account Account to check
+     * @return Boolean indicating if account is burner
+     */
     function isBurner(address account) public view returns (bool) {
         return burners.has(account);
     }
 
+    /** Adds a burner account
+     * @dev Is only callable by owner
+     * @param account to be added
+     */
     function addBurner(address account) public onlyOwner {
         _addBurner(account);
     }
 
+    /** Removes a burner account
+     * @dev Is only callable by owner
+     * @param account to be removed
+     */
     function removeBurner(address account) public onlyOwner {
         _removeBurner(account);
     }
 
+    /** Allows privilege holder to renounce their role */
     function renounceBurner() public {
         _removeBurner(msg.sender);
     }
 
+    /** Internal implementation of addBurner */
     function _addBurner(address account) internal {
         burners.add(account);
         emit BurnerAdded(account);
     }
 
+    /** Internal implementation of removeBurner */
     function _removeBurner(address account) internal {
         burners.remove(account);
         emit BurnerRemoved(account);

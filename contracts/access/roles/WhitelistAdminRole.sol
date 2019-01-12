@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
+/** @title Contract managing the whitelist admin role */
 contract WhitelistAdminRole is Ownable {
     using Roles for Roles.Role;
 
@@ -25,27 +26,42 @@ contract WhitelistAdminRole is Ownable {
         _;
     }
 
+    /** Checks if account is whitelist dmin
+     * @param account Account to check
+     * @return Boolean indicating if account is whitelist admin
+     */
     function isWhitelistAdmin(address account) public view returns (bool) {
         return whitelistAdmins.has(account);
     }
 
+    /** Adds a whitelist admin account
+     * @dev Is only callable by owner
+     * @param account to be added
+     */
     function addWhitelistAdmin(address account) public onlyOwner {
         _addWhitelistAdmin(account);
     }
 
+    /** Removes a whitelist admin account
+     * @dev Is only callable by owner
+     * @param account to be removed
+     */
     function removeWhitelistAdmin(address account) public onlyOwner {
         _removeWhitelistAdmin(account);
     }
 
+    /** Allows privilege holder to renounce their role */
     function renounceWhitelistAdmin() public {
         _removeWhitelistAdmin(msg.sender);
     }
 
+    /** Internal implementation of addWhitelistAdmin */
     function _addWhitelistAdmin(address account) internal {
         whitelistAdmins.add(account);
         emit WhitelistAdminAdded(account);
     }
 
+    /** Internal implementation of removeWhitelistAdmin */
     function _removeWhitelistAdmin(address account) internal {
         whitelistAdmins.remove(account);
         emit WhitelistAdminRemoved(account);
