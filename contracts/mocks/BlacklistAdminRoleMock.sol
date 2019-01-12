@@ -7,7 +7,6 @@ import "../access/roles/BlacklistAdminRole.sol";
  *  @dev Contract to test currently unused modifiers and functions for
  *  the blacklist administrator role
  */
-
 contract BlacklistAdminRoleMock is BlacklistAdminRole {
 
     function onlyBlacklistAdminMock() public view onlyBlacklistAdmin {

@@ -7,7 +7,6 @@ import "../access/roles/BurnerRole.sol";
  * @dev Contract to test currently unused modifiers and functions for
  * the burner role
  */
-
 contract BurnerRoleMock is BurnerRole {
 
     /**

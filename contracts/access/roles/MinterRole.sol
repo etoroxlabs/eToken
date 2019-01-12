@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /** @title The minter role contract */
-
 contract MinterRole is Ownable {
     using Roles for Roles.Role;
 
@@ -13,11 +12,18 @@ contract MinterRole is Ownable {
 
     Roles.Role private minters;
 
+    /**
+     * @dev checks if the message sender is a minter
+     */
     modifier onlyMinter() {
         require(isMinter(msg.sender), "not minter");
         _;
     }
 
+    /**
+     * @dev checks if the given address is a minter
+     * @param account address to be checked
+     */
     modifier requireMinter(address account) {
         require(isMinter(account), "not minter");
         _;

@@ -70,6 +70,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     /**
      *  @dev Checks to see if given address is whitelisted
      *  @param account Address to be checked
+     *  @return true if address is whitelisted
      */
     function isWhitelisted(address account)
         public
@@ -82,6 +83,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     /**
      *  @dev Checks to see if given address is blacklisted
      *  @param account Address to be checked
+     *  @return true if address is blacklisted
      */
     function isBlacklisted(address account)
         public
@@ -94,6 +96,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     /**
      *  @dev Checks to see if given address is whitelisted and not blacklisted
      *  @param account Address to be checked
+     *  @return true if address has access
      */
     function hasAccess(address account)
         public

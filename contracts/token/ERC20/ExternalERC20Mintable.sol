@@ -13,6 +13,10 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
     event MintingRecipientAccountChanged(address prev, address next);
 
+    /**
+     * @dev constructor. Sets minting recipient to given address
+     * @param _mintingRecipientAccount address to be set to recipient
+     */
     constructor(address _mintingRecipientAccount) internal {
         _changeMintingRecipient(msg.sender, _mintingRecipientAccount);
     }
