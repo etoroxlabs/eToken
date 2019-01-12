@@ -23,7 +23,7 @@ contract MinterRoleMock is MinterRole {
         super._removeMinter(account);
     }
 
-    /** Causes compilation errors if _removeMinter function is not declared internal */
+    /** Causes compilation errors if _addMinter function is not declared internal */
     function _addMinter(address account) internal {
         super._addMinter(account);
     }

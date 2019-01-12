@@ -25,7 +25,7 @@ contract WhitelistAdminRoleMock is WhitelistAdminRole {
         super._removeWhitelistAdmin(account);
     }
 
-    /** Causes compilation errors if _removeWhitelistAdmin function is not declared internal */
+    /** Causes compilation errors if _addWhitelistAdmin function is not declared internal */
     function addWhitelistAdmin(address account) internal {
         super._addWhitelistAdmin(account);
     }
