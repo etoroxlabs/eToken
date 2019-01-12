@@ -15,7 +15,7 @@ contract AccesslistGuarded {
     /**
      * @dev constructor. checks if the accesslist is a zero address
      * @param _accesslist the access list
-     * @param _whitelistenabled if the whitelist is enabled
+     * @param _whitelistEnabled if the whitelist is enabled
      */
     constructor(
         Accesslist _accesslist,

@@ -24,7 +24,7 @@ contract BurnerRoleMock is BurnerRole {
 
     /**
      * @dev removes given address from burners
-     * @param address to be removed
+     * @param account address to be removed
      */
     function _removeBurner(address account) internal {
         super._removeBurner(account);
