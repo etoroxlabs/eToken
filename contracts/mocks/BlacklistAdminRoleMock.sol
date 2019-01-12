@@ -2,11 +2,21 @@ pragma solidity ^0.4.24;
 
 import "../access/roles/BlacklistAdminRole.sol";
 
+/**
+ *  @title An Blacklist admin mock contract
+ *  @dev Contract to test currently unused modifiers and functions for
+ *  the blacklist administrator role
+ */
 contract BlacklistAdminRoleMock is BlacklistAdminRole {
 
+    /** Tests the msg.sender-dependent onlyBlacklistAdmin modifier */
     function onlyBlacklistAdminMock() public view onlyBlacklistAdmin {
     }
 
+    /** Tests the requireBlacklistAdmin modifier which checks if the
+     * given address is a blacklist admin
+     * @param a The address to be checked
+     */
     function requireBlacklistAdminMock(address a)
         public
         view
@@ -14,11 +24,12 @@ contract BlacklistAdminRoleMock is BlacklistAdminRole {
     {
     }
 
-    // Causes compilation errors if functions are not declared internal
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _removeBlacklistAdmin(address account) internal {
         super._removeBlacklistAdmin(account);
     }
 
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _addBlacklistAdmin(address account) internal {
         super._addBlacklistAdmin(account);
     }
