@@ -24,12 +24,12 @@ contract BlacklistAdminRoleMock is BlacklistAdminRole {
     {
     }
 
-    /** Causes compilation errors if _removeBurner function is not declared internal */
+    /** Causes compilation errors if _removeBlacklistAdmin function is not declared internal */
     function _removeBlacklistAdmin(address account) internal {
         super._removeBlacklistAdmin(account);
     }
 
-    /** Causes compilation errors if _removeBurner function is not declared internal */
+    /** Causes compilation errors if _removeBlacklistAdmin function is not declared internal */
     function _addBlacklistAdmin(address account) internal {
         super._addBlacklistAdmin(account);
     }
