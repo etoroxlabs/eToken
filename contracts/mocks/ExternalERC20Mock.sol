@@ -132,12 +132,7 @@ contract ExternalERC20Mock is ExternalERC20 {
         super._burnFrom(burner, account, value);
     }
 
-    /**
-     * @dev internal approve function
-     * @param originSender address to approve
-     * @param spender address to be approved
-     * @param value amount to be approved
-     */
+    /** Causes compilation errors if _approve function is not declared internal */
     function _approve(
         address originSender,
         address spender,
@@ -148,13 +143,7 @@ contract ExternalERC20Mock is ExternalERC20 {
         super._approve(originSender, spender, value);
     }
 
-    /**
-     * @dev internal transfer from function
-     * @param originSender address of sender
-     * @param from address to be sent from
-     * @param to address to be sent to
-     * @param value value to be sent
-     */
+    /** Causes compilation errors if _transferFrom function is not declared internal */
     function _transferFrom(
         address originSender,
         address from,
@@ -170,12 +159,7 @@ contract ExternalERC20Mock is ExternalERC20 {
         );
     }
 
-    /**
-     * @dev increase allowance internal function
-     * @param originSender address to increase allowance
-     * @param spender address to get increased allowance
-     * @param addedValue amount to increase by
-     */
+    /** Causes compilation errors if _increaseAllowance function is not declared internal */
     function _increaseAllowance(
         address originSender,
         address spender,
@@ -186,12 +170,7 @@ contract ExternalERC20Mock is ExternalERC20 {
         super._increaseAllowance(originSender, spender, addedValue);
     }
 
-    /**
-     * @dev decrease allowance internal function
-     * @param originSender address to decrease allowance
-     * @param spender address to have decreased allowance
-     * @param subtractedValue amount to decrease by
-     */
+    /** Causes compilation errors if _decreaseAllowance function is not declared internal */
     function _decreaseAllowance(
         address originSender,
         address spender,
@@ -202,40 +181,22 @@ contract ExternalERC20Mock is ExternalERC20 {
         super._decreaseAllowance(originSender, spender, subtractedValue);
     }
 
-    /**
-     * @dev internal transfer function
-     * @param from address to be transferred from
-     * @param to address to be transferred to
-     * @param value amount to be transferred
-     */
+    /** Causes compilation errors if _transfer function is not declared internal */
     function _transfer(address from, address to, uint256 value) internal {
         super._transfer(from, to, value);
     }
 
-    /**
-     * @dev internal minting function
-     * @param account address to mint to
-     * @param value amount to mint
-     */
+    /** Causes compilation errors if _mint function is not declared internal */
     function _mint(address account, uint256 value) internal {
         super._mint(account, value);
     }
 
-    /**
-     * @dev internal burn function
-     * @param account address to burn from
-     * @param value amount to burn
-     */
+    /** Causes compilation errors if _burn function is not declared internal */
     function _burn(address account, uint256 value) internal {
         super._burn(account, value);
     }
 
-    /**
-     * @dev internal burn from function
-     * @param burner address to burn
-     * @param account address to burn from
-     * @param value amount to burn
-     */
+    /** Causes compilation errors if _burnFrom function is not declared internal */
     function _burnFrom(
         address burner,
         address account,

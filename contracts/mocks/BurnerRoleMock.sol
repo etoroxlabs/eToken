@@ -9,31 +9,23 @@ import "../access/roles/BurnerRole.sol";
  */
 contract BurnerRoleMock is BurnerRole {
 
-    /**
-     * @dev returns true if message sender is a burner
-     */
+    /** Tests the msg.sender-dependent onlyBurner modifier */
     function onlyBurnerMock() public view onlyBurner {
     }
 
-    /**
-     * @dev returns true if given address is a burner
-     * @param a the address to be given
+    /** Tests the requireBurner modifier which checks if the
+     * given address is a blacklist admin
+     * @param a The address to be checked
      */
     function requireBurnerMock(address a) public view requireBurner(a) {
     }
 
-    /**
-     * @dev removes given address from burners
-     * @param account address to be removed
-     */
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _removeBurner(address account) internal {
         super._removeBurner(account);
     }
 
-    /**
-     * @dev adds given address to burners
-     * @param account address to be added
-     */
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _addBurner(address account) internal {
         super._addBurner(account);
     }

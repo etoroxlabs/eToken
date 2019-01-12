@@ -9,11 +9,13 @@ import "../access/roles/BlacklistAdminRole.sol";
  */
 contract BlacklistAdminRoleMock is BlacklistAdminRole {
 
+    /** Tests the msg.sender-dependent onlyBlacklistAdmin modifier */
     function onlyBlacklistAdminMock() public view onlyBlacklistAdmin {
     }
 
-    /**
-     * @dev returns true if given address is blacklist administrator
+    /** Tests the requireBlacklistAdmin modifier which checks if the
+     * given address is a blacklist admin
+     * @param a The address to be checked
      */
     function requireBlacklistAdminMock(address a)
         public
@@ -22,18 +24,12 @@ contract BlacklistAdminRoleMock is BlacklistAdminRole {
     {
     }
 
-    /**
-     * @dev removes given address from blacklist administrators
-     * @param account address to be removed
-     */
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _removeBlacklistAdmin(address account) internal {
         super._removeBlacklistAdmin(account);
     }
 
-    /**
-     * @dev adds given address to blacklist administrators
-     * @param account address to be added
-     */
+    /** Causes compilation errors if _removeBurner function is not declared internal */
     function _addBlacklistAdmin(address account) internal {
         super._addBlacklistAdmin(account);
     }
