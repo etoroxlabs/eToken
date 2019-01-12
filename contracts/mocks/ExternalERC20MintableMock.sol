@@ -20,4 +20,32 @@ contract ExternalERC20MintableMock is  ExternalERC20Mintable, MinterRoleMock {
     function changeMintingRecipient(address to) public {
         _changeMintingRecipient(msg.sender, to);
     }
+
+    /** Triggers compilation error if _changeMintingRecipient
+     * function is not declared internal
+     */
+    function _changeMintingRecipient(
+        address sender,
+        address mintingRecip
+    )
+        internal
+        requireMinter(sender)
+    {
+        super._changeMintingRecipient(sender, mintingRecip);
+    }
+
+    /** Triggers compilation error if _mintExplicitSender
+     * function is not declared internal
+     */
+    function _mintExplicitSender(
+        address sender,
+        address to,
+        uint256 value
+    )
+        internal
+        requireMinter(sender)
+    {
+        super._mintExplicitSender(sender, to, value);
+    }
+
 }
