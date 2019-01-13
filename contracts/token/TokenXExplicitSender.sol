@@ -26,7 +26,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
 {
 
     /**
-     * Holds the address of the
+     * @dev Holds the address of the
      */
     address private _upgradedFrom;
 
@@ -82,9 +82,9 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-       @dev Called by the upgraded contract in order to mark the finalization of
-       the upgrade and activate the new contract
-    */
+     * @dev Called by the upgraded contract in order to mark the finalization of
+     * the upgrade and activate the new contract
+     */
     function finalizeUpgrade() external {
         require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
         require(msg.sender == _upgradedFrom, "Sender is not old contract");
@@ -95,7 +95,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     /**
      * @dev Only allow the old contract to access the functions with explicit
      * sender passing
-    */
+     */
     modifier senderIsProxy () {
         require(msg.sender == _upgradedFrom, "Proxy is the only allowed caller");
         _;
@@ -111,7 +111,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         _;
     }
 
-    /** Like TokenX.name, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.name, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -128,7 +129,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.name();
     }
 
-    /** Like TokenX.symbol, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.symbol, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -145,7 +147,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.symbol();
     }
 
-    /** Like TokenX.decimal, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.decimal, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -162,7 +165,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.decimals();
     }
 
-    /** Like TokenX.totalSupply, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.totalSupply, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -179,7 +183,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.totalSupply();
     }
 
-    /** Like TokenX.balanceOf, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.balanceOf, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -196,7 +201,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.balanceOf(who);
     }
 
-    /** Like TokenX.allowance, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.allowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -213,7 +219,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.allowance(owner, spender);
     }
 
-    /** Like TokenX.transfer, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.transfer, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -231,7 +238,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** Like TokenX.approve, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.approve, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -251,7 +259,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
 
-    /** Like TokenX.transferFrom, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.transferFrom, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -279,7 +288,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
 
-    /** Like TokenX.increaseAllowance, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.increaseAllowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -301,7 +311,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** Like TokenX.decreaseAllowance, but gets sender from explicit sender
+    /** 
+     @ dev Like TokenX.decreaseAllowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -320,7 +331,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** Like TokenX.burn, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.burn, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -334,7 +346,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         super._burn(sender, value);
     }
 
-    /** Like TokenX.burnFrom, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.burnFrom, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -350,7 +363,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         super._burnFrom(sender, from, value);
     }
 
-    /** Like TokenX.mint, but gets sender from explicit sender
+    /** 
+     * @dev Like TokenX.mint, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -365,7 +379,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** Like TokenX.changeMintingRecipient, but gets sender from
+    /** 
+     * @dev Like TokenX.changeMintingRecipient, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -378,7 +393,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         super._changeMintingRecipient(sender, mintingRecip);
     }
 
-    /** Like TokenX.transfer, but gets sender from
+    /** 
+     * @dev Like TokenX.transfer, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -394,7 +410,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.transfer(to, value);
     }
 
-    /** Like TokenX.approve, but gets sender from
+    /** 
+     * @dev Like TokenX.approve, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -410,7 +427,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.approve(spender, value);
     }
 
-    /** Like TokenX.transferFrom, but gets sender from
+    /** 
+     * @dev Like TokenX.transferFrom, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -427,7 +445,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.transferFrom(from, to, value);
     }
 
-    /** Like TokenX.increaseAllowance, but gets sender from
+    /** 
+     * @dev Like TokenX.increaseAllowance, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -443,7 +462,8 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.increaseAllowance(spender, addedValue);
     }
 
-    /** Like TokenX.decreaseAllowance, but gets sender from
+    /** 
+     * @dev Like TokenX.decreaseAllowance, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -459,17 +479,17 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.decreaseAllowance(spender, subtractedValue);
     }
 
-    /** Burning function called by TokenX.burn */
+    /** @dev Burning function called by TokenX.burn */
     function burn(uint256 value) public isEnabled onlyBurner {
         super.burn(value);
     }
 
-    /** Burning function called by TokenX.burnFrom */
+    /** @dev Burning function called by TokenX.burnFrom */
     function burnFrom(address from, uint256 value) public isEnabled onlyBurner {
         super.burnFrom(from, value);
     }
 
-    /** Minting function called by TokenX.mint */
+    /** @dev Minting function called by TokenX.mint */
     function mint(address to, uint256 value)
         public
         isEnabled
@@ -479,7 +499,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** changeMintingRecipient function called by TokenX.changeMintingRecipient */
+    /** @dev changeMintingRecipient function called by TokenX.changeMintingRecipient */
     function changeMintingRecipient(address _mintingRecipientAddress)
         public
         isEnabled

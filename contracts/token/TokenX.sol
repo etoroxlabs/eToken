@@ -61,8 +61,8 @@ contract TokenX is ITokenX, TokenXExplicitSender {
     event Upgraded(address to);
 
     /**
-      * @return Is this token upgraded
-      */
+     * @return Is this token upgraded
+     */
     function isUpgraded() public view returns (bool) {
         return upgradedToken != IUpgradableTokenX(0);
     }
