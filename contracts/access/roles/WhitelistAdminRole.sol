@@ -26,7 +26,7 @@ contract WhitelistAdminRole is Ownable {
         _;
     }
 
-    /** Checks if account is whitelist dmin
+    /** @dev Checks if account is whitelist dmin
      * @param account Account to check
      * @return Boolean indicating if account is whitelist admin
      */
@@ -34,34 +34,32 @@ contract WhitelistAdminRole is Ownable {
         return whitelistAdmins.has(account);
     }
 
-    /** Adds a whitelist admin account
-     * @dev Is only callable by owner
-     * @param account to be added
+    /** @dev Adds a whitelist admin account. Is only callable by owner.
+     * @param account Address to be added
      */
     function addWhitelistAdmin(address account) public onlyOwner {
         _addWhitelistAdmin(account);
     }
 
-    /** Removes a whitelist admin account
-     * @dev Is only callable by owner
-     * @param account to be removed
+    /** @dev Removes a whitelist admin account. Is only callable by owner.
+     * @param account Address to be removed
      */
     function removeWhitelistAdmin(address account) public onlyOwner {
         _removeWhitelistAdmin(account);
     }
 
-    /** Allows privilege holder to renounce their role */
+    /** @dev Allows a privileged holder to renounce their role */
     function renounceWhitelistAdmin() public {
         _removeWhitelistAdmin(msg.sender);
     }
 
-    /** Internal implementation of addWhitelistAdmin */
+    /** @dev Internal implementation of addWhitelistAdmin */
     function _addWhitelistAdmin(address account) internal {
         whitelistAdmins.add(account);
         emit WhitelistAdminAdded(account);
     }
 
-    /** Internal implementation of removeWhitelistAdmin */
+    /** @dev Internal implementation of removeWhitelistAdmin */
     function _removeWhitelistAdmin(address account) internal {
         whitelistAdmins.remove(account);
         emit WhitelistAdminRemoved(account);

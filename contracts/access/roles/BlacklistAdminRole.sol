@@ -26,7 +26,7 @@ contract BlacklistAdminRole is Ownable {
         _;
     }
 
-    /** Checks if account is blacklist dmin
+    /** @dev Checks if account is blacklist admin
      * @param account Account to check
      * @return Boolean indicating if account is blacklist admin
      */
@@ -34,34 +34,32 @@ contract BlacklistAdminRole is Ownable {
         return blacklistAdmins.has(account);
     }
 
-    /** Adds a blacklist admin account
-     * @dev Is only callable by owner
-     * @param account to be added
+    /** @dev Adds a blacklist admin account. Is only callable by owner.
+     * @param account Address to be added
      */
     function addBlacklistAdmin(address account) public onlyOwner {
         _addBlacklistAdmin(account);
     }
 
-    /** Removes a blacklist admin account
-     * @dev Is only callable by owner
-     * @param account to be removed
+    /** @dev Removes a blacklist admin account. Is only callable by owner
+     * @param account Address to be removed
      */
     function removeBlacklistAdmin(address account) public onlyOwner {
         _removeBlacklistAdmin(account);
     }
 
-    /** Allows privilege holder to renounce their role */
+    /** @dev Allows privilege holder to renounce their role */
     function renounceBlacklistAdmin() public {
         _removeBlacklistAdmin(msg.sender);
     }
 
-    /** Internal implementation of addBlacklistAdmin */
+    /** @dev Internal implementation of addBlacklistAdmin */
     function _addBlacklistAdmin(address account) internal {
         blacklistAdmins.add(account);
         emit BlacklistAdminAdded(account);
     }
 
-    /** Internal implementation of removeBlacklistAdmin */
+    /** @dev Internal implementation of removeBlacklistAdmin */
     function _removeBlacklistAdmin(address account) internal {
         blacklistAdmins.remove(account);
         emit BlacklistAdminRemoved(account);

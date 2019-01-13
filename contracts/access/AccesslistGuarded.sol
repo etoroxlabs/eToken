@@ -13,9 +13,9 @@ contract AccesslistGuarded {
     bool public whitelistEnabled;
 
     /**
-     * @dev constructor. checks if the accesslist is a zero address
-     * @param _accesslist the access list
-     * @param _whitelistEnabled if the whitelist is enabled
+     * @dev Constructor. Checks if the accesslist is a zero address
+     * @param _accesslist The access list
+     * @param _whitelistEnabled If the whitelist is enabled
      */
     constructor(
         Accesslist _accesslist,
@@ -92,7 +92,7 @@ contract AccesslistGuarded {
      *  @dev Returns whether account has access.
      *       If whitelist is enabled a whitelist check is also made,
      *       otherwise it only checks for blacklisting.
-     *  @param account address to be checked
+      *  @param account Address to be checked
      *  @return true if address has access or is not blacklisted when whitelist
      *  is disabled
      */
@@ -106,7 +106,7 @@ contract AccesslistGuarded {
 
     /**
      *  @dev Returns whether account is whitelisted
-     *  @param account address to be checked
+      *  @param account Address to be checked
      *  @return true if address is whitelisted
      */
     function isWhitelisted(address account) public view returns (bool) {
@@ -115,7 +115,7 @@ contract AccesslistGuarded {
 
     /**
      *  @dev Returns whether account is not blacklisted
-     *  @param account address to be checked
+      *  @param account Address to be checked
      *  @return true if address is not blacklisted
      */
     function isNotBlacklisted(address account) public view returns (bool) {

@@ -20,37 +20,37 @@ contract ExternalERC20Mock is ExternalERC20 {
     }
 
     /**
-     * @dev mints given amount to given address
-     * @param account address to be given
-     * @param amount amount to be minted
+     * @dev Mints amount to given address
+     * @param account Receiving address
+     * @param amount Amount to be minted
      */
     function mint(address account, uint256 amount) public {
         _mint(account, amount);
     }
 
     /**
-     * @dev given address burns given amount
-     * @param account address to be given
-     * @param amount amount to be burned
+     * @dev Burn amount from the given address
+     * @param account Address to burn from
+     * @param amount Amount to be burned
      */
     function burn(address account, uint256 amount) public {
         _burn(account, amount);
     }
 
     /**
-     * @dev message sender burns given amount from given address
-     * @param account address to be given
-     * @param amount amount to be burned
+     * @dev Message sender burns approved amount from the given address
+     * @param account Address to burn from
+     * @param amount Amount to be burned
      */
     function burnFrom(address account, uint256 amount) public {
         _burnFrom(msg.sender, account, amount);
     }
 
     /**
-     * @dev approve test function. Approves address to spend given amount
-     * @param originSender address to approve spending
-     * @param spender address to be approved
-     * @param value amount to be approved
+     * @dev Approve test function. Approves the given address to spend amount.
+     * @param originSender Address that approves spending
+     * @param spender Address to be approved
+     * @param value Amount to be approved
      */
     function approvePublicTest(
         address originSender,
@@ -63,11 +63,11 @@ contract ExternalERC20Mock is ExternalERC20 {
     }
 
     /**
-     * @dev transfer from test function
-     * @param originSender address of sender
-     * @param from address to be sent from
-     * @param to address to be sent to
-     * @param value value to be sent
+     * @dev Transfer from test function
+     * @param originSender Address of sender
+     * @param from Address to be sent from
+     * @param to Address to be sent to
+     * @param value Amount to be sent
      */
     function transferFromPublicTest(
         address originSender,
@@ -85,10 +85,10 @@ contract ExternalERC20Mock is ExternalERC20 {
     }
 
     /**
-     * @dev increase allowance test function
-     * @param originSender address to increase allowance
-     * @param spender address to get increased allowance
-     * @param addedValue amount to increase by
+     * @dev Increase allowance test function
+     * @param originSender Address to increase allowance
+     * @param spender Address to get increased allowance
+     * @param addedValue Amount to increase by
      */
     function increaseAllowancePublicTest(
         address originSender,
@@ -101,10 +101,10 @@ contract ExternalERC20Mock is ExternalERC20 {
     }
 
     /**
-     * @dev decrease allowance test function
-     * @param originSender address to decrease allowance
-     * @param spender address to have decreased allowance
-     * @param subtractedValue amount to decrease by
+     * @dev Decrease allowance test function
+     * @param originSender Address to decrease allowance
+     * @param spender Address to have decreased allowance
+     * @param subtractedValue Amount to decrease by
      */
     function decreaseAllowancePublicTest(
         address originSender,
