@@ -26,7 +26,8 @@ contract BurnerRole is Ownable {
         _;
     }
 
-    /** @dev Checks if account is burner
+    /** 
+     * @dev Checks if account is burner
      * @param account Account to check
      * @return Boolean indicating if account is burner
      */
@@ -34,7 +35,8 @@ contract BurnerRole is Ownable {
         return burners.has(account);
     }
 
-    /** @dev Adds a burner account
+    /** 
+     * @dev Adds a burner account
      * @dev Is only callable by owner
      * @param account Address to be added
      */
@@ -42,7 +44,8 @@ contract BurnerRole is Ownable {
         _addBurner(account);
     }
 
-    /** @dev Removes a burner account
+    /** 
+     * @dev Removes a burner account
      * @dev Is only callable by owner
      * @param account Address to be removed
      */

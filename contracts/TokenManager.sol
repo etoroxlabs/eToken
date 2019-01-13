@@ -109,7 +109,7 @@ contract TokenManager is Ownable {
 
     /**
      * @dev Finds a token of the specified name
-      * @param _name Name of the token to be returned
+     * @param _name Name of the token to be returned
      * @return The token of the given name
      */
     function getToken (bytes32 _name)

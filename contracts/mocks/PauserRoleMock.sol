@@ -11,10 +11,11 @@ contract PauserRoleMock is PauserRole {
     function onlyPauserMock() public view onlyPauser {
     }
 
-    /** Tests the requirePauser modifier which checks if the
-      * given address is a pauser
-      * @param a The address to be checked
-      */
+    /** 
+     * Tests the requirePauser modifier which checks if the
+     * given address is a pauser
+     * @param a The address to be checked
+     */
     function requirePauserMock(address a) public view requirePauser(a) {
     }
 

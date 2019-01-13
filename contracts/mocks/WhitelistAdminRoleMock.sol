@@ -9,10 +9,11 @@ contract WhitelistAdminRoleMock is WhitelistAdminRole {
     function onlyWhitelistAdminMock() public view onlyWhitelistAdmin {
     }
 
-    /** Tests the requireWhitelistAdmin modifier which checks if the
-      * given address is whitelsited
-      * @param a The address to be checked
-      */
+    /** 
+     * Tests the requireWhitelistAdmin modifier which checks if the
+     * given address is whitelsited
+     * @param a The address to be checked
+     */
     function requireWhitelistAdminMock(address a)
         public
         view

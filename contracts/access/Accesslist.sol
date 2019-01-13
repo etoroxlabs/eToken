@@ -5,8 +5,8 @@ import "./roles/WhitelistAdminRole.sol";
 import "./roles/BlacklistAdminRole.sol";
 
 /**
- *  @title The Accesslist contract
- *  @dev Contract that contains a whitelist and a blacklist and manages them
+ * @title The Accesslist contract
+ * @dev Contract that contains a whitelist and a blacklist and manages them
  */
 contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     using Roles for Roles.Role;
@@ -20,9 +20,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     Roles.Role private blacklist;
 
     /**
-     *  @dev Calls internal function _addWhitelisted
-     *  to add given address to whitelist
-     *  @param account Address to be added
+     * @dev Calls internal function _addWhitelisted
+     * to add given address to whitelist
+     * @param account Address to be added
      */
     function addWhitelisted(address account)
         public
@@ -32,9 +32,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Calls internal function _removeWhitelisted
-     *  to remove given address from the whitelist
-     *  @param account Address to be removed
+     * @dev Calls internal function _removeWhitelisted
+     * to remove given address from the whitelist
+     * @param account Address to be removed
      */
     function removeWhitelisted(address account)
         public
@@ -44,9 +44,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Calls internal function _addBlacklisted
-     *  to add given address to blacklist
-     *  @param account Address to be added
+     * @dev Calls internal function _addBlacklisted
+     * to add given address to blacklist
+     * @param account Address to be added
      */
     function addBlacklisted(address account)
         public
@@ -56,9 +56,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Calls internal function _removeBlacklisted
-     *  to remove given address from blacklist
-     *  @param account Address to be removed
+     * @dev Calls internal function _removeBlacklisted
+     * to remove given address from blacklist
+     * @param account Address to be removed
      */
     function removeBlacklisted(address account)
         public
@@ -68,9 +68,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-      *  @dev Checks to see if the given address is whitelisted
-     *  @param account Address to be checked
-     *  @return true if address is whitelisted
+     * @dev Checks to see if the given address is whitelisted
+     * @param account Address to be checked
+     * @return true if address is whitelisted
      */
     function isWhitelisted(address account)
         public
@@ -81,9 +81,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Checks to see if given address is blacklisted
-     *  @param account Address to be checked
-     *  @return true if address is blacklisted
+     * @dev Checks to see if given address is blacklisted
+     * @param account Address to be checked
+     * @return true if address is blacklisted
      */
     function isBlacklisted(address account)
         public
@@ -94,9 +94,9 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Checks to see if given address is whitelisted and not blacklisted
-     *  @param account Address to be checked
-     *  @return true if address has access
+     * @dev Checks to see if given address is whitelisted and not blacklisted
+     * @param account Address to be checked
+     * @return true if address has access
      */
     function hasAccess(address account)
         public
@@ -108,8 +108,8 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
 
 
     /**
-     *  @dev Adds given address to the whitelist
-     *  @param account Address to be added
+     * @dev Adds given address to the whitelist
+     * @param account Address to be added
      */
     function _addWhitelisted(address account) internal {
         whitelist.add(account);
@@ -117,8 +117,8 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Removes given address to the whitelist
-     *  @param account Address to be removed
+     * @dev Removes given address to the whitelist
+     * @param account Address to be removed
      */
     function _removeWhitelisted(address account) internal {
         whitelist.remove(account);
@@ -126,8 +126,8 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Adds given address to the blacklist
-     *  @param account Address to be added
+     * @dev Adds given address to the blacklist
+     * @param account Address to be added
      */
     function _addBlacklisted(address account) internal {
         blacklist.add(account);
@@ -135,8 +135,8 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Removes given address to the blacklist
-     *  @param account Address to be removed
+     * @dev Removes given address to the blacklist
+     * @param account Address to be removed
      */
     function _removeBlacklisted(address account) internal {
         blacklist.remove(account);

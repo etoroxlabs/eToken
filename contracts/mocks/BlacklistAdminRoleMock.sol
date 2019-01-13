@@ -3,9 +3,9 @@ pragma solidity ^0.4.24;
 import "../access/roles/BlacklistAdminRole.sol";
 
 /**
- *  @title An Blacklist admin mock contract
- *  @dev Contract to test currently unused modifiers and functions for
- *  the blacklist administrator role
+ * @title An Blacklist admin mock contract
+ * @dev Contract to test currently unused modifiers and functions for
+ * the blacklist administrator role
  */
 contract BlacklistAdminRoleMock is BlacklistAdminRole {
 
@@ -13,7 +13,8 @@ contract BlacklistAdminRoleMock is BlacklistAdminRole {
     function onlyBlacklistAdminMock() public view onlyBlacklistAdmin {
     }
 
-    /** @dev Tests the requireBlacklistAdmin modifier which checks if the
+    /** 
+     * @dev Tests the requireBlacklistAdmin modifier which checks if the
      * given address is a blacklist admin
      * @param a Address to be checked
      */
