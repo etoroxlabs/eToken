@@ -26,7 +26,7 @@ contract PauserRole is Ownable {
         _;
     }
 
-    /** 
+    /**
      * @dev Checks if account is pauser
      * @param account Account to check
      * @return Boolean indicating if account is pauser
@@ -35,7 +35,7 @@ contract PauserRole is Ownable {
         return pausers.has(account);
     }
 
-    /** 
+    /**
      * @dev Adds a pauser account. Is only callable by owner.
      * @param account Address to be added
      */
@@ -43,7 +43,7 @@ contract PauserRole is Ownable {
         _addPauser(account);
     }
 
-    /** 
+    /**
      * @dev Removes a pauser account. Is only callable by owner.
      * @param account Address to be removed
      */

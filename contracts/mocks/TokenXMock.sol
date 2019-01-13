@@ -9,7 +9,7 @@ import "./PauserRoleMock.sol";
 /** @title Mock contract for testing TokenX */
 contract TokenXMock is TokenX, PauserRoleMock {
 
-    /** 
+    /**
      * Initializes a TokenX contract and optionally mint some amount to a
      * given account
      * @param name The name of the token

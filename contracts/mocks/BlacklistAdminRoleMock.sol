@@ -13,7 +13,7 @@ contract BlacklistAdminRoleMock is BlacklistAdminRole {
     function onlyBlacklistAdminMock() public view onlyBlacklistAdmin {
     }
 
-    /** 
+    /**
      * @dev Tests the requireBlacklistAdmin modifier which checks if the
      * given address is a blacklist admin
      * @param a Address to be checked

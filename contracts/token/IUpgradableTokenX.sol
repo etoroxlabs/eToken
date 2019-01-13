@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-/** 
+/**
  * @title Interface of an upgradable token
- * @dev See implementation for 
+ * @dev See implementation for
  */
 interface IUpgradableTokenX {
 

@@ -9,7 +9,7 @@ import "./PauserRoleMock.sol";
  */
 contract ExternalERC20PausableMock is ExternalERC20Pausable, PauserRoleMock {
 
-    /** 
+    /**
      * @dev Initializes an ERC20Pausable, sets up the external
      * storage and mints an amount of token to the given account
      * @param initialAccount The account that tokens should be minted to

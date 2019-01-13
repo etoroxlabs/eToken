@@ -26,7 +26,7 @@ contract BlacklistAdminRole is Ownable {
         _;
     }
 
-    /** 
+    /**
      * @dev Checks if account is blacklist admin
      * @param account Account to check
      * @return Boolean indicating if account is blacklist admin
@@ -35,7 +35,7 @@ contract BlacklistAdminRole is Ownable {
         return blacklistAdmins.has(account);
     }
 
-    /** 
+    /**
      * @dev Adds a blacklist admin account. Is only callable by owner.
      * @param account Address to be added
      */
@@ -43,7 +43,7 @@ contract BlacklistAdminRole is Ownable {
         _addBlacklistAdmin(account);
     }
 
-    /** 
+    /**
      * @dev Removes a blacklist admin account. Is only callable by owner
      * @param account Address to be removed
      */

@@ -9,7 +9,7 @@ import "../../lifecycle/Pausable.sol";
  */
 contract ExternalERC20Pausable is ExternalERC20, Pausable {
 
-    /** 
+    /**
      * Wrapper for ExternalERC20.transfer which requires that the
      * contract is not currently paused
      */
@@ -24,7 +24,7 @@ contract ExternalERC20Pausable is ExternalERC20, Pausable {
         return super.transfer(to, value);
     }
 
-    /** 
+    /**
      * Wrapper for ExternalERC20.transferFrom which requires that the
      * contract is not currently paused
      */
@@ -40,7 +40,7 @@ contract ExternalERC20Pausable is ExternalERC20, Pausable {
         return super.transferFrom(from, to, value);
     }
 
-    /** 
+    /**
      * Wrapper for ExternalERC20.approve which requires that the
      * contract is not currently paused
      */
@@ -55,7 +55,7 @@ contract ExternalERC20Pausable is ExternalERC20, Pausable {
         return super.approve(spender, value);
     }
 
-    /** 
+    /**
      * Wrapper for ExternalERC20.increaseAllowance which requires
      * that the contract is not currently paused
      */
@@ -70,7 +70,7 @@ contract ExternalERC20Pausable is ExternalERC20, Pausable {
         return super.increaseAllowance(spender, addedValue);
     }
 
-    /** 
+    /**
      * Wrapper for ExternalERC20.decreaseAllowance which requires
      * that the contract is not currently paused
      */
