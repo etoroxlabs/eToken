@@ -4,7 +4,7 @@ pragma solidity ^0.4.24;
  * @title Interface of an upgradable token
  * @dev See implementation for 
  */
-contract IUpgradableTokenX {
+interface IUpgradableTokenX {
 
     event Transfer(address indexed from,
                    address indexed to,
