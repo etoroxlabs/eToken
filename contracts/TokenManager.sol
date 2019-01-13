@@ -22,9 +22,11 @@ contract TokenManager is Ownable {
     mapping (bytes32 => TokenEntry) private tokens;
     bytes32[] private names;
 
-    event TokenAdded(bytes32 name, ITokenX addr);
-    event TokenDeleted(bytes32 name, ITokenX addr);
-    event TokenUpgraded(bytes32 name, ITokenX from, ITokenX to);
+    event TokenAdded(bytes32 indexed name, ITokenX indexed addr);
+    event TokenDeleted(bytes32 indexed name, ITokenX indexed addr);
+    event TokenUpgraded(bytes32 indexed name,
+                        ITokenX indexed from,
+                        ITokenX indexed to);
 
     /**
      * @dev Require that the token _name exists
