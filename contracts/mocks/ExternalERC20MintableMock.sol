@@ -29,7 +29,6 @@ contract ExternalERC20MintableMock is  ExternalERC20Mintable, MinterRoleMock {
         address mintingRecip
     )
         internal
-        requireMinter(sender)
     {
         super._changeMintingRecipient(sender, mintingRecip);
     }
