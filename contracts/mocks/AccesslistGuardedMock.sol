@@ -3,10 +3,9 @@ pragma solidity ^0.4.24;
 import "../access/AccesslistGuarded.sol";
 
 /**
- *  @title An AccesslistGuarded mock contract
- *  @dev Contracts to test currently unused modifiers in AccesslistGuarded
+ * @title An AccesslistGuarded mock contract
+ * @dev Contracts to test currently unused modifiers in AccesslistGuarded
  */
-
 contract AccesslistGuardedMock is AccesslistGuarded {
 
     constructor(Accesslist _accesslist, bool whitelistEnabled)
@@ -17,7 +16,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
 
     /**
      * @dev Function that returns true if
-     *      given address has access
+     * given address has access
      * @param account Address to check
      */
     function requireHasAccessMock(address account)
@@ -31,7 +30,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
 
     /**
      * @dev Function that returns true if
-     *      message sender has access
+     * message sender has access
      */
     function onlyHasAccessMock()
         public
@@ -44,7 +43,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
 
     /**
      * @dev Function that returns true if
-     *      given address is whitelisted
+     * given address is whitelisted
      * @param account Address to check
      */
     function requireWhitelistedMock(address account)
@@ -58,7 +57,7 @@ contract AccesslistGuardedMock is AccesslistGuarded {
 
     /**
      * @dev Function that returns true if
-     *      message sender is Whitelisted
+     * message sender is Whitelisted
      */
     function onlyWhitelistedMock()
         public
@@ -70,9 +69,9 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-     *  @dev Function that returns true if
-     *       given address isn't blacklisted
-     *  @param account Address to check
+     * @dev Function that returns true if
+     * given address isn't blacklisted
+     * @param account Address to check
      */
     function requireNotBlacklistedMock(address account)
         public
@@ -84,8 +83,8 @@ contract AccesslistGuardedMock is AccesslistGuarded {
     }
 
     /**
-     *  @dev Function that returns true if
-     *       message sender isn't blacklisted
+     * @dev Function that returns true if
+     * message sender isn't blacklisted
      */
     function onlyNotBlacklistedMock()
         public

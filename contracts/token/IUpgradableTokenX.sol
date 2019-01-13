@@ -1,5 +1,9 @@
 pragma solidity ^0.4.24;
 
+/**
+ * @title Interface of an upgradable token
+ * @dev See implementation for
+ */
 interface IUpgradableTokenX {
 
     event Transfer(address indexed from,
@@ -10,6 +14,8 @@ interface IUpgradableTokenX {
                    address indexed spender,
                    uint256 value);
 
+
+    /* solium-disable zeppelin/missing-natspec-comments */
 
     function finalizeUpgrade() external;
 

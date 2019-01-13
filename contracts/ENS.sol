@@ -7,5 +7,5 @@ import "@ensdomains/ens/contracts/ENSRegistry.sol";
 import "@ensdomains/ens/contracts/PublicResolver.sol";
 import "@ensdomains/ens/contracts/ReverseRegistrar.sol";
 
-// Avoild recompiling every time
+/** @title Contract declaration to avoid recompiling ENS every time */
 contract ENSdummy { }

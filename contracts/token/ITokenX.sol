@@ -2,7 +2,13 @@ pragma solidity ^0.4.24;
 
 import "./IUpgradableTokenX.sol";
 
+/**
+ * @title TokenX interface
+ * @dev The interface comprising a TokenX contract
+ */
 interface ITokenX {
+
+    /* solium-disable zeppelin/missing-natspec-comments */
 
     function upgrade(IUpgradableTokenX upgradedToken) external;
 

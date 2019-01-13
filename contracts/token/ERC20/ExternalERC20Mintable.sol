@@ -13,12 +13,17 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
     event MintingRecipientAccountChanged(address prev, address next);
 
+    /**
+     * @dev constructor. Sets minting recipient to given address
+     * @param _mintingRecipientAccount address to be set to recipient
+     */
     constructor(address _mintingRecipientAccount) internal {
         _changeMintingRecipient(msg.sender, _mintingRecipientAccount);
     }
 
     /**
-     * @dev Allows the owner to change the current minting recipient account
+     * @dev Internal function allowing the owner to change the current minting recipient account
+     * @param sender The sender address of the request
      * @param _mintingRecipientAccount address of new minting recipient
      */
     function _changeMintingRecipient(
@@ -37,6 +42,7 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
     /**
      * @dev Function to mint tokens
+     * @param sender the sender address of the requiest
      * @param to The address that will receive the minted tokens.
      * @param value The amount of tokens to mint.
      * @return A boolean that indicates if the operation was successful.

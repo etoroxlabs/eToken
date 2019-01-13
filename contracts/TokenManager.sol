@@ -108,8 +108,9 @@ contract TokenManager is Ownable {
     }
 
     /**
-     * @dev Returns a token of specified name
-     * @param _name Name of token to be returned
+     * @dev Finds a token of the specified name
+     * @param _name Name of the token to be returned
+     * @return The token of the given name
      */
     function getToken (bytes32 _name)
         public
@@ -121,14 +122,14 @@ contract TokenManager is Ownable {
     }
 
     /**
-     * @dev Returns list of tokens
+     * @dev Gets all token names
+     * @return A list of names
      */
     function getTokens ()
         public
         view
         returns (bytes32[])
     {
-        // TODO: Maybe filter out 0 entries (deleted names) from the list?
         return names;
     }
 
@@ -136,6 +137,7 @@ contract TokenManager is Ownable {
      * @dev Checks whether a token of specified name exists exists
      * in list of tokens
      * @param _name Name of token
+     * @return true if a token of the given name exists
      */
     function _tokenExists (bytes32 _name)
         private

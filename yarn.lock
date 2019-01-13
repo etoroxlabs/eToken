@@ -1994,6 +1994,11 @@ decompress@^4.0.0:
     pify "^2.3.0"
     strip-dirs "^2.0.0"
 
+dedent@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
+  integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
+
 deep-eql@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-3.0.1.tgz#dfc9404400ad1c8fe023e7da1df1c147c4b444df"
@@ -3625,7 +3630,12 @@ global@~4.3.0:
     min-document "^2.19.0"
     process "~0.5.1"
 
-globals@^11.0.1, globals@^11.7.0:
+globals@^11.0.1:
+  version "11.10.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-11.10.0.tgz#1e09776dffda5e01816b3bb4077c8b59c24eaa50"
+  integrity sha512-0GZF1RiPKU97IHUO5TORo9w1PwrH/NBPl+fS7oMLdaTRiYmYbwK4NWoZWrAdd0/abG9R2BU+OiwyQpTpE6pdfQ==
+
+globals@^11.7.0:
   version "11.9.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.9.0.tgz#bde236808e987f290768a93d065060d78e6ab249"
   integrity sha512-5cJVtyXWH8PiJPVLZzzoIizXx944O4OmRro5MWKx5fT4MgcN7OfaMutPeaTdJCCURwbWdhhcCWcKIffPnmTzBg==
@@ -4418,7 +4428,7 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-yaml@3.x, js-yaml@^3.11.0, js-yaml@^3.9.1:
+js-yaml@3.x, js-yaml@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
   integrity sha512-PIt2cnwmPfL4hKNwqeiuz4bKfnzHTBv6HyVgjahA6mPLwPDzjDWrplJBMjHUFxku/N3FlmrbyPclad+I+4mJ3A==
@@ -4426,7 +4436,7 @@ js-yaml@3.x, js-yaml@^3.11.0, js-yaml@^3.9.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-js-yaml@^3.12.0:
+js-yaml@^3.12.0, js-yaml@^3.9.1:
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
   integrity sha512-um46hB9wNOKlwkHgiuyEVAybXBjwFUV0Z/RaHJblRd9DXltue9FTYvzCr9ErQrK9Adz5MU4gHWVaNUfdmrC8qA==
@@ -6768,11 +6778,11 @@ solium-plugin-security@0.1.1:
   resolved "https://registry.yarnpkg.com/solium-plugin-security/-/solium-plugin-security-0.1.1.tgz#2a87bcf8f8c3abf7d198e292e4ac080284e3f3f6"
   integrity sha512-kpLirBwIq4mhxk0Y/nn5cQ6qdJTI+U1LO3gpoNIcqNaW+sI058moXBe2UiHs+9wvF9IzYD49jcKhFTxcR9u9SQ==
 
-solium-plugin-zeppelin@^0.0.2:
+"solium-plugin-zeppelin@ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247":
   version "0.0.2"
-  resolved "https://registry.yarnpkg.com/solium-plugin-zeppelin/-/solium-plugin-zeppelin-0.0.2.tgz#da9ab8f2657a2d65fd07e4436245d045e4bcf59a"
-  integrity sha512-9g94tij352g8Ov21cFGfMFMQS5UL2ggxuu5mXScrSzzbKK2v4kTnkuqJXcnKOfkccVlVe9ShkDSVPOrgs3UFXQ==
+  resolved "ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247"
   dependencies:
+    dedent "^0.7.0"
     eslint "^4.13.1"
     solparse "^2.2.2"
     util-deprecate "^1.0.2"
@@ -6795,10 +6805,19 @@ solium@^1.1.8:
     solparse "2.2.5"
     text-table "^0.2.0"
 
-solparse@2.2.5, solparse@^2.2.2:
+solparse@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/solparse/-/solparse-2.2.5.tgz#72709c867cd6bfc50ec2325f4b81d2b3ea365d99"
   integrity sha512-t7tvtR6KU6QfPYLMv1nlCh9DA8HYIu5tbjHpKu0fhGFZ1NuSp0KKDHfFHv07g6v1xgcuUY3rVqNFjZt5b9+5qA==
+  dependencies:
+    mocha "^4.0.1"
+    pegjs "^0.10.0"
+    yargs "^10.0.3"
+
+solparse@^2.2.2:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/solparse/-/solparse-2.2.7.tgz#5479ff4ba4ca6900df89b902b5af1ee23b816250"
+  integrity sha512-s2DKdvVxXcWefPgBSb+HgTylomzbNjsKdZDN6PsWi9h+UYdyw7DFozpPCGETNEz523tIjrqBRnSPIoDVL1zv5Q==
   dependencies:
     mocha "^4.0.1"
     pegjs "^0.10.0"
