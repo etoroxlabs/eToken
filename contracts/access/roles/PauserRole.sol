@@ -26,7 +26,7 @@ contract PauserRole is Ownable {
         _;
     }
 
-    /** Checks if account is pauser
+    /** @dev Checks if account is pauser
      * @param account Account to check
      * @return Boolean indicating if account is pauser
      */
@@ -34,34 +34,32 @@ contract PauserRole is Ownable {
         return pausers.has(account);
     }
 
-    /** Adds a pauser account
-     * @dev Is only callable by owner
-     * @param account to be added
+    /** @dev Adds a pauser account. Is only callable by owner.
+     * @param account Address to be added
      */
     function addPauser(address account) public onlyOwner {
         _addPauser(account);
     }
 
-    /** Removes a pauser account
-     * @dev Is only callable by owner
-     * @param account to be removed
+    /** @dev Removes a pauser account. Is only callable by owner.
+     * @param account Address to be removed
      */
     function removePauser(address account) public onlyOwner {
         _removePauser(account);
     }
 
-    /** Allows privilege holder to renounce their role */
+    /** @dev Allows a privileged holder to renounce their role */
     function renouncePauser() public {
         _removePauser(msg.sender);
     }
 
-    /** Internal implementation of addPauser */
+    /** @dev Internal implementation of addPauser */
     function _addPauser(address account) internal {
         pausers.add(account);
         emit PauserAdded(account);
     }
 
-    /** Internal implementation of removePauser */
+    /** @dev Internal implementation of removePauser */
     function _removePauser(address account) internal {
         pausers.remove(account);
         emit PauserRemoved(account);

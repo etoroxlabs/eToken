@@ -19,17 +19,17 @@ contract ExternalERC20MintableMock is  ExternalERC20Mintable, MinterRoleMock {
     }
 
     /**
-     * @dev mints a given amount to a given address
-     * @param to address to be minted to
-     * @param amount amount to be minted
+     * @dev Mints a given amount to a given address
+     * @param to Address to be minted to
+     * @param amount Amount to be minted
      */
     function mint(address to, uint256 amount) public {
         _mintExplicitSender(msg.sender, to, amount);
     }
 
     /**
-     * @dev changes set minting recipient to given address
-     * @param to address to be set
+     * @dev Changes set minting recipient to given address
+     * @param to Address to be set
      */
     function changeMintingRecipient(address to) public {
         _changeMintingRecipient(msg.sender, to);

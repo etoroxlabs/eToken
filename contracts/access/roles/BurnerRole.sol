@@ -26,7 +26,7 @@ contract BurnerRole is Ownable {
         _;
     }
 
-    /** Checks if account is burner
+    /** @dev Checks if account is burner
      * @param account Account to check
      * @return Boolean indicating if account is burner
      */
@@ -34,34 +34,34 @@ contract BurnerRole is Ownable {
         return burners.has(account);
     }
 
-    /** Adds a burner account
+    /** @dev Adds a burner account
      * @dev Is only callable by owner
-     * @param account to be added
+     * @param account Address to be added
      */
     function addBurner(address account) public onlyOwner {
         _addBurner(account);
     }
 
-    /** Removes a burner account
+    /** @dev Removes a burner account
      * @dev Is only callable by owner
-     * @param account to be removed
+     * @param account Address to be removed
      */
     function removeBurner(address account) public onlyOwner {
         _removeBurner(account);
     }
 
-    /** Allows privilege holder to renounce their role */
+    /** @dev Allows a privileged holder to renounce their role */
     function renounceBurner() public {
         _removeBurner(msg.sender);
     }
 
-    /** Internal implementation of addBurner */
+    /** @dev Internal implementation of addBurner */
     function _addBurner(address account) internal {
         burners.add(account);
         emit BurnerAdded(account);
     }
 
-    /** Internal implementation of removeBurner */
+    /** @dev Internal implementation of removeBurner */
     function _removeBurner(address account) internal {
         burners.remove(account);
         emit BurnerRemoved(account);

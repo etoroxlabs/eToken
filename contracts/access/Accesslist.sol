@@ -68,7 +68,7 @@ contract Accesslist is WhitelistAdminRole, BlacklistAdminRole {
     }
 
     /**
-     *  @dev Checks to see if given address is whitelisted
+      *  @dev Checks to see if the given address is whitelisted
      *  @param account Address to be checked
      *  @return true if address is whitelisted
      */
