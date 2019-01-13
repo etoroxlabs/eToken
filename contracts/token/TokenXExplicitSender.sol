@@ -312,7 +312,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /** 
-     @ dev Like TokenX.decreaseAllowance, but gets sender from explicit sender
+     * @dev Like TokenX.decreaseAllowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
