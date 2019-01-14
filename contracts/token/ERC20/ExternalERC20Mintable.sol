@@ -22,6 +22,13 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
     }
 
     /**
+     * @return The current minting recipient account address
+     */
+    function getMintingRecipientAccount() public view returns (address) {
+        return mintingRecipientAccount;
+    }
+
+    /**
      * @dev Internal function allowing the owner to change the current minting recipient account
      * @param sender The sender address of the request
      * @param _mintingRecipientAccount address of new minting recipient
