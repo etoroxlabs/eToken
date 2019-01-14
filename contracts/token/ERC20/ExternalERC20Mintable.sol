@@ -9,7 +9,7 @@ import "../../access/roles/MinterRole.sol";
  */
 contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
-    address public mintingRecipientAccount;
+    address private mintingRecipientAccount;
 
     event MintingRecipientAccountChanged(address prev, address next);
 
@@ -19,6 +19,13 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
      */
     constructor(address _mintingRecipientAccount) internal {
         _changeMintingRecipient(msg.sender, _mintingRecipientAccount);
+    }
+
+    /**
+     * @return The current minting recipient account address
+     */
+    function getMintingRecipientAccount() public view returns (address) {
+        return mintingRecipientAccount;
     }
 
     /**

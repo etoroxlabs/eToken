@@ -45,4 +45,16 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
       (await this.token2.totalSupply()).should.be.bignumber.equal(100);
     });
   });
+
+  describe('When retrieving minting recipient account', function () {
+    it('should return correct address when not changed', async function () {
+      (await this.token.getMintingRecipientAccount()).should.be.equal(mintingRecipientAccount);
+    });
+
+    it('should return correct address when changed', async function () {
+      const newAccount = '0x000000000000000000000000000000000000dddd';
+      await this.token.changeMintingRecipient(newAccount, {from: minter});
+      (await this.token.getMintingRecipientAccount()).should.be.equal(newAccount);
+    });
+  });
 });
