@@ -9,7 +9,7 @@ import "../../access/roles/MinterRole.sol";
  */
 contract ExternalERC20Mintable is ExternalERC20, MinterRole {
 
-    address private mintingRecipientAccount;
+    address public mintingRecipientAccount;
 
     event MintingRecipientAccountChanged(address prev, address next);
 
