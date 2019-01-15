@@ -7,8 +7,8 @@ const util = require('./../utils.js');
 
 const Accesslist = artifacts.require('Accesslist');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
-const TokenXExplicitSender = artifacts.require('TokenXExplicitSenderMock');
-const TokenXExplicitSenderE = require('./TokenXExplicitSender.events.js');
+const ETokenizeExplicitSender = artifacts.require('ETokenizeExplicitSenderMock');
+const ETokenizeExplicitSenderE = require('./ETokenizeExplicitSender.events.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -16,7 +16,7 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
+contract('ETokenizeExplicitSender', function ([owner, someAddress, ...rest]) {
   describe('finalizeUpgrade', function () {
     let accesslist;
     let storage;
@@ -27,7 +27,7 @@ contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
     });
 
     it('reverts when no upgradeFrom contract is set', async function () {
-      const token = await TokenXExplicitSender.new('tok', 't', 10,
+      const token = await ETokenizeExplicitSender.new('tok', 't', 10,
                                                    accesslist.address, true, storage.address,
                                                    0, true, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
@@ -35,7 +35,7 @@ contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
     });
 
     it('reverts when wrong contract finalizes upgrade', async function () {
-      const token = await TokenXExplicitSender.new('tok', 't', 10,
+      const token = await ETokenizeExplicitSender.new('tok', 't', 10,
                                                    accesslist.address, true, storage.address,
                                                    0xf00f, false, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
@@ -43,14 +43,14 @@ contract('TokenXExplicitSender', function ([owner, someAddress, ...rest]) {
     });
 
     it('emits UpgradeFinalized event', async function () {
-      const token = await TokenXExplicitSender.new(
+      const token = await ETokenizeExplicitSender.new(
         'tok', 't', 10, accesslist.address, true, storage.address,
         owner, false, { from: owner });
 
-      const tokenE = TokenXExplicitSenderE.wrap(token);
+      const tokenE = ETokenizeExplicitSenderE.wrap(token);
 
       await tokenE.finalizeUpgrade(owner, owner, { from: owner });
     });
   });
-  // Remainder of contract tested through TokenX.
+  // Remainder of contract tested through ETokenize.
 });

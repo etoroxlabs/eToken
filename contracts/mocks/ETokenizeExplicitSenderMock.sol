@@ -3,12 +3,12 @@ pragma solidity ^0.4.24;
 import "../token/ETokenizeExplicitSender.sol";
 
 /**
- * @title Mock contract for testing TokenXExplicitSender
+ * @title Mock contract for testing eTokenizeExplicitSender
  */
 contract ETokenizeExplicitSenderMock is ETokenizeExplicitSender {
 
     /**
-     * Initializes an TokenXExplicitSender. Forwards parameters
+     * Initializes an eTokenizeExplicitSender. Forwards parameters
      * as is except that the initial minting recipient (see
      * tokens/ERC20/ExternalERC20Mintable) is set to a static value.
      */

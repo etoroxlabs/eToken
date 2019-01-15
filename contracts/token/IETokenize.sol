@@ -3,8 +3,8 @@ pragma solidity ^0.4.24;
 import "./IUpgradableETokenize.sol";
 
 /**
- * @title TokenX interface
- * @dev The interface comprising a TokenX contract
+ * @title eTokenize interface
+ * @dev The interface comprising a eTokenize contract
  */
 interface IETokenize {
 

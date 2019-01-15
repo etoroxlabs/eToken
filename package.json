@@ -1,8 +1,8 @@
 {
-  "name": "TokenX",
+  "name": "eTokenize",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "git@github.com:eTokenize/TokenX.git",
+  "repository": "git@github.com:eTokenize/eTokenize.git",
   "author": "eTokenize",
   "license": "UNLICENSED",
   "private": true,

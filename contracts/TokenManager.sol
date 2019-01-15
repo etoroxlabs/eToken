@@ -10,7 +10,7 @@ import "./token/IETokenize.sol";
 contract TokenManager is Ownable {
 
     /**
-     * @dev A TokenEntry defines a relation between a TokenX instance and the
+     * @dev A TokenEntry defines a relation between a eTokenize instance and the
      * index of the names list containing the name of the token.
      */
     struct TokenEntry {
@@ -47,32 +47,32 @@ contract TokenManager is Ownable {
     }
 
     /**
-     * @dev Require that the token _iTokenX is not null
-     * @param _iTokenX Token that is checked for
+     * @dev Require that the token _iETokenize is not null
+     * @param _iETokenize Token that is checked for
      */
-    modifier notNullToken(IETokenize _iTokenX) {
-        require(_iTokenX != IETokenize(0), "Supplied token is null");
+    modifier notNullToken(IETokenize _iETokenize) {
+        require(_iETokenize != IETokenize(0), "Supplied token is null");
         _;
     }
 
     /**
      * @dev Adds a token to the tokenmanager
      * @param _name Name of the token to be added
-     * @param _iTokenX Token to be added
+     * @param _iETokenize Token to be added
      */
-    function addToken(bytes32 _name, IETokenize _iTokenX)
+    function addToken(bytes32 _name, IETokenize _iETokenize)
         public
         onlyOwner
         tokenNotExists(_name)
-        notNullToken(_iTokenX)
+        notNullToken(_iETokenize)
     {
         tokens[_name] = TokenEntry({
             index: names.length,
-            token: _iTokenX,
+            token: _iETokenize,
             exists: true
         });
         names.push(_name);
-        emit TokenAdded(_name, _iTokenX);
+        emit TokenAdded(_name, _iETokenize);
     }
 
     /**
@@ -94,17 +94,17 @@ contract TokenManager is Ownable {
     /**
      * @dev Upgrades a token
      * @param _name Name of token to be upgraded
-     * @param _iTokenX Upgraded version of token
+     * @param _iETokenize Upgraded version of token
      */
-    function upgradeToken(bytes32 _name, IETokenize _iTokenX)
+    function upgradeToken(bytes32 _name, IETokenize _iETokenize)
         public
         onlyOwner
         tokenExists(_name)
-        notNullToken(_iTokenX)
+        notNullToken(_iETokenize)
     {
         IETokenize prev = tokens[_name].token;
-        tokens[_name].token = _iTokenX;
-        emit TokenUpgraded(_name, prev, _iTokenX);
+        tokens[_name].token = _iETokenize;
+        emit TokenUpgraded(_name, prev, _iETokenize);
     }
 
     /**

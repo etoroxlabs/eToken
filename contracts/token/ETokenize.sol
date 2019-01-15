@@ -6,7 +6,7 @@ import "./ETokenizeExplicitSender.sol";
 import "./IETokenize.sol";
 import "./IUpgradableETokenize.sol";
 
-/** @title Main TokenX contract */
+/** @title Main eTokenize contract */
 contract ETokenize is IETokenize, ETokenizeExplicitSender {
 
     ExternalERC20Storage private externalStorage;

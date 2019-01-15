@@ -6,11 +6,11 @@ import "../token/ETokenize.sol";
 import "../token/IUpgradableETokenize.sol";
 import "./PauserRoleMock.sol";
 
-/** @title Mock contract for testing TokenX */
+/** @title Mock contract for testing eTokenize */
 contract ETokenizeMock is ETokenize, PauserRoleMock {
 
     /**
-     * Initializes a TokenX contract and optionally mint some amount to a
+     * Initializes a eTokenize contract and optionally mint some amount to a
      * given account
      * @param name The name of the token
      * @param symbol The symbol of the token
