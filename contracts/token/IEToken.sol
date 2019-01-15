@@ -1,16 +1,16 @@
 pragma solidity ^0.4.24;
 
-import "./IUpgradableTokenX.sol";
+import "./IUpgradableEToken.sol";
 
 /**
- * @title TokenX interface
- * @dev The interface comprising a TokenX contract
+ * @title EToken interface
+ * @dev The interface comprising an EToken contract
  */
-interface ITokenX {
+interface IEToken {
 
     /* solium-disable zeppelin/missing-natspec-comments */
 
-    function upgrade(IUpgradableTokenX upgradedToken) external;
+    function upgrade(IUpgradableEToken upgradedToken) external;
 
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function name() external view returns(string);

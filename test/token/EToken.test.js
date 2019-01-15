@@ -15,8 +15,8 @@ const { shouldBehaveLikeERC20Pausable } =
 const util = require('./../utils.js');
 
 const Accesslist = artifacts.require('Accesslist');
-const TokenXMock = artifacts.require('TokenXMock');
-const TokenXE = require('./TokenX.events.js');
+const ETokenMock = artifacts.require('ETokenMock');
+const ETokenE = require('./EToken.events.js');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 const BigNumber = web3.BigNumber;
@@ -189,7 +189,7 @@ function ERC20Permissions (owner, whitelisted, other, other1, blacklisted, black
   });
 }
 
-contract('TokenX', async function (
+contract('EToken', async function (
   [owner, minter, pauser, otherPauser, burner, whitelistAdmin,
     whitelisted, whitelisted1, blacklisted, blacklisted1,
     blackwhite, blackwhite1, user, user1, ...restAccounts]) {
@@ -210,7 +210,7 @@ contract('TokenX', async function (
 
     it('reverts when both upgradedFrom and initialDeployment are set', async function () {
       await util.assertRevertsReason(
-        TokenXMock.new(tokNameOrig, symbolOrig, 10,
+        ETokenMock.new(tokNameOrig, symbolOrig, 10,
                        0xf00f, true, storage.address, mintingRecipientAccount,
                        0xf00f, true, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
@@ -218,7 +218,7 @@ contract('TokenX', async function (
 
     it('reverts when niether upgradedFrom or initialDeployment are set', async function () {
       await util.assertRevertsReason(
-        TokenXMock.new(tokNameOrig, symbolOrig, 10,
+        ETokenMock.new(tokNameOrig, symbolOrig, 10,
                        0xf00f, true, storage.address, mintingRecipientAccount,
                        0, false, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
@@ -237,11 +237,11 @@ contract('TokenX', async function (
       accesslist = await Accesslist.new({ from: owner });
       storage = await ExternalERC20Storage.new({ from: owner });
 
-      token = await TokenXMock.new(tokNameOrig, symbolOrig, 10,
+      token = await ETokenMock.new(tokNameOrig, symbolOrig, 10,
                                    accesslist.address, true, storage.address, mintingRecipientAccount,
                                    0, true, owner, 100, { from: owner });
-      tokenE = TokenXE.wrap(token);
-      upgradeToken = await TokenXMock.new(
+      tokenE = ETokenE.wrap(token);
+      upgradeToken = await ETokenMock.new(
         tokNameUpgraded, symbolUpgraded, 20,
         accesslist.address, true, storage.address, mintingRecipientAccount,
         token.address, false, 0, 0, { from: owner });

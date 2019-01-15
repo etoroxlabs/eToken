@@ -1,7 +1,7 @@
-# TokenX - an [eToro](https://www.etoro.com/) stablecoin
-[![Build Status](https://circleci.com/gh/eTokenize/TokenX.svg?style=shield&circle-token=797dc9ae3f839ac4fc5d5edad6c993ae9faa3943&maxAge=0)](https://circleci.com/gh/eTokenize/TokenX) [![Coverage Status](https://coveralls.io/repos/github/eTokenize/TokenX/badge.svg?t=un8yQ7&maxAge=0)](https://coveralls.io/github/eTokenize/TokenX)
+# eToken - an [eToro](https://www.etoro.com/) stablecoin
+[![Build Status](https://circleci.com/gh/eTokenize/eToken.svg?style=shield&circle-token=797dc9ae3f839ac4fc5d5edad6c993ae9faa3943&maxAge=0)](https://circleci.com/gh/eTokenize/eToken) [![Coverage Status](https://coveralls.io/repos/github/eTokenize/eToken/badge.svg?t=un8yQ7&maxAge=0)](https://coveralls.io/github/eTokenize/eToken)
 
-TokenX is stablecoin implementation by [eToro](https://www.etoro.com/) targeting the [Ethereum](https://www.ethereum.org/) platform.
+eToken is stablecoin implementation by [eToro](https://www.etoro.com/) targeting the [Ethereum](https://www.ethereum.org/) platform.
 
 ## USAGE
 To test the library and setup the development environment, issue the following commands in a shell:
@@ -20,8 +20,8 @@ This repository has only been tested on UNIX-derived systems.
 
 *__Figure 1:__ Design overview. To simplify the overview, aspects related to the token upgrading functionality are not shown here but are described separately in Figure 2.*
 
-### TokenX - ERC20
-This document describes the design and implementation of the smart contracts comprising TokenX which is intended to be used for powering several different stablecoins representing various assets. At its core, TokenX is an ERC20 token with additional supporting infrastructure relating to token management, permission management and token upgradability. The remainder of this document gives a high-level overview of the design and implementation of the token itself and its supporting infrastructure.
+### eToken - ERC20
+This document describes the design and implementation of the smart contracts comprising eToken which is intended to be used for powering several different stablecoins representing various assets. At its core, eToken is an ERC20 token with additional supporting infrastructure relating to token management, permission management and token upgradability. The remainder of this document gives a high-level overview of the design and implementation of the token itself and its supporting infrastructure.
 
 Initially, we intended to base our implementation entirely on the OpenZeppelin (OZ) solidity library and extend from its unmodified ERC20 implementation. However, we found that implementing a number of our desired features was impossible without modifying the underlying OZ code. Therefore, our current implementation contains several modified and extended OZ components.When modifying OZ components, we have attempted to retain major design decisions and making non-intrusive and predictable code alteration.
 
@@ -33,7 +33,7 @@ An overview of the design is shown in Figure 1 and a detailed diagram of the int
 
  * The Ethereum Name System (ENS) is used to allow frontends to identify (possibly changing) contract addresses through a constant name.
 
- * TokenX(n) are ERC20 tokens which uses an ERC20 implementation extended from the OpenZeppelin library to enable the use of an separate contract for storing balances and allowances. The need for this separation was driven by our requirement of being able to upgrade the tokens. We discuss the token implementation itself in the following section.
+ * eToken(n) are ERC20 tokens which uses an ERC20 implementation extended from the OpenZeppelin library to enable the use of an separate contract for storing balances and allowances. The need for this separation was driven by our requirement of being able to upgrade the tokens. We discuss the token implementation itself in the following section.
 
 #### Upgradability and external storage ERC20 implementation
 Due to the immutability of Ethereum smart contracts, upgrading the functionality of a previously deployed contract is a well known challenge. The strategy we use for upgrading previously deployed tokens are similar to, eg., TrueUSD and Tether USD and works by allowing the functions comprising the external interface of a token to which modes such that they proxy all calls to a new contract. In particular, the following is achieved.
@@ -99,7 +99,7 @@ In order to limit the damage which can be caused by a compromised minter account
 Path | Description
 ------------- | -------------
 `contracts/` | All the solidity files making up the implementation
-`contracts/token` | Contains the TokenX implementation
+`contracts/token` | Contains the eToken implementation
 `contracts/token/ERC20` | ERC20 implementation using an external storage
 `contracts/roles` | Defines the roles implementation, i.e. whitelisting, blacklisting, miners etc.
 `contracts/lifecycle` | Implements lifecycle behaviors. Taken from OpenZeppelin

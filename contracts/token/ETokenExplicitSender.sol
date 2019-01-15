@@ -11,11 +11,11 @@ import "../access/roles/BurnerRole.sol";
 import "../access/roles/MinterRole.sol";
 import "../access/Accesslist.sol";
 import "../access/AccesslistGuarded.sol";
-import "./IUpgradableTokenX.sol";
+import "./IUpgradableEToken.sol";
 /* solium-enable max-len */
 
-/** @title TokenX functions accepting explicit sender params */
-contract TokenXExplicitSender is IUpgradableTokenX,
+/** @title EToken functions accepting explicit sender params */
+contract ETokenExplicitSender is IUpgradableEToken,
     ExternalERC20,
     ExternalERC20Burnable,
     ExternalERC20Mintable,
@@ -112,7 +112,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.name, but gets sender from explicit sender
+     * @dev Like EToken.name, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -130,7 +130,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.symbol, but gets sender from explicit sender
+     * @dev Like EToken.symbol, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -148,7 +148,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.decimal, but gets sender from explicit sender
+     * @dev Like EToken.decimal, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -166,7 +166,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.totalSupply, but gets sender from explicit sender
+     * @dev Like EToken.totalSupply, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -184,7 +184,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.balanceOf, but gets sender from explicit sender
+     * @dev Like EToken.balanceOf, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -202,7 +202,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.allowance, but gets sender from explicit sender
+     * @dev Like EToken.allowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -220,7 +220,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.transfer, but gets sender from explicit sender
+     * @dev Like EToken.transfer, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -239,7 +239,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.approve, but gets sender from explicit sender
+     * @dev Like EToken.approve, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -260,7 +260,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
 
 
     /**
-     * @dev Like TokenX.transferFrom, but gets sender from explicit sender
+     * @dev Like EToken.transferFrom, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -289,7 +289,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
 
 
     /**
-     * @dev Like TokenX.increaseAllowance, but gets sender from explicit sender
+     * @dev Like EToken.increaseAllowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -312,7 +312,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.decreaseAllowance, but gets sender from explicit sender
+     * @dev Like EToken.decreaseAllowance, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -332,7 +332,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.burn, but gets sender from explicit sender
+     * @dev Like EToken.burn, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -347,7 +347,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.burnFrom, but gets sender from explicit sender
+     * @dev Like EToken.burnFrom, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -364,7 +364,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.mint, but gets sender from explicit sender
+     * @dev Like EToken.mint, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
      * called from the proxy contract (the contract that this contract
      * upgraded).
@@ -380,7 +380,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.changeMintingRecipient, but gets sender from
+     * @dev Like EToken.changeMintingRecipient, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -394,7 +394,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.transfer, but gets sender from
+     * @dev Like EToken.transfer, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -411,7 +411,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.approve, but gets sender from
+     * @dev Like EToken.approve, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -428,7 +428,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.transferFrom, but gets sender from
+     * @dev Like EToken.transferFrom, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -446,7 +446,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.increaseAllowance, but gets sender from
+     * @dev Like EToken.increaseAllowance, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -463,7 +463,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
     }
 
     /**
-     * @dev Like TokenX.decreaseAllowance, but gets sender from
+     * @dev Like EToken.decreaseAllowance, but gets sender from
      * explicit sender parameter rather than msg.sender. This function
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
@@ -479,17 +479,17 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return super.decreaseAllowance(spender, subtractedValue);
     }
 
-    /** @dev Burning function called by TokenX.burn */
+    /** @dev Burning function called by EToken.burn */
     function burn(uint256 value) public isEnabled onlyBurner {
         super.burn(value);
     }
 
-    /** @dev Burning function called by TokenX.burnFrom */
+    /** @dev Burning function called by EToken.burnFrom */
     function burnFrom(address from, uint256 value) public isEnabled onlyBurner {
         super.burnFrom(from, value);
     }
 
-    /** @dev Minting function called by TokenX.mint */
+    /** @dev Minting function called by EToken.mint */
     function mint(address to, uint256 value)
         public
         isEnabled
@@ -499,7 +499,7 @@ contract TokenXExplicitSender is IUpgradableTokenX,
         return true;
     }
 
-    /** @dev changeMintingRecipient function called by TokenX.changeMintingRecipient */
+    /** @dev changeMintingRecipient function called by EToken.changeMintingRecipient */
     function changeMintingRecipient(address _mintingRecipientAddress)
         public
         isEnabled

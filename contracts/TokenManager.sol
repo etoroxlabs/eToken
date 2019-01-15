@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./token/ITokenX.sol";
+import "./token/IEToken.sol";
 
 /**
  * @title The Token Manager contract
@@ -10,23 +10,23 @@ import "./token/ITokenX.sol";
 contract TokenManager is Ownable {
 
     /**
-     * @dev A TokenEntry defines a relation between a TokenX instance and the
+     * @dev A TokenEntry defines a relation between an EToken instance and the
      * index of the names list containing the name of the token.
      */
     struct TokenEntry {
         bool exists;
         uint index;
-        ITokenX token;
+        IEToken token;
     }
 
     mapping (bytes32 => TokenEntry) private tokens;
     bytes32[] private names;
 
-    event TokenAdded(bytes32 indexed name, ITokenX indexed addr);
-    event TokenDeleted(bytes32 indexed name, ITokenX indexed addr);
+    event TokenAdded(bytes32 indexed name, IEToken indexed addr);
+    event TokenDeleted(bytes32 indexed name, IEToken indexed addr);
     event TokenUpgraded(bytes32 indexed name,
-                        ITokenX indexed from,
-                        ITokenX indexed to);
+                        IEToken indexed from,
+                        IEToken indexed to);
 
     /**
      * @dev Require that the token _name exists
@@ -47,32 +47,32 @@ contract TokenManager is Ownable {
     }
 
     /**
-     * @dev Require that the token _iTokenX is not null
-     * @param _iTokenX Token that is checked for
+     * @dev Require that the token _iEToken is not null
+     * @param _iEToken Token that is checked for
      */
-    modifier notNullToken(ITokenX _iTokenX) {
-        require(_iTokenX != ITokenX(0), "Supplied token is null");
+    modifier notNullToken(IEToken _iEToken) {
+        require(_iEToken != IEToken(0), "Supplied token is null");
         _;
     }
 
     /**
      * @dev Adds a token to the tokenmanager
      * @param _name Name of the token to be added
-     * @param _iTokenX Token to be added
+     * @param _iEToken Token to be added
      */
-    function addToken(bytes32 _name, ITokenX _iTokenX)
+    function addToken(bytes32 _name, IEToken _iEToken)
         public
         onlyOwner
         tokenNotExists(_name)
-        notNullToken(_iTokenX)
+        notNullToken(_iEToken)
     {
         tokens[_name] = TokenEntry({
             index: names.length,
-            token: _iTokenX,
+            token: _iEToken,
             exists: true
         });
         names.push(_name);
-        emit TokenAdded(_name, _iTokenX);
+        emit TokenAdded(_name, _iEToken);
     }
 
     /**
@@ -84,7 +84,7 @@ contract TokenManager is Ownable {
         onlyOwner
         tokenExists(_name)
     {
-        ITokenX prev = tokens[_name].token;
+        IEToken prev = tokens[_name].token;
         delete names[tokens[_name].index];
         delete tokens[_name].token;
         delete tokens[_name];
@@ -94,17 +94,17 @@ contract TokenManager is Ownable {
     /**
      * @dev Upgrades a token
      * @param _name Name of token to be upgraded
-     * @param _iTokenX Upgraded version of token
+     * @param _iEToken Upgraded version of token
      */
-    function upgradeToken(bytes32 _name, ITokenX _iTokenX)
+    function upgradeToken(bytes32 _name, IEToken _iEToken)
         public
         onlyOwner
         tokenExists(_name)
-        notNullToken(_iTokenX)
+        notNullToken(_iEToken)
     {
-        ITokenX prev = tokens[_name].token;
-        tokens[_name].token = _iTokenX;
-        emit TokenUpgraded(_name, prev, _iTokenX);
+        IEToken prev = tokens[_name].token;
+        tokens[_name].token = _iEToken;
+        emit TokenUpgraded(_name, prev, _iEToken);
     }
 
     /**
@@ -116,7 +116,7 @@ contract TokenManager is Ownable {
         public
         tokenExists(_name)
         view
-        returns (ITokenX)
+        returns (IEToken)
     {
         return tokens[_name].token;
     }
