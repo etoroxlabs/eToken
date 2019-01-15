@@ -11,11 +11,11 @@ import "../access/roles/BurnerRole.sol";
 import "../access/roles/MinterRole.sol";
 import "../access/Accesslist.sol";
 import "../access/AccesslistGuarded.sol";
-import "./IUpgradableTokenX.sol";
+import "./IUpgradableETokenize.sol";
 /* solium-enable max-len */
 
 /** @title TokenX functions accepting explicit sender params */
-contract TokenXExplicitSender is IUpgradableTokenX,
+contract ETokenizeExplicitSender is IUpgradableETokenize,
     ExternalERC20,
     ExternalERC20Burnable,
     ExternalERC20Mintable,

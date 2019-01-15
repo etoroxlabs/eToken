@@ -2,15 +2,15 @@ pragma solidity ^0.4.24;
 
 import "./ERC20/ExternalERC20Storage.sol";
 
-import "./TokenXExplicitSender.sol";
-import "./ITokenX.sol";
-import "./IUpgradableTokenX.sol";
+import "./ETokenizeExplicitSender.sol";
+import "./IETokenize.sol";
+import "./IUpgradableETokenize.sol";
 
 /** @title Main TokenX contract */
-contract TokenX is ITokenX, TokenXExplicitSender {
+contract ETokenize is IETokenize, ETokenizeExplicitSender {
 
     ExternalERC20Storage private externalStorage;
-    IUpgradableTokenX public upgradedToken;
+    IUpgradableETokenize public upgradedToken;
 
     /**
      * @param name The name of the token
@@ -40,7 +40,7 @@ contract TokenX is ITokenX, TokenXExplicitSender {
         bool initialDeployment
     )
         public
-        TokenXExplicitSender(
+        ETokenizeExplicitSender(
             name,
             symbol,
             decimals,
@@ -64,18 +64,18 @@ contract TokenX is ITokenX, TokenXExplicitSender {
      * @return Is this token upgraded
      */
     function isUpgraded() public view returns (bool) {
-        return upgradedToken != IUpgradableTokenX(0);
+        return upgradedToken != IUpgradableETokenize(0);
     }
 
     /**
      * Upgrades the current token
      * @param _upgradedToken The address of the token that this token should be upgraded to
      */
-    function upgrade(IUpgradableTokenX _upgradedToken) public onlyOwner {
+    function upgrade(IUpgradableETokenize _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
-        require(_upgradedToken != IUpgradableTokenX(0),
+        require(_upgradedToken != IUpgradableETokenize(0),
                 "Cannot upgrade to null address");
-        require(_upgradedToken != IUpgradableTokenX(this),
+        require(_upgradedToken != IUpgradableETokenize(this),
                 "Cannot upgrade to myself");
         require(externalStorage.isImplementor(),
                 "I don't own my storage. This will end badly.");

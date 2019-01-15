@@ -1,11 +1,11 @@
 pragma solidity ^0.4.24;
 
-import "../token/TokenXExplicitSender.sol";
+import "../token/ETokenizeExplicitSender.sol";
 
 /**
  * @title Mock contract for testing TokenXExplicitSender
  */
-contract TokenXExplicitSenderMock is TokenXExplicitSender {
+contract ETokenizeExplicitSenderMock is ETokenizeExplicitSender {
 
     /**
      * Initializes an TokenXExplicitSender. Forwards parameters
@@ -19,11 +19,11 @@ contract TokenXExplicitSenderMock is TokenXExplicitSender {
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage stor,
-        IUpgradableTokenX upgradedFrom,
+        IUpgradableETokenize upgradedFrom,
         bool initialDeployment
     )
         public
-        TokenXExplicitSender(
+        ETokenizeExplicitSender(
             name, symbol, decimals, accesslist, whitelistEnabled,
             stor, address(0xf00f), upgradedFrom, initialDeployment)
     {}

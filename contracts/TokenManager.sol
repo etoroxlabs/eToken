@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./token/ITokenX.sol";
+import "./token/IETokenize.sol";
 
 /**
  * @title The Token Manager contract
@@ -16,17 +16,17 @@ contract TokenManager is Ownable {
     struct TokenEntry {
         bool exists;
         uint index;
-        ITokenX token;
+        IETokenize token;
     }
 
     mapping (bytes32 => TokenEntry) private tokens;
     bytes32[] private names;
 
-    event TokenAdded(bytes32 indexed name, ITokenX indexed addr);
-    event TokenDeleted(bytes32 indexed name, ITokenX indexed addr);
+    event TokenAdded(bytes32 indexed name, IETokenize indexed addr);
+    event TokenDeleted(bytes32 indexed name, IETokenize indexed addr);
     event TokenUpgraded(bytes32 indexed name,
-                        ITokenX indexed from,
-                        ITokenX indexed to);
+                        IETokenize indexed from,
+                        IETokenize indexed to);
 
     /**
      * @dev Require that the token _name exists
@@ -50,8 +50,8 @@ contract TokenManager is Ownable {
      * @dev Require that the token _iTokenX is not null
      * @param _iTokenX Token that is checked for
      */
-    modifier notNullToken(ITokenX _iTokenX) {
-        require(_iTokenX != ITokenX(0), "Supplied token is null");
+    modifier notNullToken(IETokenize _iTokenX) {
+        require(_iTokenX != IETokenize(0), "Supplied token is null");
         _;
     }
 
@@ -60,7 +60,7 @@ contract TokenManager is Ownable {
      * @param _name Name of the token to be added
      * @param _iTokenX Token to be added
      */
-    function addToken(bytes32 _name, ITokenX _iTokenX)
+    function addToken(bytes32 _name, IETokenize _iTokenX)
         public
         onlyOwner
         tokenNotExists(_name)
@@ -84,7 +84,7 @@ contract TokenManager is Ownable {
         onlyOwner
         tokenExists(_name)
     {
-        ITokenX prev = tokens[_name].token;
+        IETokenize prev = tokens[_name].token;
         delete names[tokens[_name].index];
         delete tokens[_name].token;
         delete tokens[_name];
@@ -96,13 +96,13 @@ contract TokenManager is Ownable {
      * @param _name Name of token to be upgraded
      * @param _iTokenX Upgraded version of token
      */
-    function upgradeToken(bytes32 _name, ITokenX _iTokenX)
+    function upgradeToken(bytes32 _name, IETokenize _iTokenX)
         public
         onlyOwner
         tokenExists(_name)
         notNullToken(_iTokenX)
     {
-        ITokenX prev = tokens[_name].token;
+        IETokenize prev = tokens[_name].token;
         tokens[_name].token = _iTokenX;
         emit TokenUpgraded(_name, prev, _iTokenX);
     }
@@ -116,7 +116,7 @@ contract TokenManager is Ownable {
         public
         tokenExists(_name)
         view
-        returns (ITokenX)
+        returns (IETokenize)
     {
         return tokens[_name].token;
     }
