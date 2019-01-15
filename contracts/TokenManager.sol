@@ -10,7 +10,7 @@ import "./token/IEToken.sol";
 contract TokenManager is Ownable {
 
     /**
-     * @dev A TokenEntry defines a relation between a EToken instance and the
+     * @dev A TokenEntry defines a relation between an EToken instance and the
      * index of the names list containing the name of the token.
      */
     struct TokenEntry {

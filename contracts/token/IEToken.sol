@@ -4,7 +4,7 @@ import "./IUpgradableEToken.sol";
 
 /**
  * @title EToken interface
- * @dev The interface comprising a EToken contract
+ * @dev The interface comprising an EToken contract
  */
 interface IEToken {
 

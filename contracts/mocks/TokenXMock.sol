@@ -10,7 +10,7 @@ import "./PauserRoleMock.sol";
 contract ETokenMock is EToken, PauserRoleMock {
 
     /**
-     * Initializes a EToken contract and optionally mint some amount to a
+     * Initializes an EToken contract and optionally mint some amount to a
      * given account
      * @param name The name of the token
      * @param symbol The symbol of the token
