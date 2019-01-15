@@ -5,7 +5,7 @@
 
 const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');
-const TokenX = artifacts.require('TokenX');
+const EToken = artifacts.require('EToken');
 const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
 
 const util = require('./utils.js');
@@ -30,13 +30,13 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
 
        const storage = await ExternalERC20Storage.new({ from: storageOwner });
 
-       const oldToken = await TokenX.new(
+       const oldToken = await EToken.new(
          tokenName, 'e', oldTokenDecimals,
          accesslist.address, true, storage.address, 0xf00f, 0, true,
          { from: oldTokenOwner }
        );
 
-       const newToken = await TokenX.new(
+       const newToken = await EToken.new(
          tokenName, 'e', newTokenDecimals,
          accesslist.address, true,
          storage.address, 0xf00f, oldToken.address, false,

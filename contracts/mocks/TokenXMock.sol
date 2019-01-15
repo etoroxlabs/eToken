@@ -2,15 +2,15 @@ pragma solidity ^0.4.24;
 
 /* solium-disable max-len */
 import "../token/ERC20/ExternalERC20Storage.sol";
-import "../token/TokenX.sol";
-import "../token/IUpgradableTokenX.sol";
+import "../token/EToken.sol";
+import "../token/IUpgradableEToken.sol";
 import "./PauserRoleMock.sol";
 
-/** @title Mock contract for testing TokenX */
-contract TokenXMock is TokenX, PauserRoleMock {
+/** @title Mock contract for testing EToken */
+contract ETokenMock is EToken, PauserRoleMock {
 
     /**
-     * Initializes a TokenX contract and optionally mint some amount to a
+     * Initializes a EToken contract and optionally mint some amount to a
      * given account
      * @param name The name of the token
      * @param symbol The symbol of the token
@@ -38,12 +38,12 @@ contract TokenXMock is TokenX, PauserRoleMock {
         bool whitelistEnabled,
         ExternalERC20Storage stor,
         address mintingRecip,
-        IUpgradableTokenX upgradedFrom,
+        IUpgradableEToken upgradedFrom,
         bool initialDeployment,
         address initialAccount,
         uint256 initialBalance
     )
-        TokenX(
+        EToken(
             name, symbol, decimals,
             accesslist, whitelistEnabled, stor, mintingRecip, upgradedFrom,
             initialDeployment

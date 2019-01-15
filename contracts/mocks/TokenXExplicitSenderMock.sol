@@ -1,14 +1,14 @@
 pragma solidity ^0.4.24;
 
-import "../token/TokenXExplicitSender.sol";
+import "../token/ETokenExplicitSender.sol";
 
 /**
- * @title Mock contract for testing TokenXExplicitSender
+ * @title Mock contract for testing ETokenExplicitSender
  */
-contract TokenXExplicitSenderMock is TokenXExplicitSender {
+contract ETokenExplicitSenderMock is ETokenExplicitSender {
 
     /**
-     * Initializes an TokenXExplicitSender. Forwards parameters
+     * Initializes an ETokenExplicitSender. Forwards parameters
      * as is except that the initial minting recipient (see
      * tokens/ERC20/ExternalERC20Mintable) is set to a static value.
      */
@@ -19,11 +19,11 @@ contract TokenXExplicitSenderMock is TokenXExplicitSender {
         Accesslist accesslist,
         bool whitelistEnabled,
         ExternalERC20Storage stor,
-        IUpgradableTokenX upgradedFrom,
+        IUpgradableEToken upgradedFrom,
         bool initialDeployment
     )
         public
-        TokenXExplicitSender(
+        ETokenExplicitSender(
             name, symbol, decimals, accesslist, whitelistEnabled,
             stor, address(0xf00f), upgradedFrom, initialDeployment)
     {}
