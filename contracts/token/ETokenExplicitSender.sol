@@ -8,7 +8,6 @@ import "./ERC20/ExternalERC20Mintable.sol";
 import "../lifecycle/Pausable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "../access/roles/BurnerRole.sol";
-import "../access/roles/MinterRole.sol";
 import "../access/Accesslist.sol";
 import "../access/AccesslistGuarded.sol";
 import "./IUpgradableEToken.sol";
