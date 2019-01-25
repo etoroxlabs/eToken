@@ -84,7 +84,10 @@ contract ETokenExplicitSender is IUpgradableEToken,
      * @dev Called by the upgraded contract in order to mark the finalization of
      * the upgrade and activate the new contract
      */
-    function finalizeUpgrade() external senderIsProxy {
+    function finalizeUpgrade()
+        external
+        senderIsProxy
+    {
         require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
         enabled = true;
         emit UpgradeFinalized(msg.sender);
