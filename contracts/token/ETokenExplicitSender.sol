@@ -248,7 +248,6 @@ contract ETokenExplicitSender is IUpgradableEToken,
         isEnabled
         senderIsProxy
         whenNotPaused
-        // FIXME: This used to be spender spender. Why wasn't this caught in tests?
         requireHasAccess(spender)
         requireHasAccess(sender)
         returns (bool)
