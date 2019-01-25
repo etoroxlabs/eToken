@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 /* solium-disable max-len */
 import "../token/ERC20/ExternalERC20Storage.sol";
