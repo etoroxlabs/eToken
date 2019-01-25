@@ -25,7 +25,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
 {
 
     /**
-     * @dev Holds the address of the
+     * @dev Holds the address of the contract that was upgraded from
      */
     address private _upgradedFrom;
 
