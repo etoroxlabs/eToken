@@ -31,7 +31,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
 
     bool private enabled;
 
-    event UpgradeFinalized(address indexed upgradedFrom, address indexed sender);
+    event UpgradeFinalized(address indexed upgradedFrom);
 
     /**
      * @param name The name of the token
@@ -88,7 +88,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
         require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
         require(msg.sender == _upgradedFrom, "Sender is not old contract");
         enabled = true;
-        emit UpgradeFinalized(_upgradedFrom, msg.sender);
+        emit UpgradeFinalized(msg.sender);
     }
 
     /**
