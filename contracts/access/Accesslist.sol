@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./roles/WhitelistAdminRole.sol";
