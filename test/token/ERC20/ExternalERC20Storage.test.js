@@ -135,7 +135,6 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
 
     describe('when is implementor', function () {
       it('should allow changing balance', async function () {
-
         (await this.token.balances(anotherAccount)).should.not.be.bignumber.equal(newBalance);
         await this.token.setBalance(anotherAccount, newBalance, { from: implementor });
         (await this.token.balances(anotherAccount)).should.be.bignumber.equal(newBalance);
@@ -168,12 +167,10 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
 
     describe('when is implementor', function () {
       it('should allow changing allowance', async function () {
-
         (await this.token.allowed(anotherAccount, thirdAccount)).should.not.be.bignumber.equal(newAllowance);
         await this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: implementor });
         (await this.token.allowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(newAllowance);
       });
-
     });
 
     describe('when is not owner or implementor', function () {
