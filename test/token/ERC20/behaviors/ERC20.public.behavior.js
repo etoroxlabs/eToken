@@ -186,13 +186,28 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
             (await this.token.allowance(owner, spender)).should.be.bignumber.equal(0);
           });
 
-          it('emits a transfer event', async function () {
-            const { logs } = await this.token.transferFrom(owner, to, amount, { from: spender });
+          describe('emits', function () {
+            let events;
 
-            expectEvent.inLogs(logs, 'Transfer', {
-              from: owner,
-              to: to,
-              value: amount
+            beforeEach(async function () {
+              const { logs } = await this.token.transferFrom(owner, to, amount, { from: spender });
+              events = logs;
+            });
+
+            it('a transfer event', async function () {
+              expectEvent.inLogs(events, 'Transfer', {
+                from: owner,
+                to: to,
+                value: amount
+              });
+            });
+
+            it('an approval event', async function () {
+              expectEvent.inLogs(events, 'Approval', {
+                owner: owner,
+                spender: spender,
+                value: amount
+              });
             });
           });
         });
