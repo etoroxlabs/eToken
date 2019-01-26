@@ -11,11 +11,9 @@ import "./MinterRoleMock.sol";
 contract ExternalERC20MintableMock is  ExternalERC20Mintable, MinterRoleMock {
 
     constructor(address initMintingRecipient)
-        ExternalERC20(new ExternalERC20Storage())
+        ExternalERC20(ExternalERC20Storage(0), true)
         ExternalERC20Mintable(initMintingRecipient)
         public {
-        _externalERC20Storage.transferImplementor(this);
-        _externalERC20Storage.transferOwnership(msg.sender);
     }
 
     /**

@@ -16,45 +16,17 @@ require('chai')
 
 contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccount, thirdAccount]) {
   beforeEach(async function () {
-    this.token = await ExternalERC20Storage.new({ from: owner });
+    this.token = await ExternalERC20Storage.new(owner, implementor, { from: owner });
     this.tokenE = ExternalERC20StorageE.wrap(this.token);
-    await this.token.latchInitialImplementor({ from: implementor });
   });
 
-  describe('setting initial implementor', function () {
-    beforeEach(async function () {
-      this.otherStorage = await ExternalERC20Storage.new({ from: owner });
-      this.otherStorageE = ExternalERC20StorageE.wrap(this.otherStorage);
+  describe('initial implementor', function () {
+    it('isImplementor should be true initially', async function () {
+      (await this.token.isImplementor({ from: implementor })).should.equal(true);
     });
 
-    it('hasImplementor should be false initially', async function () {
-      (await this.otherStorage.hasImplementor()).should.equal(false);
-    });
-
-    it('isImplementor should be false initially', async function () {
-      (await this.otherStorage.isImplementor({ from: owner })).should.equal(false);
-    });
-
-    it('hasImplementor should is true after setting implementor', async function () {
-      (await this.otherStorage.hasImplementor()).should.equal(false);
-      this.otherStorage.latchInitialImplementor({ from: anotherAccount });
-      (await this.otherStorage.hasImplementor()).should.equal(true);
-    });
-
-    it('latchInitialImplementor sets isImplementor correctly', async function () {
-      (await this.otherStorage.isImplementor({ from: anotherAccount })).should.equal(false);
-      this.otherStorage.latchInitialImplementor({ from: anotherAccount });
-      (await this.otherStorage.isImplementor({ from: anotherAccount })).should.equal(true);
-    });
-
-    it('reverts when iplementor already exists', async function () {
-      // Note: Uses this.token initialized in parent beforeEach
-      await utils.assertRevertsReason(this.token.latchInitialImplementor({ from: owner }),
-                                      'Storage implementor is already set');
-    });
-
-    it('Should emit initial implementor event', async function () {
-      await this.otherStorageE.latchInitialImplementor(implementor, { from: implementor });
+    it('isImplementor for owner should be false', async function () {
+      (await this.token.isImplementor({ from: owner })).should.equal(false);
     });
   });
 

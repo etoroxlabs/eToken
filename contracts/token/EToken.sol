@@ -9,7 +9,6 @@ import "./IUpgradableEToken.sol";
 /** @title Main EToken contract */
 contract EToken is IEToken, ETokenExplicitSender {
 
-    ExternalERC20Storage private externalStorage;
     IUpgradableEToken public upgradedToken;
 
     /**
@@ -51,11 +50,6 @@ contract EToken is IEToken, ETokenExplicitSender {
             upgradedFrom,
             initialDeployment
         ) {
-        externalStorage = externalERC20Storage;
-
-        if (initialDeployment) {
-            externalStorage.latchInitialImplementor();
-        }
     }
 
     event Upgraded(address indexed to);
@@ -77,11 +71,11 @@ contract EToken is IEToken, ETokenExplicitSender {
                 "Cannot upgrade to null address");
         require(_upgradedToken != IUpgradableEToken(this),
                 "Cannot upgrade to myself");
-        require(externalStorage.isImplementor(),
+        require(_externalERC20Storage.isImplementor(),
                 "I don't own my storage. This will end badly.");
 
         upgradedToken = _upgradedToken;
-        externalStorage.transferImplementor(_upgradedToken);
+        _externalERC20Storage.transferImplementor(_upgradedToken);
         _upgradedToken.finalizeUpgrade();
         emit Upgraded(_upgradedToken);
     }

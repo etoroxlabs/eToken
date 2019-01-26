@@ -28,13 +28,13 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
 
        const accesslist = await Accesslist.new();
 
-       const storage = await ExternalERC20Storage.new({ from: storageOwner });
-
        const oldToken = await EToken.new(
          tokenName, 'e', oldTokenDecimals,
-         accesslist.address, true, storage.address, 0xf00f, 0, true,
+         accesslist.address, true, util.ZERO_ADDRESS, 0xf00f, 0, true,
          { from: oldTokenOwner }
        );
+
+       const storage = ExternalERC20Storage.at(await oldToken._externalERC20Storage());
 
        const newToken = await EToken.new(
          tokenName, 'e', newTokenDecimals,

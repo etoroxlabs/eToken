@@ -22,11 +22,26 @@ contract ExternalERC20 is IERC20 {
 
     /**
      * @dev Constructor
-     * @param erc20Storage The external storage contract.
+     * @param externalERC20Storage The external storage contract.
      * This is the only time you can change it
      */
-    constructor(ExternalERC20Storage erc20Storage) public {
-        _externalERC20Storage = erc20Storage;
+    constructor(
+        ExternalERC20Storage externalERC20Storage,
+        bool shouldCreateStorage
+    )
+        public
+    {
+
+        require(
+            (externalERC20Storage != address(0) && (!shouldCreateStorage)) ||
+            (externalERC20Storage == address(0) && shouldCreateStorage),
+            "Cannot both create external storage and use existing one.");
+
+        if (shouldCreateStorage) {
+            _externalERC20Storage = new ExternalERC20Storage(msg.sender, this);
+        } else {
+            _externalERC20Storage = externalERC20Storage;
+        }
     }
 
     /**

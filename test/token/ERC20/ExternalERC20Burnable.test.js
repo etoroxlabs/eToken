@@ -21,6 +21,7 @@ contract('ExternalERC20Burnable', function ([_, owner, spender, ...otherAccounts
       this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
       this.token2 = await ExternalERC20.new(
         this.storage.address,
+        false,
         { from: owner }
       );
     });

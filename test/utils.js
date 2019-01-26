@@ -1,11 +1,11 @@
 /* global assert, web3 */
 
-const BigNumber = web3.BigNumber;
+const BigNumber = typeof web3 !== 'undefined' ? web3.BigNumber : undefined;
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
-const truffleAssert = require('truffle-assertions');
 
+const truffleAssert = require('truffle-assertions');
 const nodeAssert = require('assert');
 
 const _assertReverts = async (f, reason = '', invertMatch = false) => {
@@ -136,7 +136,7 @@ function contains (args, key, value) {
 // From openzeppelin test library
 function isBigNumber (object) {
   return object.isBigNumber ||
-    object instanceof BigNumber ||
+    typeof BigNumber === typeof object ||
     (object.constructor && object.constructor.name === 'BigNumber');
 }
 

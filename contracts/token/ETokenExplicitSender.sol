@@ -61,17 +61,17 @@ contract ETokenExplicitSender is IUpgradableEToken,
         bool initialDeployment
     )
         internal
-        ExternalERC20(externalERC20Storage)
+        ExternalERC20(externalERC20Storage, initialDeployment)
         ExternalERC20Mintable(mintingRecipientAccount)
         ERC20Detailed(name, symbol, decimals)
         AccesslistGuarded(accesslist, whitelistEnabled)
     {
 
-        require((upgradedFrom != address(0) && (! initialDeployment)) ||
+        require((upgradedFrom != address(0) && (!initialDeployment)) ||
                 (upgradedFrom == address(0) && initialDeployment),
                 "Cannot both be upgraded and initial deployment.");
 
-        if (! initialDeployment) {
+        if (!initialDeployment) {
             // Pause until explicitly unpaused by upgraded contract
             enabled = false;
             _upgradedFrom = upgradedFrom;

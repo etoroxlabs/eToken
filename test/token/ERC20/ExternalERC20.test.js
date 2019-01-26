@@ -25,6 +25,7 @@ contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
       this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
       this.token2 = await ExternalERC20.new(
         this.storage.address,
+        false,
         { from: owner }
       );
     });
