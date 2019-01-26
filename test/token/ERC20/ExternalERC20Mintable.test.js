@@ -53,7 +53,7 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
 
     it('should return correct address when changed', async function () {
       const newAccount = '0x000000000000000000000000000000000000dddd';
-      await this.token.changeMintingRecipient(newAccount, {from: minter});
+      await this.token.changeMintingRecipient(newAccount, { from: minter });
       (await this.token.getMintingRecipientAccount()).should.be.equal(newAccount);
     });
   });

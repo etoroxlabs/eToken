@@ -15,10 +15,15 @@ contract ExternalERC20PausableMock is ExternalERC20Pausable, PauserRoleMock {
      * @param initialAccount The account that tokens should be minted to
      * @param initialBalance The amount of tokens that should be minted
      */
-    constructor(address initialAccount, uint initialBalance)
-        ExternalERC20(new ExternalERC20Storage())
+    constructor(
+        address initialAccount,
+        uint initialBalance,
+        ExternalERC20Storage stor
+    )
+        ExternalERC20(stor)
         public
     {
+        stor.latchInitialImplementor();
         _mint(initialAccount, initialBalance);
     }
 }
