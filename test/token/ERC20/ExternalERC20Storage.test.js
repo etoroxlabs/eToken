@@ -123,99 +123,99 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
   });
 
   describe('setBalance', function () {
-    const commonOwnerImplementorTests = function (ownerOrImplementorAddress) {
-      it('should allow changing balance', async function () {
-        const newBalance = 200;
-
-        (await this.token.balances(anotherAccount)).should.not.be.bignumber.equal(newBalance);
-        await this.token.setBalance(anotherAccount, newBalance, { from: ownerOrImplementorAddress });
-        (await this.token.balances(anotherAccount)).should.be.bignumber.equal(newBalance);
-      });
-    };
+    const newBalance = 200;
 
     describe('when is owner', function () {
-      commonOwnerImplementorTests(owner);
+      it('should not allow changing balance', async function () {
+        await utils.assertRevertsReason(
+          this.token.setBalance(anotherAccount, newBalance, { from: owner }),
+          'Is not implementor');
+      });
     });
 
     describe('when is implementor', function () {
-      commonOwnerImplementorTests(implementor);
+      it('should allow changing balance', async function () {
+
+        (await this.token.balances(anotherAccount)).should.not.be.bignumber.equal(newBalance);
+        await this.token.setBalance(anotherAccount, newBalance, { from: implementor });
+        (await this.token.balances(anotherAccount)).should.be.bignumber.equal(newBalance);
+      });
     });
 
     describe('when is not owner or implementor', function () {
       it('should not allow changing balance', async function () {
-        const newBalance = 200;
         const oldBalance = await this.token.balances(anotherAccount);
 
         oldBalance.should.not.be.bignumber.equal(newBalance);
         await utils.assertRevertsReason(
           this.token.setBalance(anotherAccount, newBalance, { from: thirdAccount }),
-          'Is not implementor or owner');
+          'Is not implementor');
         (await this.token.balances(anotherAccount)).should.be.bignumber.equal(oldBalance);
       });
     });
   });
 
   describe('setAllowed', function () {
-    const commonOwnerImplementorTests = function (ownerOrImplementorAddress) {
-      it('should allow changing allowance', async function () {
-        const newAllowance = 200;
-
-        (await this.token.allowed(anotherAccount, thirdAccount)).should.not.be.bignumber.equal(newAllowance);
-        await this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: ownerOrImplementorAddress });
-        (await this.token.allowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(newAllowance);
-      });
-    };
+    const newAllowance = 200;
 
     describe('when is owner', function () {
-      commonOwnerImplementorTests(owner);
+      it('should not allow changing allowance', async function () {
+        await utils.assertRevertsReason(
+          this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: owner }),
+          'Is not implementor');
+      });
     });
 
     describe('when is implementor', function () {
-      commonOwnerImplementorTests(implementor);
+      it('should allow changing allowance', async function () {
+
+        (await this.token.allowed(anotherAccount, thirdAccount)).should.not.be.bignumber.equal(newAllowance);
+        await this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: implementor });
+        (await this.token.allowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(newAllowance);
+      });
+
     });
 
     describe('when is not owner or implementor', function () {
-      it('should not allow changing balance', async function () {
-        const newAllowance = 200;
+      it('should not allow changing allowance', async function () {
         const oldAllowance = (await this.token.allowed(anotherAccount, thirdAccount));
 
         oldAllowance.should.not.be.bignumber.equal(newAllowance);
         await utils.assertRevertsReason(
           this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: anotherAccount }),
-          'Is not implementor or owner');
+          'Is not implementor');
         (await this.token.allowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(oldAllowance);
       });
     });
   });
 
   describe('setTotalSupply', function () {
-    const commonOwnerImplementorTests = function (ownerOrImplementorAddress) {
-      it('should allow changing total supply', async function () {
-        const newTotalSupply = 200;
-
-        (await this.token.totalSupply()).should.not.be.bignumber.equal(newTotalSupply);
-        await this.token.setTotalSupply(newTotalSupply, { from: ownerOrImplementorAddress });
-        (await this.token.totalSupply()).should.be.bignumber.equal(newTotalSupply);
-      });
-    };
+    const newTotalSupply = 200;
 
     describe('when is owner', function () {
-      commonOwnerImplementorTests(owner);
+      it('should not allow changing total supply', async function () {
+        await utils.assertRevertsReason(
+          this.token.setTotalSupply(newTotalSupply, { from: owner }),
+          'Is not implementor');
+      });
     });
 
     describe('when is implementor', function () {
-      commonOwnerImplementorTests(implementor);
+      it('should allow changing total supply', async function () {
+        (await this.token.totalSupply()).should.not.be.bignumber.equal(newTotalSupply);
+        await this.token.setTotalSupply(newTotalSupply, { from: implementor });
+        (await this.token.totalSupply()).should.be.bignumber.equal(newTotalSupply);
+      });
     });
 
     describe('when is not owner or implementor', function () {
-      it('should not allow changing balance', async function () {
-        const newTotalSupply = 200;
+      it('should not allow changing total supply', async function () {
         const oldTotalSupply = await this.token.totalSupply();
 
         oldTotalSupply.should.not.be.bignumber.equal(newTotalSupply);
         await utils.assertRevertsReason(
           this.token.setTotalSupply(newTotalSupply, { from: thirdAccount }),
-          'Is not implementor or owner');
+          'Is not implementor');
         (await this.token.totalSupply()).should.be.bignumber.equal(oldTotalSupply);
       });
     });

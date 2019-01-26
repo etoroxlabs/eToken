@@ -55,38 +55,38 @@ contract ExternalERC20Storage is Ownable {
   function setBalance(address owner,
                       uint256 value)
     public
-    onlyImplementorOrOwner
+    onlyImplementor
   {
     balances[owner] = value;
   }
 
   /**
    * @dev Sets new allowance.
-   * Can only be done by owner or implementor contract.
+   * Can only be called by implementor contract.
    */
   function setAllowed(address owner,
                       address spender,
                       uint256 value)
     public
-    onlyImplementorOrOwner
+    onlyImplementor
   {
     allowed[owner][spender] = value;
   }
 
   /**
    * @dev Change totalSupply.
-   * Can only be done by owner or implementor contract.
+   * Can only be called by implementor contract.
    */
   function setTotalSupply(uint256 value)
     public
-    onlyImplementorOrOwner
+    onlyImplementor
   {
     totalSupply = value;
   }
 
   /**
    * @dev Transfer implementor to new contract
-   * Can only be done by owner or implementor contract.
+   * Can only be called by owner or implementor contract.
    */
   function transferImplementor(address newImplementor)
     public
@@ -101,7 +101,7 @@ contract ExternalERC20Storage is Ownable {
   }
 
   /**
-   * @dev Asserts if sender is neither owner nor implementor.
+   * @dev Asserts that sender is either owner or implementor.
    */
   modifier onlyImplementorOrOwner() {
     require(isImplementor() || isOwner(), "Is not implementor or owner");
@@ -109,7 +109,15 @@ contract ExternalERC20Storage is Ownable {
   }
 
   /**
-   * @dev Asserts if the given address is the null-address
+   * @dev Asserts that sender is the implementor.
+   */
+  modifier onlyImplementor() {
+    require(isImplementor(), "Is not implementor");
+    _;
+  }
+
+  /**
+   * @dev Asserts that the given address is not the null-address
    */
   modifier requireNonZero(address addr) {
     require(addr != address(0), "Expected a non-zero address");
