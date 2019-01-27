@@ -89,7 +89,7 @@ function shouldBehaveLikeERC20Burnable (owner, initialBalance, [burner]) {
           expectEvent.inLogs(this.logs, 'Approval', {
             owner: owner,
             spender: burner,
-            value: amount
+            value: originalAllowance - amount
           });
         });
       }

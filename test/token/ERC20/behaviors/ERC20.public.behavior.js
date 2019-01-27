@@ -206,7 +206,7 @@ function shouldBehaveLikeERC20PublicAPI (owner, recipient, anotherAccount) {
               expectEvent.inLogs(events, 'Approval', {
                 owner: owner,
                 spender: spender,
-                value: amount
+                value: 0
               });
             });
           });
