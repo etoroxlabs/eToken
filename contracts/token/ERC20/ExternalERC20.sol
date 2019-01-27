@@ -23,7 +23,10 @@ contract ExternalERC20 is IERC20 {
     /**
      * @dev Constructor
      * @param externalERC20Storage The external storage contract.
-     * This is the only time you can change it
+     * Should be zero address if shouldCreateStorage is true.
+     * @param shouldCreateStorage Defines whether it should
+     * create a new external storage. Should be false if
+     * externalERC20Storage is defined.
      */
     constructor(
         ExternalERC20Storage externalERC20Storage,

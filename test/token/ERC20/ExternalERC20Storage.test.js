@@ -20,13 +20,25 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
     this.tokenE = ExternalERC20StorageE.wrap(this.token);
   });
 
-  describe('initial implementor', function () {
+  describe('initial deployment', function () {
     it('isImplementor should be true initially', async function () {
       (await this.token.isImplementor({ from: implementor })).should.equal(true);
     });
 
     it('isImplementor for owner should be false', async function () {
       (await this.token.isImplementor({ from: owner })).should.equal(false);
+    });
+
+    it('should fail if owner is the zero address', async function () {
+      await utils.assertRevertsReason(
+        ExternalERC20Storage.new(utils.ZERO_ADDRESS, implementor),
+        'Owner should not be the zero address');
+    });
+
+    it('should fail if implementor is the zero address', async function () {
+      await utils.assertRevertsReason(
+        ExternalERC20Storage.new(owner, utils.ZERO_ADDRESS),
+        'Implementor should not be the zero address');
     });
   });
 
