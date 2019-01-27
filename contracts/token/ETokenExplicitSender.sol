@@ -88,7 +88,6 @@ contract ETokenExplicitSender is IUpgradableEToken,
         external
         senderIsProxy
     {
-        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
         enabled = true;
         emit UpgradeFinalized(msg.sender);
     }
@@ -394,10 +393,9 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.transfer, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Like EToken.transfer. Transfers tokens to a specified address
+     * @param to The address to transfer to
+     * @param value the amount to be transferred
      */
     function transfer(address to, uint256 value)
         public
@@ -411,10 +409,10 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.approve, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Like EToken.approve. Approves passed address to spend specified
+     * @dev amount on their behalf
+     * @param spender The address which will spend the funds
+     * @param value The amount of tokens to be spent.
      */
     function approve(address spender, uint256 value)
         public
@@ -428,10 +426,10 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.transferFrom, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Like EToken.transferFrom. Transfers tokens from one address to another
+     * @param from The address to send tokens from
+     * @param to The address to transfer to
+     * @param value the amount of tokens to be transferred 
      */
     function transferFrom(address from, address to, uint256 value)
         public
@@ -446,10 +444,10 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.increaseAllowance, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Like EToken.increaseAllowance. Increase the amount of tokens spender
+     * @dev is allowed to spend
+     * @param spender The address which will spend the funds.
+     * @param addedValue The amount of tokens to increase the allowance by.
      */
     function increaseAllowance(address spender, uint256 addedValue)
         public
@@ -463,10 +461,10 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.decreaseAllowance, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Like EToken.decreaseAllowance. Decrease the amount of tokens allowed
+     * @dev to spender
+     * @param spender The address which will spend the funds.
+     * @param subtractedValue The amount of tokens to decrease the allowance by.
      */
     function decreaseAllowance(address spender, uint256 subtractedValue)
         public
