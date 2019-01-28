@@ -393,7 +393,8 @@ contract ETokenExplicitSender is IUpgradableEToken,
     }
 
     /**
-     * @dev Like EToken.transfer. Transfers tokens to a specified address
+     * @dev Like EToken.transfer. Transfers tokens to a specified address using
+     * modifiers to ensure the caller is allowed to make the call.
      * @param to The address to transfer to
      * @param value the amount to be transferred
      */
@@ -410,7 +411,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
 
     /**
      * @dev Like EToken.approve. Approves passed address to spend specified
-     * @dev amount on their behalf
+     * amount on their behalf
      * @param spender The address which will spend the funds
      * @param value The amount of tokens to be spent.
      */
