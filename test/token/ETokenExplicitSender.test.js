@@ -26,12 +26,20 @@ contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
       storage = await ExternalERC20Storage.new({ from: owner });
     });
 
+    it('reverts when no upgradeFrom contract is set', async function () {
+      const token = await ETokenExplicitSender.new('tok', 't', 10,
+                                                   accesslist.address, true, storage.address,
+                                                   0, true, { from: owner });
+      await util.assertRevertsReason(token.finalizeUpgrade({ from: owner }),
+                                     'Must have a contract to upgrade from');
+    });
+
     it('reverts when wrong contract finalizes upgrade', async function () {
       const token = await ETokenExplicitSender.new('tok', 't', 10,
                                                    accesslist.address, true, storage.address,
                                                    0xf00f, false, { from: owner });
-      await util.assertReverts(token.finalizeUpgrade({ from: someAddress }),
-                                     'Sender is not old contract');
+      await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
+                                     'Proxy is the only allowed caller');
     });
 
     it('emits UpgradeFinalized event', async function () {
