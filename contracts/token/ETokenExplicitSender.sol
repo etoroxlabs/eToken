@@ -86,10 +86,16 @@ contract ETokenExplicitSender is IUpgradableEToken,
      */
     function finalizeUpgrade()
         external
+        upgradeExists
         senderIsProxy
     {
         enabled = true;
         emit UpgradeFinalized(msg.sender);
+    }
+
+    modifier upgradeExists() {
+        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
+        _;
     }
 
     /**
