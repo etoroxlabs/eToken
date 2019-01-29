@@ -17,6 +17,8 @@ interface IUpgradableEToken {
 
     /* solium-disable zeppelin/missing-natspec-comments */
 
+    function upgrade(IUpgradableEToken upgradedToken) external;
+
     function finalizeUpgrade() external;
 
     /* Taken from ERC20Detailed in openzeppelin-solidity */

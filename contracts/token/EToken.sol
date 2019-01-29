@@ -9,8 +9,6 @@ import "./IUpgradableEToken.sol";
 /** @title Main EToken contract */
 contract EToken is IEToken, ETokenExplicitSender {
 
-    IUpgradableEToken public upgradedToken;
-
     /**
      * @param name The name of the token
      * @param symbol The symbol of the token
@@ -52,34 +50,6 @@ contract EToken is IEToken, ETokenExplicitSender {
             upgradedFrom,
             initialDeployment
         ) {
-    }
-
-    event Upgraded(address indexed to);
-
-    /**
-     * @return Is this token upgraded
-     */
-    function isUpgraded() public view returns (bool) {
-        return upgradedToken != IUpgradableEToken(0);
-    }
-
-    /**
-     * Upgrades the current token
-     * @param _upgradedToken The address of the token that this token should be upgraded to
-     */
-    function upgrade(IUpgradableEToken _upgradedToken) public onlyOwner {
-        require(!isUpgraded(), "Token is already upgraded");
-        require(_upgradedToken != IUpgradableEToken(0),
-                "Cannot upgrade to null address");
-        require(_upgradedToken != IUpgradableEToken(this),
-                "Cannot upgrade to myself");
-        require(_externalERC20Storage.isImplementor(),
-                "I don't own my storage. This will end badly.");
-
-        upgradedToken = _upgradedToken;
-        _externalERC20Storage.transferImplementor(_upgradedToken);
-        _upgradedToken.finalizeUpgrade();
-        emit Upgraded(_upgradedToken);
     }
 
     /**
@@ -345,5 +315,4 @@ contract EToken is IEToken, ETokenExplicitSender {
             super.unpause();
         }
     }
-
 }
