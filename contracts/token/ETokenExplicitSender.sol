@@ -45,11 +45,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
      * to address(0) for initial deployments
      * @param initialDeployment Set to true if this is the initial deployment of
      * the token. If true it automtically creates a new ExternalERC20Storage.
-     * Also, acts as a confirmation of intention which interlocks
+     * Also, it acts as a confirmation of intention which interlocks
      * upgradedFrom as follows: If initialDeployment is true, then
      * upgradedFrom must be the zero address. Otherwise, upgradedFrom must not
-     * be the zero address. The same goes for externalERC20Storage, which must
-     * the zero address if initialDeployment is true.
+     * be the zero address. The same applies to externalERC20Storage, which must
+     * be set to the zero address if initialDeployment is true.
      */
     constructor(
         string name,

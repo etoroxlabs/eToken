@@ -1,6 +1,7 @@
+const events = require('./events.js');
 const utils = require('./utils.js');
 
-module.exports = utils.makeEventMap({
+module.exports = events.makeEventMap({
   constructor: () => [],
   addToken: (name, addr) => [{ eventName: 'TokenAdded',
                                paramMap: { name: utils.stringToBytes32(name),

@@ -20,26 +20,24 @@ contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
   });
 
   describe('At contruction', function () {
-    it(
-      'should assert if specified external storage and expecting new storage',
-      async function () {
-        const randomAddress = anotherAccount;
-        const assertReason = 'Cannot both create external storage and use existing one.';
+    it('should fail if specified external storage and expecting new storage',
+       async function () {
+         const someAddress = anotherAccount;
+         const assertReason = 'Cannot both create external storage and use existing one.';
 
-        await utils.assertRevertsReason(
-          ExternalERC20.new(randomAddress, true),
-          assertReason);
-      }
+         await utils.assertRevertsReason(
+           ExternalERC20.new(someAddress, true),
+           assertReason);
+       }
     );
 
-    it(
-      'should assert if not specified external storage and not expecting new storage',
-      async function () {
-        const assertReason = 'Cannot both create external storage and use existing one.';
-        await utils.assertRevertsReason(
-          ExternalERC20.new(utils.ZERO_ADDRESS, false),
-          assertReason);
-      }
+    it('should fail if not specified external storage and not expecting new storage',
+       async function () {
+         const assertReason = 'Cannot both create external storage and use existing one.';
+         await utils.assertRevertsReason(
+           ExternalERC20.new(utils.ZERO_ADDRESS, false),
+           assertReason);
+       }
     );
   });
 

@@ -1,8 +1,8 @@
-const utils = require('./../utils.js');
+const events = require('./../events.js');
 
-module.exports = utils.makeEventMap({
+module.exports = events.makeEventMap({
   upgrade: (contract, oldContract) => [
     { eventName: 'UpgradeFinalized',
-      paramMap: { upgradedFrom: oldContract} },
+      paramMap: { upgradedFrom: oldContract } },
     { eventName: 'Upgraded',
       paramMap: { to: contract } }] });

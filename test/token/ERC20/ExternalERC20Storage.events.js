@@ -1,6 +1,6 @@
-const utils = require('./../../utils.js');
+const events = require('./../../events.js');
 
-module.exports = utils.makeEventMap({
+module.exports = events.makeEventMap({
   transferImplementor: (toAddr, fromAddr) => [{
     eventName: 'StorageImplementorTransferred',
     paramMap: { from: fromAddr,
