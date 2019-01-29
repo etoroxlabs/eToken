@@ -52,7 +52,6 @@ contract EToken is IEToken, ETokenExplicitSender {
         ) {
     }
 
-
     /**
      * @dev Proxies call to new token if this token is upgraded
      * @return the name of the token.
