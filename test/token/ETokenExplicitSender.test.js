@@ -30,7 +30,7 @@ contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
       const token = await ETokenExplicitSender.new('tok', 't', 10,
                                                    accesslist.address, true, storage.address,
                                                    0, true, { from: owner });
-      await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
+      await util.assertRevertsReason(token.finalizeUpgrade({ from: owner }),
                                      'Must have a contract to upgrade from');
     });
 
@@ -39,7 +39,7 @@ contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
                                                    accesslist.address, true, storage.address,
                                                    0xf00f, false, { from: owner });
       await util.assertRevertsReason(token.finalizeUpgrade({ from: someAddress }),
-                                     'Sender is not old contract');
+                                     'Proxy is the only allowed caller');
     });
 
     it('emits UpgradeFinalized event', async function () {
@@ -49,7 +49,7 @@ contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
 
       const tokenE = ETokenExplicitSenderE.wrap(token);
 
-      await tokenE.finalizeUpgrade(owner, owner, { from: owner });
+      await tokenE.finalizeUpgrade(owner, { from: owner });
     });
   });
   // Remainder of contract tested through EToken.
