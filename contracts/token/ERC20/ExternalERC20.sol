@@ -181,6 +181,7 @@ contract ExternalERC20 is IERC20 {
             _externalERC20Storage.allowed(from, originSender).sub(value)
         );
         _transfer(from, to, value);
+        emit Approval(from, originSender, _externalERC20Storage.allowed(from, originSender));
     }
 
     /**
@@ -283,5 +284,6 @@ contract ExternalERC20 is IERC20 {
                 _externalERC20Storage.allowed(account, burner).sub(value)
             );
         _burn(account, value);
+        emit Approval(account, burner, _externalERC20Storage.allowed(account, burner));
     }
 }
