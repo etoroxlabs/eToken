@@ -3,7 +3,8 @@
 const Accesslist = artifacts.require('Accesslist');
 const TokenManager = artifacts.require('TokenManager');
 const EToken = artifacts.require('EToken');
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
+
+const { ZERO_ADDRESS } = require('../test/utils.js');
 
 module.exports = function (deployer, _network, accounts) {
   if (deployer.network === 'development' ||
@@ -49,10 +50,10 @@ async function setupAccounts ([owner, whitelistAdmin, whitelisted, minter, ...re
 
   const tokens = await Promise.all(
     tokenDetails.map(async (td) => {
-      const externalERC20Storage = await ExternalERC20Storage.new();
       const token = await EToken.new(
         td.name, td.symbol, td.decimals,
-        accesslistContract.address, td.whitelistEnabled, externalERC20Storage.address,
+        accesslistContract.address, td.whitelistEnabled,
+        ZERO_ADDRESS,
         mintTargetAccount, 0, true,
         { from: owner });
 

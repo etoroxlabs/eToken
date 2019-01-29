@@ -6,6 +6,7 @@ const ExternalERC20 = artifacts.require('ExternalERC20');
 const ExternalERC20Mock = artifacts.require('ExternalERC20Mock');
 
 const { shouldBehaveLikeERC20 } = require('./behaviors/ERC20.behavior');
+const utils = require('../../utils');
 
 const BigNumber = web3.BigNumber;
 
@@ -18,6 +19,28 @@ contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
     this.token = await ExternalERC20Mock.new(owner, 100);
   });
 
+  describe('At contruction', function () {
+    it('should fail if specified external storage and expecting new storage',
+       async function () {
+         const someAddress = anotherAccount;
+         const assertReason = 'Cannot both create external storage and use existing one.';
+
+         await utils.assertRevertsReason(
+           ExternalERC20.new(someAddress, true),
+           assertReason);
+       }
+    );
+
+    it('should fail if not specified external storage and not expecting new storage',
+       async function () {
+         const assertReason = 'Cannot both create external storage and use existing one.';
+         await utils.assertRevertsReason(
+           ExternalERC20.new(utils.ZERO_ADDRESS, false),
+           assertReason);
+       }
+    );
+  });
+
   shouldBehaveLikeERC20(owner, recipient, anotherAccount);
 
   describe('When sharing storage', function () {
@@ -25,6 +48,7 @@ contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
       this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
       this.token2 = await ExternalERC20.new(
         this.storage.address,
+        false,
         { from: owner }
       );
     });

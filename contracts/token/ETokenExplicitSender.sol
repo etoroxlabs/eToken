@@ -44,10 +44,12 @@ contract ETokenExplicitSender is IUpgradableEToken,
      * @param upgradedFrom The token contract that this contract upgrades. Set
      * to address(0) for initial deployments
      * @param initialDeployment Set to true if this is the initial deployment of
-     * the token. Acts as a confirmation of intention which interlocks
+     * the token. If true it automtically creates a new ExternalERC20Storage.
+     * Also, it acts as a confirmation of intention which interlocks
      * upgradedFrom as follows: If initialDeployment is true, then
      * upgradedFrom must be the zero address. Otherwise, upgradedFrom must not
-     * be the zero address.
+     * be the zero address. The same applies to externalERC20Storage, which must
+     * be set to the zero address if initialDeployment is true.
      */
     constructor(
         string name,
@@ -61,17 +63,17 @@ contract ETokenExplicitSender is IUpgradableEToken,
         bool initialDeployment
     )
         internal
-        ExternalERC20(externalERC20Storage)
+        ExternalERC20(externalERC20Storage, initialDeployment)
         ExternalERC20Mintable(mintingRecipientAccount)
         ERC20Detailed(name, symbol, decimals)
         AccesslistGuarded(accesslist, whitelistEnabled)
     {
 
-        require((upgradedFrom != address(0) && (! initialDeployment)) ||
+        require((upgradedFrom != address(0) && (!initialDeployment)) ||
                 (upgradedFrom == address(0) && initialDeployment),
                 "Cannot both be upgraded and initial deployment.");
 
-        if (! initialDeployment) {
+        if (!initialDeployment) {
             // Pause until explicitly unpaused by upgraded contract
             enabled = false;
             _upgradedFrom = upgradedFrom;

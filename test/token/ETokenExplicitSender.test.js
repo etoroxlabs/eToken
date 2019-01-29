@@ -23,13 +23,15 @@ contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
 
     beforeEach(async function () {
       accesslist = await Accesslist.new({ from: owner });
-      storage = await ExternalERC20Storage.new({ from: owner });
     });
 
     it('reverts when no upgradeFrom contract is set', async function () {
       const token = await ETokenExplicitSender.new('tok', 't', 10,
-                                                   accesslist.address, true, storage.address,
+                                                   accesslist.address, true, util.ZERO_ADDERSS,
                                                    0, true, { from: owner });
+
+      storage = ExternalERC20Storage.at(await token._externalERC20Storage());
+
       await util.assertRevertsReason(token.finalizeUpgrade({ from: owner }),
                                      'Must have a contract to upgrade from');
     });

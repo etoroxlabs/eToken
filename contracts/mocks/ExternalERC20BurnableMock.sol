@@ -12,11 +12,9 @@ contract ExternalERC20BurnableMock is ExternalERC20Burnable {
       * @param initialBalance The amount of tokens that should be minted
       */
     constructor(address initialAccount, uint256 initialBalance)
-        ExternalERC20(new ExternalERC20Storage())
+        ExternalERC20(ExternalERC20Storage(0), true)
         public
     {
-        _externalERC20Storage.transferImplementor(this);
-        _externalERC20Storage.transferOwnership(msg.sender);
         _mint(initialAccount, initialBalance);
     }
 

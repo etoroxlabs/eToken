@@ -17,13 +17,11 @@ contract ExternalERC20PausableMock is ExternalERC20Pausable, PauserRoleMock {
      */
     constructor(
         address initialAccount,
-        uint initialBalance,
-        ExternalERC20Storage stor
+        uint initialBalance
     )
-        ExternalERC20(stor)
+        ExternalERC20(ExternalERC20Storage(0), true)
         public
     {
-        stor.latchInitialImplementor();
         _mint(initialAccount, initialBalance);
     }
 }

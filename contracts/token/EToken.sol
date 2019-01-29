@@ -9,7 +9,6 @@ import "./IUpgradableEToken.sol";
 /** @title Main EToken contract */
 contract EToken is IEToken, ETokenExplicitSender {
 
-    ExternalERC20Storage private externalStorage;
     IUpgradableEToken public upgradedToken;
 
     /**
@@ -23,10 +22,12 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @param upgradedFrom The token contract that this contract upgrades. Set
      * to address(0) for initial deployments
      * @param initialDeployment Set to true if this is the initial deployment of
-     * the token. Acts as a confirmation of intention which interlocks
+     * the token. If true it automtically creates a new ExternalERC20Storage.
+     * Also, it acts as a confirmation of intention which interlocks
      * upgradedFrom as follows: If initialDeployment is true, then
      * upgradedFrom must be the zero address. Otherwise, upgradedFrom must not
-     * be the zero address.
+     * be the zero address. The same applies to externalERC20Storage, which must
+     * be set to the zero address if initialDeployment is true.
      */
     constructor(
         string name,
@@ -51,11 +52,6 @@ contract EToken is IEToken, ETokenExplicitSender {
             upgradedFrom,
             initialDeployment
         ) {
-        externalStorage = externalERC20Storage;
-
-        if (initialDeployment) {
-            externalStorage.latchInitialImplementor();
-        }
     }
 
     event Upgraded(address indexed to);
@@ -77,11 +73,11 @@ contract EToken is IEToken, ETokenExplicitSender {
                 "Cannot upgrade to null address");
         require(_upgradedToken != IUpgradableEToken(this),
                 "Cannot upgrade to myself");
-        require(externalStorage.isImplementor(),
+        require(_externalERC20Storage.isImplementor(),
                 "I don't own my storage. This will end badly.");
 
         upgradedToken = _upgradedToken;
-        externalStorage.transferImplementor(_upgradedToken);
+        _externalERC20Storage.transferImplementor(_upgradedToken);
         _upgradedToken.finalizeUpgrade();
         emit Upgraded(_upgradedToken);
     }

@@ -53,7 +53,7 @@ const otherOps = [
   ['changeMintingRecipient', [util.ZERO_ADDRESS]]
 ];
 
-function unopgradedTokenBehavior () {
+function unupgradedTokenBehavior () {
   it('claims not to be upgraded', async function () {
     (await this.token.isUpgraded()).should.be.equal(false);
   });
@@ -205,18 +205,18 @@ contract('EToken', async function (
     let storage;
 
     beforeEach(async function () {
-      storage = await ExternalERC20Storage.new({ from: owner });
+      storage = await ExternalERC20Storage.new(owner, owner, { from: owner });
     });
 
     it('reverts when both upgradedFrom and initialDeployment are set', async function () {
       await util.assertRevertsReason(
         ETokenMock.new(tokNameOrig, symbolOrig, 10,
-                       0xf00f, true, storage.address, mintingRecipientAccount,
+                       0xf00f, true, util.ZERO_ADDRESS, mintingRecipientAccount,
                        0xf00f, true, owner, 100, { from: owner }),
         'Cannot both be upgraded and initial deployment.');
     });
 
-    it('reverts when niether upgradedFrom or initialDeployment are set', async function () {
+    it('reverts when neither upgradedFrom nor initialDeployment are set', async function () {
       await util.assertRevertsReason(
         ETokenMock.new(tokNameOrig, symbolOrig, 10,
                        0xf00f, true, storage.address, mintingRecipientAccount,
@@ -235,11 +235,13 @@ contract('EToken', async function (
 
     beforeEach(async function () {
       accesslist = await Accesslist.new({ from: owner });
-      storage = await ExternalERC20Storage.new({ from: owner });
 
       token = await ETokenMock.new(tokNameOrig, symbolOrig, 10,
-                                   accesslist.address, true, storage.address, mintingRecipientAccount,
+                                   accesslist.address, true, util.ZERO_ADDRESS,
+                                   mintingRecipientAccount,
                                    0, true, owner, 100, { from: owner });
+      storage = ExternalERC20Storage.at(await token._externalERC20Storage());
+
       tokenE = ETokenE.wrap(token);
       upgradeToken = await ETokenMock.new(
         tokNameUpgraded, symbolUpgraded, 20,
@@ -276,7 +278,7 @@ contract('EToken', async function (
       });
 
       describe('Original token', function () {
-        unopgradedTokenBehavior();
+        unupgradedTokenBehavior();
         shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
         shouldBehaveLikeERC20Mintable(owner, minter, [user], mintingRecipientAccount);
         shouldBehaveLikeERC20Burnable(owner, 100, [burner]);

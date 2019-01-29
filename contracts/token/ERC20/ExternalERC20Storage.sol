@@ -7,8 +7,9 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  *
  * @dev The storage contract used in ExternalERC20 token. This contract can
  * provide storage for exactly one contract, referred to as the implementor,
- * inheriting from the ExternalERC20 contract.  Only the current implementor or
- * the owner can transfer the implementorship.
+ * inheriting from the ExternalERC20 contract. Only the current implementor or
+ * the owner can transfer the implementorship. Change of state is only allowed
+ * by the implementor.
  */
 contract ExternalERC20Storage is Ownable {
 
@@ -18,34 +19,37 @@ contract ExternalERC20Storage is Ownable {
 
   address private _implementor;
 
-  event StorageInitialImplementorSet(address indexed to);
   event StorageImplementorTransferred(address indexed from,
                                       address indexed to);
+
+  /**
+   * @dev Contructor.
+   * @param owner The address of the owner of the contract. 
+   * Must not be the zero address.
+   * @param implementor The address of the contract that is 
+   * allowed to change state. Must not be the zero address.
+   */
+  constructor(address owner, address implementor) public {
+
+      require(
+          owner != address(0),
+          "Owner should not be the zero address"
+      );
+
+      require(
+          implementor != address(0),
+          "Implementor should not be the zero address"
+      );
+
+      transferOwnership(owner);
+      _implementor = implementor;
+  }
 
   /**
    * @dev Returns whether the sender is an implementor.
    */
   function isImplementor() public view returns(bool) {
     return msg.sender == _implementor;
-  }
-
-  /**
-   * @return Does this storage have a preexisting implementor?
-   */
-  function hasImplementor() public view returns(bool) {
-    return _implementor != address(0);
-  }
-
-  /**
-   * @dev Oneshot function for setting he initial implementor of a function
-   * This is not done in the constructor since we need the storage contract to
-   * be created separately and then having the initial implementor set itself as
-   * the implementor from its constructor.
-   */
-  function latchInitialImplementor() public {
-    require(_implementor == address(0), "Storage implementor is already set");
-    _implementor = msg.sender;
-    emit StorageInitialImplementorSet(msg.sender);
   }
 
   /**

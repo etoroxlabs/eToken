@@ -11,11 +11,9 @@ import "../token/ERC20/ExternalERC20Storage.sol";
 contract ExternalERC20Mock is ExternalERC20 {
 
     constructor(address initialAccount, uint256 initialBalance)
-        ExternalERC20(new ExternalERC20Storage())
+        ExternalERC20(ExternalERC20Storage(0), true)
         public
     {
-        _externalERC20Storage.transferImplementor(this);
-        _externalERC20Storage.transferOwnership(msg.sender);
         _mint(initialAccount, initialBalance);
     }
 

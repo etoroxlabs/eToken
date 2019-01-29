@@ -31,6 +31,7 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
       this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
       this.token2 = await ExternalERC20.new(
         this.storage.address,
+        false,
         { from: minter }
       );
     });
