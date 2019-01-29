@@ -31,6 +31,8 @@ contract ETokenExplicitSender is IUpgradableEToken,
 
     bool private enabled;
 
+    IUpgradableEToken public upgradedToken;
+
     event UpgradeFinalized(address indexed upgradedFrom);
 
     /**
@@ -80,6 +82,34 @@ contract ETokenExplicitSender is IUpgradableEToken,
         } else {
             enabled = true;
         }
+    }
+
+    event Upgraded(address indexed to);
+
+    /**
+     * Upgrades the current token
+     * @param _upgradedToken The address of the token that this token should be upgraded to
+     */
+    function upgrade(IUpgradableEToken _upgradedToken) public onlyOwner {
+        require(!isUpgraded(), "Token is already upgraded");
+        require(_upgradedToken != IUpgradableEToken(0),
+                "Cannot upgrade to null address");
+        require(_upgradedToken != IUpgradableEToken(this),
+                "Cannot upgrade to myself");
+        require(_externalERC20Storage.isImplementor(),
+                "I don't own my storage. This will end badly.");
+
+        upgradedToken = _upgradedToken;
+        _externalERC20Storage.transferImplementor(_upgradedToken);
+        _upgradedToken.finalizeUpgrade();
+        emit Upgraded(_upgradedToken);
+    }
+
+    /**
+     * @return Is this token upgraded
+     */
+    function isUpgraded() public view returns (bool) {
+        return upgradedToken != IUpgradableEToken(0);
     }
 
     /**
@@ -134,7 +164,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
     {
         // Silence warnings
         sender;
-        return super.name();
+        if (isUpgraded()) {
+            upgradedToken.nameExplicitSender(msg.sender);
+        } else {
+            return super.name();
+        }
     }
 
     /**
@@ -152,7 +186,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
     {
         // Silence warnings
         sender;
-        return super.symbol();
+        if (isUpgraded()) {
+            return upgradedToken.symbolExplicitSender(msg.sender);
+        } else {
+            return super.symbol();
+        }
     }
 
     /**
@@ -170,7 +208,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
     {
         // Silence warnings
         sender;
-        return super.decimals();
+        if (isUpgraded()) {
+            return upgradedToken.decimalsExplicitSender(msg.sender);
+        } else {
+            return super.decimals();
+        }
     }
 
     /**
@@ -438,7 +480,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
      * @dev Like EToken.transferFrom. Transfers tokens from one address to another
      * @param from The address to send tokens from
      * @param to The address to transfer to
-     * @param value the amount of tokens to be transferred 
+     * @param value the amount of tokens to be transferred
      */
     function transferFrom(address from, address to, uint256 value)
         public
