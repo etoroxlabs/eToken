@@ -86,6 +86,24 @@ contract ETokenExplicitSender is IUpgradableEToken,
 
     event Upgraded(address indexed to);
 
+    modifier upgradeExists() {
+        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
+        _;
+    }
+
+    /**
+     * @dev Called by the upgraded contract in order to mark the finalization of
+     * the upgrade and activate the new contract
+     */
+    function finalizeUpgrade()
+        external
+        upgradeExists
+        senderIsProxy
+    {
+        enabled = true;
+        emit UpgradeFinalized(msg.sender);
+    }
+
     /**
      * Upgrades the current token
      * @param _upgradedToken The address of the token that this token should be upgraded to
@@ -110,24 +128,6 @@ contract ETokenExplicitSender is IUpgradableEToken,
      */
     function isUpgraded() public view returns (bool) {
         return upgradedToken != IUpgradableEToken(0);
-    }
-
-    /**
-     * @dev Called by the upgraded contract in order to mark the finalization of
-     * the upgrade and activate the new contract
-     */
-    function finalizeUpgrade()
-        external
-        upgradeExists
-        senderIsProxy
-    {
-        enabled = true;
-        emit UpgradeFinalized(msg.sender);
-    }
-
-    modifier upgradeExists() {
-        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
-        _;
     }
 
     /**
@@ -338,9 +338,19 @@ contract ETokenExplicitSender is IUpgradableEToken,
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferFromExplicitSender(sender, from, to, value);
+            upgradedToken.transferFromExplicitSender(
+                sender,
+                from,
+                to,
+                value
+            );
         } else {
-            super._transferFrom(sender, from, to, value);
+            super._transferFrom(
+                sender,
+                from,
+                to,
+                value
+            );
         }
         return true;
     }
