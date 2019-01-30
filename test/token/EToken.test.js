@@ -434,6 +434,8 @@ contract('EToken', async function (
       );
 
       this.revertToken = await RevertTokenMock.new();
+      // Ensure 100% coverage
+      await this.revertToken.upgrade(0);
       this.upgrade = function () {
         return this.token.upgrade(this.revertToken.address);
       };
