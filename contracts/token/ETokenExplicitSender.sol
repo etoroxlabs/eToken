@@ -308,7 +308,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferExplicitSender(sender, spender, value);
+            upgradedToken.approveExplicitSender(sender, spender, value);
         } else {
             super._approve(sender, spender, value);
         }
