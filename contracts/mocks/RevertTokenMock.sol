@@ -5,8 +5,12 @@ import "../token/IUpgradableEToken.sol";
 
 contract RevertTokenMock is IUpgradableEToken {
 
-    function finalizeUpgrade() public {
+    function upgrade(IUpgradableEToken upgradedToken) public {
+        // Silence warnings
+        upgradedToken;
+    }
 
+    function finalizeUpgrade() public {
     }
 
     function nameExplicitSender(address sender)
