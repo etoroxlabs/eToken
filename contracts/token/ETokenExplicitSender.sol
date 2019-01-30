@@ -31,6 +31,8 @@ contract ETokenExplicitSender is IUpgradableEToken,
 
     bool private enabled;
 
+    IUpgradableEToken public upgradedToken;
+
     event UpgradeFinalized(address indexed upgradedFrom);
 
     /**
@@ -82,6 +84,13 @@ contract ETokenExplicitSender is IUpgradableEToken,
         }
     }
 
+    event Upgraded(address indexed to);
+
+    modifier upgradeExists() {
+        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
+        _;
+    }
+
     /**
      * @dev Called by the upgraded contract in order to mark the finalization of
      * the upgrade and activate the new contract
@@ -95,9 +104,30 @@ contract ETokenExplicitSender is IUpgradableEToken,
         emit UpgradeFinalized(msg.sender);
     }
 
-    modifier upgradeExists() {
-        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
-        _;
+    /**
+     * Upgrades the current token
+     * @param _upgradedToken The address of the token that this token should be upgraded to
+     */
+    function upgrade(IUpgradableEToken _upgradedToken) public onlyOwner {
+        require(!isUpgraded(), "Token is already upgraded");
+        require(_upgradedToken != IUpgradableEToken(0),
+                "Cannot upgrade to null address");
+        require(_upgradedToken != IUpgradableEToken(this),
+                "Cannot upgrade to myself");
+        require(_externalERC20Storage.isImplementor(),
+                "I don't own my storage. This will end badly.");
+
+        upgradedToken = _upgradedToken;
+        _externalERC20Storage.transferImplementor(_upgradedToken);
+        _upgradedToken.finalizeUpgrade();
+        emit Upgraded(_upgradedToken);
+    }
+
+    /**
+     * @return Is this token upgraded
+     */
+    function isUpgraded() public view returns (bool) {
+        return upgradedToken != IUpgradableEToken(0);
     }
 
     /**
@@ -132,9 +162,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(string)
     {
-        // Silence warnings
-        sender;
-        return super.name();
+        if (isUpgraded()) {
+            upgradedToken.nameExplicitSender(sender);
+        } else {
+            return super.name();
+        }
     }
 
     /**
@@ -150,9 +182,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(string)
     {
-        // Silence warnings
-        sender;
-        return super.symbol();
+        if (isUpgraded()) {
+            return upgradedToken.symbolExplicitSender(sender);
+        } else {
+            return super.symbol();
+        }
     }
 
     /**
@@ -168,9 +202,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(uint8)
     {
-        // Silence warnings
-        sender;
-        return super.decimals();
+        if (isUpgraded()) {
+            return upgradedToken.decimalsExplicitSender(sender);
+        } else {
+            return super.decimals();
+        }
     }
 
     /**
@@ -186,9 +222,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(uint256)
     {
-        // Silence warnings
-        sender;
-        return super.totalSupply();
+        if (isUpgraded()) {
+            return upgradedToken.totalSupplyExplicitSender(sender);
+        } else {
+            return super.totalSupply();
+        }
     }
 
     /**
@@ -204,9 +242,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(uint256)
     {
-        // Silence warnings
-        sender;
-        return super.balanceOf(who);
+        if (isUpgraded()) {
+            return upgradedToken.balanceOfExplicitSender(sender, who);
+        } else {
+            return super.balanceOf(who);
+        }
     }
 
     /**
@@ -222,9 +262,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns(uint256)
     {
-        // Silence warnings
-        sender;
-        return super.allowance(owner, spender);
+        if (isUpgraded()) {
+            return upgradedToken.allowanceExplicitSender(sender, owner, spender);
+        } else {
+            return super.allowance(owner, spender);
+        }
     }
 
     /**
@@ -242,7 +284,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         requireHasAccess(sender)
         returns (bool)
     {
-        super._transfer(sender, to, value);
+        if (isUpgraded()) {
+            return upgradedToken.transferExplicitSender(sender, to, value);
+        } else {
+            super._transfer(sender, to, value);
+        }
         return true;
     }
 
@@ -261,7 +307,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         requireHasAccess(sender)
         returns (bool)
     {
-        super._approve(sender, spender, value);
+        if (isUpgraded()) {
+            upgradedToken.approveExplicitSender(sender, spender, value);
+        } else {
+            super._approve(sender, spender, value);
+        }
         return true;
     }
 
@@ -287,10 +337,21 @@ contract ETokenExplicitSender is IUpgradableEToken,
         requireHasAccess(sender)
         returns (bool)
     {
-        super._transferFrom(sender,
-                            from,
-                            to,
-                            value);
+        if (isUpgraded()) {
+            upgradedToken.transferFromExplicitSender(
+                sender,
+                from,
+                to,
+                value
+            );
+        } else {
+            super._transferFrom(
+                sender,
+                from,
+                to,
+                value
+            );
+        }
         return true;
     }
 
@@ -314,7 +375,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         requireHasAccess(sender)
         returns (bool)
     {
-        super._increaseAllowance(sender, spender, addedValue);
+        if (isUpgraded()) {
+            upgradedToken.increaseAllowanceExplicitSender(sender, spender, addedValue);
+        } else {
+            super._increaseAllowance(sender, spender, addedValue);
+        }
         return true;
     }
 
@@ -334,7 +399,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         requireHasAccess(spender)
         requireHasAccess(sender)
         returns (bool)  {
-        super._decreaseAllowance(sender, spender, subtractedValue);
+        if (isUpgraded()) {
+            upgradedToken.decreaseAllowanceExplicitSender(sender, spender, subtractedValue);
+        } else {
+            super._decreaseAllowance(sender, spender, subtractedValue);
+        }
         return true;
     }
 
@@ -350,7 +419,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         requireBurner(sender)
     {
-        super._burn(sender, value);
+        if (isUpgraded()) {
+            upgradedToken.burnExplicitSender(sender, value);
+        } else {
+            super._burn(sender, value);
+        }
     }
 
     /**
@@ -367,7 +440,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         requireBurner(sender)
     {
-        super._burnFrom(sender, from, value);
+        if (isUpgraded()) {
+            upgradedToken.burnFromExplicitSender(sender, from, value);
+        } else {
+            super._burnFrom(sender, from, value);
+        }
     }
 
     /**
@@ -382,7 +459,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         senderIsProxy
         returns (bool success)
     {
-        super._mintExplicitSender(sender, to, value);
+        if (isUpgraded()) {
+            upgradedToken.mintExplicitSender(sender, to, value);
+        } else {
+            super._mintExplicitSender(sender, to, value);
+        }
         return true;
     }
 
@@ -397,7 +478,11 @@ contract ETokenExplicitSender is IUpgradableEToken,
         isEnabled
         senderIsProxy
     {
-        super._changeMintingRecipient(sender, mintingRecip);
+        if (isUpgraded()) {
+            upgradedToken.changeMintingRecipientExplicitSender(sender, mintingRecip);
+        } else {
+            super._changeMintingRecipient(sender, mintingRecip);
+        }
     }
 
     /**
@@ -438,7 +523,7 @@ contract ETokenExplicitSender is IUpgradableEToken,
      * @dev Like EToken.transferFrom. Transfers tokens from one address to another
      * @param from The address to send tokens from
      * @param to The address to transfer to
-     * @param value the amount of tokens to be transferred 
+     * @param value the amount of tokens to be transferred
      */
     function transferFrom(address from, address to, uint256 value)
         public
@@ -514,6 +599,4 @@ contract ETokenExplicitSender is IUpgradableEToken,
     {
         super._changeMintingRecipient(msg.sender, _mintingRecipientAddress);
     }
-
-
 }

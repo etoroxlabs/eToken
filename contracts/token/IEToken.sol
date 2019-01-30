@@ -10,8 +10,6 @@ interface IEToken {
 
     /* solium-disable zeppelin/missing-natspec-comments */
 
-    function upgrade(IUpgradableEToken upgradedToken) external;
-
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function name() external view returns(string);
 
