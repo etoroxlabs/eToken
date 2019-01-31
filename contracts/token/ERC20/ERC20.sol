@@ -115,21 +115,21 @@ contract ERC20 {
 
     /**
      * @dev Transfer token for a specified addresses
-     * @param from The address to transfer from.
+     * @param originSender The address to transfer from.
      * @param to The address to transfer to.
      * @param value The amount to be transferred.
      */
-    function _transfer(address from, address to, uint256 value)
+    function _transfer(address originSender, address to, uint256 value)
         internal
         returns (bool)
     {
-        require(value <= _storage.balances(from));
+        require(value <= _storage.balances(originSender));
         require(to != address(0));
 
-        _storage.setBalance(from, _storage.balances(from).sub(value));
+        _storage.setBalance(originSender, _storage.balances(originSender).sub(value));
         _storage.setBalance(to, _storage.balances(to).add(value));
 
-        emit Transfer(from, to, value);
+        emit Transfer(originSender, to, value);
 
         return true;
     }
@@ -274,22 +274,22 @@ contract ERC20 {
     /**
      * @dev Internal function that burns an amount of the token of a given
      * account.
-     * @param account The account whose tokens will be burnt.
+     * @param originSender The account whose tokens will be burnt.
      * @param value The amount that will be burnt.
      */
     function _burn(
-        address account,
+        address originSender,
         uint256 value
     )
         internal
         returns (bool)
     {
-        require(account != 0);
-        require(value <= _storage.balances(account));
+        require(originSender != 0);
+        require(value <= _storage.balances(originSender));
 
         _storage.setTotalSupply(_storage.totalSupply().sub(value));
-        _storage.setBalance(account, _storage.balances(account).sub(value));
-        emit Transfer(account, address(0), value);
+        _storage.setBalance(originSender, _storage.balances(originSender).sub(value));
+        emit Transfer(originSender, address(0), value);
 
         return true;
     }

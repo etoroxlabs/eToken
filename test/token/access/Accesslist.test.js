@@ -3,7 +3,7 @@
 
 'use strict';
 
-const util = require('./utils.js');
+const util = require('../../utils.js');
 
 const Accesslist = artifacts.require('Accesslist');
 const AccesslistE = require('./Accesslist.events.js');

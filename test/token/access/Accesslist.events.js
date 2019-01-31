@@ -1,5 +1,5 @@
-const events = require('./events.js');
-const utils = require('./utils.js');
+const events = require('../../events.js');
+const utils = require('../../utils.js');
 
 module.exports = events.makeEventMap({
   // TODO: Implement the constructor using an inheritance system
