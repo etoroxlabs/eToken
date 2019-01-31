@@ -1,25 +1,26 @@
 /* global artifacts, contract */
 /* eslint-env mocha */
 
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
-const ExternalERC20 = artifacts.require('ExternalERC20');
+const Storage = artifacts.require('Storage');
+const ERC20BurnableMock = artifacts.require('ERC20BurnableMock');
 
 const { shouldBehaveLikeERC20Burnable } = require('./behaviors/ERC20Burnable.behavior');
-const ExternalERC20BurnableMock = artifacts.require('ExternalERC20BurnableMock');
+const utils = require('../../utils');
 
-contract('ExternalERC20Burnable', function ([_, owner, spender, ...otherAccounts]) {
+contract('ERC20Burnable', function ([_, owner, spender, ...otherAccounts]) {
   const initialBalance = 1000;
 
   beforeEach(async function () {
-    this.token = await ExternalERC20BurnableMock.new(owner, initialBalance, { from: owner });
+    this.token = await ERC20BurnableMock.new(owner, initialBalance, utils.ZERO_ADDRESS, true, { from: owner });
   });
 
   shouldBehaveLikeERC20Burnable(owner, initialBalance, otherAccounts);
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
-      this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
-      this.token2 = await ExternalERC20.new(
+      this.storage = Storage.at(await this.token._storage());
+      this.token2 = await ERC20BurnableMock.new(
+        owner, 0,
         this.storage.address,
         false,
         { from: owner }
