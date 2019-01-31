@@ -115,7 +115,7 @@ contract EToken is IEToken, ETokenProxy {
         if (isUpgraded()) {
             return upgradedToken.balanceOfProxy(msg.sender, who);
         } else {
-            return balanceOfGuarded(who);
+            return balanceOfGuarded(msg.sender, who);
         }
     }
 
@@ -149,7 +149,7 @@ contract EToken is IEToken, ETokenProxy {
         if (isUpgraded()) {
             return upgradedToken.transferProxy(msg.sender, to, value);
         } else {
-            return transferGuarded(to, value);
+            return transferGuarded(msg.sender, to, value);
         }
     }
 
@@ -307,7 +307,7 @@ contract EToken is IEToken, ETokenProxy {
         if (isUpgraded()) {
             revert("Token is upgraded. Call pause from new token.");
         } else {
-            pauseGuarded();
+            pauseGuarded(msg.sender);
         }
     }
 
@@ -320,7 +320,7 @@ contract EToken is IEToken, ETokenProxy {
         if (isUpgraded()) {
             revert("Token is upgraded. Call unpause from new token.");
         } else {
-            unpauseGuarded();
+            unpauseGuarded(msg.sender);
         }
     }
 

@@ -71,9 +71,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            upgradedToken.balanceOfProxy(sender);
+            upgradedToken.balanceOfProxy(sender, who);
         } else {
-            balanceOfGuarded(sender);
+            balanceOfGuarded(sender, who);
         }
     }
 
@@ -86,9 +86,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            upgradedToken.allowanceProxy(sender);
+            upgradedToken.allowanceProxy(sender, owner, spender);
         } else {
-            allowanceGuarded(sender);
+            allowanceGuarded(sender, owner, spender);
         }
     }
 
@@ -99,9 +99,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferProxy(sender);
+            upgradedToken.transferProxy(sender, to, value);
         } else {
-            transferGuarded(sender);
+            transferGuarded(sender, to, value);
         }
 
     }
@@ -115,9 +115,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     {
 
         if (isUpgraded()) {
-            upgradedToken.approveProxy(sender);
+            upgradedToken.approveProxy(sender, spender, value);
         } else {
-            approveGuarded(sender);
+            approveGuarded(sender, spender, value);
         }
     }
 
@@ -130,9 +130,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferFromProxy(sender);
+            upgradedToken.transferFromProxy(sender, from, to, value);
         } else {
-            transferFromGuarded(sender);
+            transferFromGuarded(sender, from, to, value);
         }
     }
 
@@ -142,9 +142,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.fooProxy(sender);
+            upgradedToken.mintProxy(sender, to, value);
         } else {
-            mintGuarded(sender);
+            mintGuarded(sender, to, value);
         }
     }
 
@@ -154,17 +154,17 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         onlyProxy
     {
         if (isUpgraded()) {
-            upgradedToken.changeMintingRecipientProxy(sender);
+            upgradedToken.changeMintingRecipientProxy(sender, mintingRecip);
         } else {
-            changeMintingRecipientGuarded(sender);
+            changeMintingRecipientGuarded(sender, mintingRecip);
         }
     }
 
     function burnProxy(address sender, uint256 value) external {
         if (isUpgraded()) {
-            upgradedToken.burnProxy(sender);
+            upgradedToken.burnProxy(sender, value);
         } else {
-            burnGuarded(sender);
+            burnGuarded(sender, value);
         }
     }
 
@@ -175,9 +175,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         onlyProxy
     {
         if (isUpgraded()) {
-            upgradedToken.burnFromProxy(sender);
+            upgradedToken.burnFromProxy(sender, from, value);
         } else {
-            burnFromGuarded(sender);
+            burnFromGuarded(sender, from, value);
         }
     }
 
@@ -189,9 +189,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.increaseAllowanceProxy(sender);
+            upgradedToken.increaseAllowanceProxy(sender, spender, addedValue);
         } else {
-            increaseAllowanceGuarded(sender);
+            increaseAllowanceGuarded(sender, spender, addedValue);
         }
     }
 
@@ -203,9 +203,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.decreaseAllowanceProxy(sender);
+            upgradedToken.decreaseAllowanceProxy(sender, spender, subtractedValue);
         } else {
-            decreaseAllowanceGuarded(sender);
+            decreaseAllowanceGuarded(sender, spender, subtractedValue);
         }
     }
 

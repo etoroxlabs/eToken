@@ -274,21 +274,16 @@ contract ERC20 {
     /**
      * @dev Internal function that burns an amount of the token of a given
      * account.
-     * @param originSender the original transaction sender
      * @param account The account whose tokens will be burnt.
      * @param value The amount that will be burnt.
      */
     function _burn(
-        address originSender,
         address account,
         uint256 value
     )
         internal
         returns (bool)
     {
-        // Silence warnings
-        originSender;
-
         require(account != 0);
         require(value <= _storage.balances(account));
 
@@ -323,7 +318,7 @@ contract ERC20 {
             account, originSender,
             _storage.allowed(account, originSender).sub(value)
         );
-        _burn(originSender, account, value);
+        _burn(account, value);
         emit Approval(account, originSender, _storage.allowed(account, originSender));
 
         return true;
