@@ -230,9 +230,11 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function decreaseAllowanceGuarded(address sender,
-                                             address spender,
-                                             uint256 subtractedValue)
+    function decreaseAllowanceGuarded(
+        address sender,
+        address spender,
+        uint256 subtractedValue
+    )
         internal
         whenNotPaused
         requireHasAccess(spender)
@@ -261,9 +263,7 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function burnFromGuarded(address sender,
-                                    address from,
-                                    uint256 value)
+    function burnFromGuarded(address sender, address from, uint256 value)
         internal
         requireBurner(sender)
     {
