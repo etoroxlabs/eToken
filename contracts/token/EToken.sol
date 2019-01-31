@@ -1,9 +1,13 @@
 pragma solidity 0.4.24;
 
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./IEToken.sol";
+import "./access/ETokenGuarded.sol";
+import "./ERC20/Storage.sol";
 
 
 /** @title Main EToken contract */
-contract EToken is IEToken, ETokenExplicitSender {
+contract EToken is IEToken, ETokenGuarded {
 
     /**
      * @param name The name of the token
@@ -11,7 +15,7 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @param decimals The number of decimals of the token
      * @param accesslist Address of a deployed whitelist contract
      * @param whitelistEnabled Create token with whitelist enabled
-     * @param externalERC20Storage Address of a deployed ERC20 storage contract
+     * @param externalStorage Address of a deployed ERC20 storage contract
      * @param mintingRecipientAccount The initial minting recipient of the token
      * @param upgradedFrom The token contract that this contract upgrades. Set
      * to address(0) for initial deployments
@@ -29,19 +33,19 @@ contract EToken is IEToken, ETokenExplicitSender {
         uint8 decimals,
         Accesslist accesslist,
         bool whitelistEnabled,
-        ExternalERC20Storage externalERC20Storage,
+        Storage externalStorage,
         address mintingRecipientAccount,
         address upgradedFrom,
         bool initialDeployment
     )
         public
-        ETokenExplicitSender(
+        ETokenGuarded(
             name,
             symbol,
             decimals,
             accesslist,
             whitelistEnabled,
-            externalERC20Storage,
+            externalStorage,
             mintingRecipientAccount,
             upgradedFrom,
             initialDeployment
@@ -293,7 +297,7 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @dev This function will _not_ be proxied to the new
      * token if this token is upgraded
      */
-    function pause () public {
+    function pause() public {
         if (isUpgraded()) {
             revert("Token is upgraded. Call pause from new token.");
         } else {
@@ -306,11 +310,22 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @dev This function will _not_ be proxied to the new
      * token if this token is upgraded
      */
-    function unpause () public {
+    function unpause() public {
         if (isUpgraded()) {
             revert("Token is upgraded. Call unpause from new token.");
         } else {
             unpauseGuarded();
+        }
+    }
+
+    /**
+     * @return true if the contract is paused, false otherwise.
+     */
+    function paused() public {
+        if (isUpgraded()) {
+            upgradedToken.pausedProxy(msg.sender);
+        } else {
+            pausedGuarded(msg.sender);
         }
     }
 }

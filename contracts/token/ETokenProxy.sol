@@ -203,4 +203,16 @@ contract ETokenProxy is IETokenProxy {
         }
     }
 
+    function pausedProxy(address sender)
+        external
+        onlyProxy
+        returns (bool)
+    {
+        if (isUpgraded()) {
+            upgradedToken.pausedProxy(sender);
+        } else {
+            pausedGuarded(sender);
+        }
+    }
+
 }

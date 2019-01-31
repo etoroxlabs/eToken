@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
-import "lifecycle/Pausable.sol";
+import "./Pausable.sol";
+import "../ERC20/ERC20.sol";
 
-contract ETokenGuarded {
+contract ETokenGuarded is Pausable, ERC20 {
+
     /**
      * @dev Like EToken.name, but gets sender from explicit sender
      * parameter rather than msg.sender. This function can only be
@@ -165,8 +167,7 @@ contract ETokenGuarded {
             to,
             value
         );
-    }
-    return true;
+        return true;
     }
 
 
@@ -220,7 +221,6 @@ contract ETokenGuarded {
     function burnGuarded(address sender, uint256 value)
         internal
         isEnabled
-        senderIsProxy
         requireBurner(sender)
     {
         _burn(sender, value);
@@ -237,7 +237,6 @@ contract ETokenGuarded {
                                     uint256 value)
         internal
         isEnabled
-        senderIsProxy
         requireBurner(sender)
     {
         _burnFrom(sender, from, value);
@@ -252,7 +251,6 @@ contract ETokenGuarded {
     function mintGuarded(address sender, address to, uint256 value)
         internal
         isEnabled
-        senderIsProxy
         returns (bool success)
     {
         _mintGuarded(sender, to, value);
@@ -268,8 +266,15 @@ contract ETokenGuarded {
     function changeMintingRecipientGuarded(address sender, address mintingRecip)
         internal
         isEnabled
-        senderIsProxy
     {
         _changeMintingRecipient(sender, mintingRecip);
+    }
+
+    function pausedGuarded(address sender)
+        external
+    {
+        // Silence warnings
+        sender;
+        _paused();
     }
 }
