@@ -33,8 +33,8 @@ contract ETokenProxy is IETokenProxy, ETokenUpgrade, ETokenGuarded {
         bool whitelistEnabled,
         Storage externalStorage,
         address initialMintingRecipient,
-        bool initialDeployment,
-        address upgradedFrom
+        address upgradedFrom,
+        bool initialDeployment
     )
         internal
         ETokenUpgrade(initialDeployment, upgradedFrom)

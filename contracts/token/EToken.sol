@@ -32,14 +32,14 @@ contract EToken is IEToken, ETokenProxy {
         bool whitelistEnabled,
         Storage externalStorage,
         address initialMintingRecipient,
-        bool initialDeployment,
-        address upgradedFrom
+        address upgradedFrom,
+        bool initialDeployment
     )
         public
         ETokenProxy(name, symbol, decimals,
                     accesslist, whitelistEnabled,
                     externalStorage, initialMintingRecipient,
-                    initialDeployment, upgradedFrom)
+                    upgradedFrom, initialDeployment)
     {
 
     }
