@@ -30,7 +30,7 @@ contract ERC20 {
      * @param name The ERC20 detailed token name
      * @param symbol The ERC20 detailed symbol name
      * @param decimals Determines the number of decimals of this token
-     * @param stor The external storage contract.
+     * @param externalStorage The external storage contract.
      * Should be zero address if shouldCreateStorage is true.
      * @param initialDeployment Defines whether it should
      * create a new external storage. Should be false if
@@ -40,15 +40,15 @@ contract ERC20 {
         string name,
         string symbol,
         uint8 decimals,
-        Storage stor,
+        Storage externalStorage,
         bool initialDeployment
     )
         public
     {
 
         require(
-            (stor != address(0) && (!initialDeployment)) ||
-            (stor == address(0) && initialDeployment),
+            (externalStorage != address(0) && (!initialDeployment)) ||
+            (externalStorage == address(0) && initialDeployment),
             "Cannot both create external storage and use the provided one.");
 
         _name_ = name;
@@ -58,7 +58,7 @@ contract ERC20 {
         if (initialDeployment) {
             _storage = new Storage(msg.sender, this);
         } else {
-            _storage = stor;
+            _storage = externalStorage;
         }
     }
 
