@@ -299,6 +299,20 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
         _changeMintingRecipient(sender, mintingRecip);
     }
 
+    function pauseGuarded(address sender)
+        requireOwner(sender)
+        internal
+    {
+        _pause();
+    }
+
+    function unpauseGuarded(address sender)
+        requireOwner(sender)
+        internal
+    {
+        _unpause();
+    }
+
     function pausedGuarded(address sender)
         internal
     {
