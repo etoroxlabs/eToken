@@ -1,19 +1,10 @@
 pragma solidity 0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./IEToken.sol";
 import "./ETokenProxy.sol";
-import "./access/ETokenGuarded.sol";
-import "./ERC20/Storage.sol";
-
 
 /** @title Main EToken contract */
 contract EToken is IEToken, ETokenProxy {
-
-    function isUpgraded() returns (bool) {
-        return false;
-    }
-    IETokenProxy upgradedToken;
 
     /**
      * @param name The name of the token
@@ -41,24 +32,20 @@ contract EToken is IEToken, ETokenProxy {
         bool whitelistEnabled,
         Storage externalStorage,
         address mintingRecipientAccount,
-        address upgradedFrom,
-        bool initialDeployment
+        bool initialDeployment,
+        address upgradedFrom
     )
         public
-        ETokenGuarded(
-            name,
-            symbol,
-            decimals,
-            accesslist,
-            whitelistEnabled,
-            externalStorage,
-            mintingRecipientAccount,
-            upgradedFrom,
-            initialDeployment
-        ) {
+        ETokenProxy(name, symbol, decimals,
+                      accesslist, whitelistEnabled,
+                      externalStorage, initialDeployment,
+                      initialMintingRecipient,
+                      initialDeployment, upgradedFrom)
+    {
+
     }
 
-        /**
+    /**
      * @dev Proxies call to new token if this token is upgraded
      * @return the name of the token.
      */

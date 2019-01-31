@@ -1,5 +1,7 @@
 pragma solidity 0.4.24;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
 import "./Pausable.sol";
 import "../ERC20/ERC20.sol";
 import "./AccesslistGuarded.sol";
@@ -7,9 +9,15 @@ import "./Accesslist.sol";
 import "./roles/BurnerRole.sol";
 import "./roles/MinterRole.sol";
 import "./RestrictedMinter.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, MinterRole, RestrictedMinter {
+contract ETokenGuarded is
+    Pausable,
+    ERC20,
+    AccesslistGuarded,
+    BurnerRole,
+    MinterRole,
+    RestrictedMinter
+{
 
     modifier requireOwner(address addr) {
         require(owner() == addr, "is not owner");
@@ -36,15 +44,15 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
         Accesslist accesslist,
         bool whitelistEnabled,
         Storage externalStorage,
-        bool initialDeployment,
-        address initialMintingRecipient
+        address initialMintingRecipient,
+        bool initialDeployment
     )
         internal
         ERC20(name, symbol, decimals, externalStorage, initialDeployment)
         AccesslistGuarded(accesslist, whitelistEnabled)
-        {
-            RestrictedMinter(initialMintingRecipient);
-        }
+    {
+        RestrictedMinter(initialMintingRecipient);
+    }
 
     /**
      * @dev Like EToken.name, but gets sender from explicit sender

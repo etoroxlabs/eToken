@@ -1,13 +1,49 @@
 pragma solidity 0.4.24;
 
 import "./IETokenProxy.sol";
+import "./ETokenUpgrade.sol";
 import "./access/ETokenGuarded.sol";
 
-contract ETokenProxy is IETokenProxy, ETokenGuarded {
+contract ETokenProxy is IETokenProxy, ETokenUpgrade, ETokenGuarded {
 
-    modifier onlyProxy() {
-        msg.sender == _upgradedFrom;
-        _;
+    /**
+     * @dev Constructor
+     * @param name The ERC20 detailed token name
+     * @param symbol The ERC20 detailed symbol name
+     * @param decimals Determines the number of decimals of this token
+     * @param accesslist Address of a deployed whitelist contract
+     * @param whitelistEnabled Create token with whitelist enabled
+     * @param externalStorage The external storage contract.
+     * Should be zero address if shouldCreateStorage is true.
+     * @param initialDeployment Set to true if this is the initial deployment of
+     * the token. If true it automtically creates a new ExternalERC20Storage.
+     * Also, it acts as a confirmation of intention which interlocks
+     * upgradedFrom as follows: If initialDeployment is true, then
+     * upgradedFrom must be the zero address. Otherwise, upgradedFrom must not
+     * be the zero address. The same applies to externalERC20Storage, which must
+     * be set to the zero address if initialDeployment is true.
+     * @param upgradedFrom The token contract that this contract upgrades. Set
+     * to address(0) for initial deployments
+     */
+    constructor(
+        string name,
+        string symbol,
+        uint8 decimals,
+        Accesslist accesslist,
+        bool whitelistEnabled,
+        Storage externalStorage,
+        address initialMintingRecipient,
+        bool initialDeployment,
+        address upgradedFrom
+    )
+        internal
+        ETokenUpgrade(initialDeployment, upgradedFrom)
+        ETokenGuarded(name, symbol, decimals,
+                      accesslist, whitelistEnabled,
+                      externalStorage, initialMintingRecipient,
+                      initialDeployment)
+    {
+
     }
 
     /* Taken from ERC20Detailed in openzeppelin-solidity */
@@ -220,5 +256,4 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
             pausedGuarded(sender);
         }
     }
-
 }
