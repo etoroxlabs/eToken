@@ -1,5 +1,7 @@
 pragma solidity 0.4.24;
 
+import "./IETokenProxy.sol";
+
 /**
  * @title EToken interface
  * @dev The interface comprising an EToken contract
@@ -9,6 +11,8 @@ pragma solidity 0.4.24;
 interface IEToken {
 
     /* solium-disable zeppelin/missing-natspec-comments */
+
+    function upgrade(IETokenProxy upgradedToken) external;
 
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function name() external view returns(string);

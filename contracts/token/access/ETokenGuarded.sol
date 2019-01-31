@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import "./Pausable.sol";
 import "../ERC20/ERC20.sol";
+import "./AccesslistGuarded.sol";
 
-contract ETokenGuarded is Pausable, ERC20 {
+contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
 
     /**
      * @dev Like EToken.name, but gets sender from explicit sender
@@ -30,7 +31,6 @@ contract ETokenGuarded is Pausable, ERC20 {
     function symbolGuarded(address sender)
         internal
         view
-        isEnabled
         returns(string)
     {
         // Silence warnings
@@ -47,7 +47,6 @@ contract ETokenGuarded is Pausable, ERC20 {
     function decimalsGuarded(address sender)
         internal
         view
-        isEnabled
         returns(uint8)
     {
         // Silence warnings
@@ -64,7 +63,6 @@ contract ETokenGuarded is Pausable, ERC20 {
     function totalSupplyGuarded(address sender)
         internal
         view
-        isEnabled
         returns(uint256)
     {
         sender;
@@ -80,8 +78,6 @@ contract ETokenGuarded is Pausable, ERC20 {
     function balanceOfGuarded(address sender, address who)
         internal
         view
-        isEnabled
-        senderIsProxy
         returns(uint256)
     {
         // Silence warnings
@@ -98,7 +94,6 @@ contract ETokenGuarded is Pausable, ERC20 {
     function allowanceGuarded(address sender, address owner, address spender)
         internal
         view
-        isEnabled
         returns(uint256)
     {
         return _allowance(owner, spender);
@@ -112,7 +107,6 @@ contract ETokenGuarded is Pausable, ERC20 {
      */
     function transferGuarded(address sender, address to, uint256 value)
         internal
-        isEnabled
         whenNotPaused
         requireHasAccess(to)
         requireHasAccess(sender)
@@ -130,7 +124,6 @@ contract ETokenGuarded is Pausable, ERC20 {
      */
     function approveGuarded(address sender, address spender, uint256 value)
         internal
-        isEnabled
         whenNotPaused
         requireHasAccess(spender)
         requireHasAccess(sender)
@@ -183,7 +176,6 @@ contract ETokenGuarded is Pausable, ERC20 {
         uint256 addedValue
     )
         internal
-        isEnabled
         whenNotPaused
         requireHasAccess(spender)
         requireHasAccess(sender)
@@ -203,7 +195,6 @@ contract ETokenGuarded is Pausable, ERC20 {
                                              address spender,
                                              uint256 subtractedValue)
         internal
-        isEnabled
         whenNotPaused
         requireHasAccess(spender)
         requireHasAccess(sender)
@@ -220,7 +211,6 @@ contract ETokenGuarded is Pausable, ERC20 {
      */
     function burnGuarded(address sender, uint256 value)
         internal
-        isEnabled
         requireBurner(sender)
     {
         _burn(sender, value);
@@ -236,7 +226,6 @@ contract ETokenGuarded is Pausable, ERC20 {
                                     address from,
                                     uint256 value)
         internal
-        isEnabled
         requireBurner(sender)
     {
         _burnFrom(sender, from, value);
@@ -250,7 +239,6 @@ contract ETokenGuarded is Pausable, ERC20 {
      */
     function mintGuarded(address sender, address to, uint256 value)
         internal
-        isEnabled
         returns (bool success)
     {
         _mintGuarded(sender, to, value);
@@ -265,7 +253,6 @@ contract ETokenGuarded is Pausable, ERC20 {
      */
     function changeMintingRecipientGuarded(address sender, address mintingRecip)
         internal
-        isEnabled
     {
         _changeMintingRecipient(sender, mintingRecip);
     }

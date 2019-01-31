@@ -8,10 +8,6 @@ interface IETokenProxy {
 
     /* solium-disable zeppelin/missing-natspec-comments */
 
-    function upgrade(IETokenProxy upgradedToken) external;
-
-    function finalizeUpgrade() external;
-
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function nameProxy(address sender) external view returns(string);
 
