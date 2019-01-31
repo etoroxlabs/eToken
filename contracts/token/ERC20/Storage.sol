@@ -11,7 +11,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  * the owner can transfer the implementorship. Change of state is only allowed
  * by the implementor.
  */
-contract ExternalERC20Storage is Ownable {
+contract Storage is Ownable {
 
   mapping (address => uint256) public balances;
   mapping (address => mapping (address => uint256)) public allowed;
@@ -24,9 +24,9 @@ contract ExternalERC20Storage is Ownable {
 
   /**
    * @dev Contructor.
-   * @param owner The address of the owner of the contract. 
+   * @param owner The address of the owner of the contract.
    * Must not be the zero address.
-   * @param implementor The address of the contract that is 
+   * @param implementor The address of the contract that is
    * allowed to change state. Must not be the zero address.
    */
   constructor(address owner, address implementor) public {
