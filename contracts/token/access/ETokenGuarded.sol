@@ -35,7 +35,7 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
         address initialMintingRecipient
     )
         internal
-        ERC20(name, symbol, decimals, externalStorage, initialDeployment, initialMintingRecipient)
+        ERC20(name, symbol, decimals, externalStorage, initialDeployment)
         {
             RestrictedMinter(initialMintingRecipient);
         }
