@@ -2,13 +2,13 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./IEToken.sol";
-import "./IETokenProxy.sol";
+import "./ETokenProxy.sol";
 import "./access/ETokenGuarded.sol";
 import "./ERC20/Storage.sol";
 
 
 /** @title Main EToken contract */
-contract EToken is IEToken, ETokenGuarded {
+contract EToken is IEToken, ETokenProxy {
 
     function isUpgraded() returns (bool) {
         return false;

@@ -1,8 +1,9 @@
 pragma solidity 0.4.24;
 
 import "./IETokenProxy.sol";
+import "./access/ETokenGuarded.sol";
 
-contract ETokenProxy is IETokenProxy {
+contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     modifier onlyProxy() {
         msg.sender == _upgradedFrom;
@@ -85,9 +86,9 @@ contract ETokenProxy is IETokenProxy {
         returns (uint256)
     {
         if (isUpgraded()) {
-            upgradedToken.allowanceProxyProxy(sender);
+            upgradedToken.allowanceProxy(sender);
         } else {
-            allowanceProxyGuarded(sender);
+            allowanceGuarded(sender);
         }
     }
 
@@ -143,7 +144,7 @@ contract ETokenProxy is IETokenProxy {
         if (isUpgraded()) {
             upgradedToken.fooProxy(sender);
         } else {
-            fooGuarded(sender);
+            mintGuarded(sender);
         }
     }
 
