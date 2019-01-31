@@ -280,7 +280,7 @@ contract EToken is IEToken, ETokenProxy {
         if (isUpgraded()) {
             upgradedToken.changeMintingRecipientProxy(msg.sender, mintingRecip);
         } else {
-            super.changeMintingRecipientGuarded(msg.sender, mintingRecip);
+            changeMintingRecipientGuarded(msg.sender, mintingRecip);
         }
     }
 
