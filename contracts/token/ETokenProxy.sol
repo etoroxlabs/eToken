@@ -180,7 +180,7 @@ contract ETokenProxy is IETokenProxy {
                                     uint addedValue)
         external
         onlyProxy
-        returns (bool success)
+        returns (bool)
     {
         if (isUpgraded()) {
             upgradedToken.increaseAllowanceProxy(sender);
@@ -194,7 +194,7 @@ contract ETokenProxy is IETokenProxy {
                                     uint subtractedValue)
         external
         onlyProxy
-        returns (bool success)
+        returns (bool)
     {
         if (isUpgraded()) {
             upgradedToken.decreaseAllowanceProxy(sender);

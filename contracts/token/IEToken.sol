@@ -3,6 +3,8 @@ pragma solidity 0.4.24;
 /**
  * @title EToken interface
  * @dev The interface comprising an EToken contract
+ * This interface is a superset of the ERC20 interface defined at
+ * https://github.com/ethereum/EIPs/issues/20
  */
 interface IEToken {
 
