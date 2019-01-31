@@ -50,8 +50,9 @@ contract ETokenGuarded is
         internal
         ERC20(name, symbol, decimals, externalStorage, initialDeployment)
         AccesslistGuarded(accesslist, whitelistEnabled)
+        RestrictedMinter(initialMintingRecipient)
     {
-        RestrictedMinter(initialMintingRecipient);
+
     }
 
     /**
