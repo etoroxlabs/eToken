@@ -20,7 +20,7 @@ contract Pausable is PauserRole {
      * @return true if the contract is paused, false otherwise.
      */
     function _paused() internal view returns(bool) {
-        return _paused;
+        return __paused;
     }
 
     /**
