@@ -13,7 +13,7 @@ contract EToken is IEToken, ETokenProxy {
      * @param accesslist Address of a deployed whitelist contract
      * @param whitelistEnabled Create token with whitelist enabled
      * @param externalStorage Address of a deployed ERC20 storage contract
-     * @param mintingRecipientAccount The initial minting recipient of the token
+     * @param initialMintingRecipient The initial minting recipient of the token
      * @param upgradedFrom The token contract that this contract upgrades. Set
      * to address(0) for initial deployments
      * @param initialDeployment Set to true if this is the initial deployment of
@@ -31,16 +31,15 @@ contract EToken is IEToken, ETokenProxy {
         Accesslist accesslist,
         bool whitelistEnabled,
         Storage externalStorage,
-        address mintingRecipientAccount,
+        address initialMintingRecipient,
         bool initialDeployment,
         address upgradedFrom
     )
         public
         ETokenProxy(name, symbol, decimals,
-                      accesslist, whitelistEnabled,
-                      externalStorage, initialDeployment,
-                      initialMintingRecipient,
-                      initialDeployment, upgradedFrom)
+                    accesslist, whitelistEnabled,
+                    externalStorage, initialMintingRecipient,
+                    initialDeployment, upgradedFrom)
     {
 
     }

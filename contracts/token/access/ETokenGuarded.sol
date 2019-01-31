@@ -60,13 +60,13 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function nameGuarded(address sender)
+    function nameGuarded(address originSender)
         internal
         view
         returns(string)
     {
         // Silence warnings
-        sender;
+        originSender;
         return _name();
     }
 
@@ -76,13 +76,13 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function symbolGuarded(address sender)
+    function symbolGuarded(address originSender)
         internal
         view
         returns(string)
     {
         // Silence warnings
-        sender;
+        originSender;
         return _symbol();
     }
 
@@ -92,13 +92,13 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function decimalsGuarded(address sender)
+    function decimalsGuarded(address originSender)
         internal
         view
         returns(uint8)
     {
         // Silence warnings
-        sender;
+        originSender;
         return _decimals();
     }
 
@@ -108,12 +108,12 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function totalSupplyGuarded(address sender)
+    function totalSupplyGuarded(address originSender)
         internal
         view
         returns(uint256)
     {
-        sender;
+        originSender;
         return _totalSupply();
     }
 
@@ -123,13 +123,13 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function balanceOfGuarded(address sender, address who)
+    function balanceOfGuarded(address originSender, address who)
         internal
         view
         returns(uint256)
     {
         // Silence warnings
-        sender;
+        originSender;
         return _balanceOf(who);
     }
 
@@ -139,11 +139,12 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function allowanceGuarded(address sender, address owner, address spender)
+    function allowanceGuarded(address originSender, address owner, address spender)
         internal
         view
         returns(uint256)
     {
+        originSender;
         return _allowance(owner, spender);
     }
 
@@ -153,14 +154,14 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function transferGuarded(address sender, address to, uint256 value)
+    function transferGuarded(address originSender, address to, uint256 value)
         internal
         whenNotPaused
         requireHasAccess(to)
-        requireHasAccess(sender)
+        requireHasAccess(originSender)
         returns (bool)
     {
-        _transfer(sender, to, value);
+        _transfer(originSender, to, value);
         return true;
     }
 
@@ -170,14 +171,14 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function approveGuarded(address sender, address spender, uint256 value)
+    function approveGuarded(address originSender, address spender, uint256 value)
         internal
         whenNotPaused
         requireHasAccess(spender)
-        requireHasAccess(sender)
+        requireHasAccess(originSender)
         returns (bool)
     {
-        _approve(sender, spender, value);
+        _approve(originSender, spender, value);
         return true;
     }
 
@@ -189,20 +190,20 @@ contract ETokenGuarded is
      * upgraded).
      */
     function transferFromGuarded(
-        address sender,
+        address originSender,
         address from,
         address to,
         uint256 value
     )
         internal
         whenNotPaused
+        requireHasAccess(originSender)
         requireHasAccess(from)
         requireHasAccess(to)
-        requireHasAccess(sender)
         returns (bool)
     {
         _transferFrom(
-            sender,
+            originSender,
             from,
             to,
             value
@@ -218,17 +219,17 @@ contract ETokenGuarded is
      * upgraded).
      */
     function increaseAllowanceGuarded(
-        address sender,
+        address originSender,
         address spender,
         uint256 addedValue
     )
         internal
         whenNotPaused
+        requireHasAccess(originSender)
         requireHasAccess(spender)
-        requireHasAccess(sender)
         returns (bool)
     {
-        _increaseAllowance(sender, spender, addedValue);
+        _increaseAllowance(originSender, spender, addedValue);
         return true;
     }
 
@@ -239,16 +240,16 @@ contract ETokenGuarded is
      * upgraded).
      */
     function decreaseAllowanceGuarded(
-        address sender,
+        address originSender,
         address spender,
         uint256 subtractedValue
     )
         internal
         whenNotPaused
+        requireHasAccess(originSender)
         requireHasAccess(spender)
-        requireHasAccess(sender)
         returns (bool)  {
-        _decreaseAllowance(sender, spender, subtractedValue);
+        _decreaseAllowance(originSender, spender, subtractedValue);
         return true;
     }
 
@@ -258,11 +259,11 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function burnGuarded(address sender, uint256 value)
+    function burnGuarded(address originSender, uint256 value)
         internal
-        requireBurner(sender)
+        requireBurner(originSender)
     {
-        _burn(sender, value);
+        _burn(originSender, value);
     }
 
     /**
@@ -271,11 +272,11 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function burnFromGuarded(address sender, address from, uint256 value)
+    function burnFromGuarded(address originSender, address from, uint256 value)
         internal
-        requireBurner(sender)
+        requireBurner(originSender)
     {
-        _burnFrom(sender, from, value);
+        _burnFrom(originSender, from, value);
     }
 
     /**
@@ -284,13 +285,13 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function mintGuarded(address sender, address to, uint256 value)
+    function mintGuarded(address originSender, address to, uint256 value)
         internal
-        requireMinter(sender)
+        requireMinter(originSender)
         requireMintingRecipient(to)
         returns (bool success)
     {
-        _mint(sender, to, value);
+        _mint(originSender, to, value);
         return true;
     }
 
@@ -300,33 +301,35 @@ contract ETokenGuarded is
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
      */
-    function changeMintingRecipientGuarded(address sender, address mintingRecip)
-        requireOwner(sender)
+    function changeMintingRecipientGuarded(address originSender, address mintingRecip)
+        requireOwner(originSender)
         internal
     {
-        _changeMintingRecipient(sender, mintingRecip);
+        _changeMintingRecipient(originSender, mintingRecip);
     }
 
-    function pauseGuarded(address sender)
-        requireOwner(sender)
+    function pauseGuarded(address originSender)
+        requireOwner(originSender)
         internal
     {
         _pause();
     }
 
-    function unpauseGuarded(address sender)
-        requireOwner(sender)
+    function unpauseGuarded(address originSender)
+        requireOwner(originSender)
         internal
     {
         _unpause();
     }
 
-    function pausedGuarded(address sender)
+    function pausedGuarded(address originSender)
         internal
+        view
+        returns (bool)
     {
         // Silence warnings
-        sender;
-        _paused();
+        originSender;
+        return _paused();
     }
 
 }

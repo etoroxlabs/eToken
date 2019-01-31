@@ -87,4 +87,5 @@ interface IETokenProxy {
         external
         returns (bool);
 
+    function finalizeUpgrade() external;
 }

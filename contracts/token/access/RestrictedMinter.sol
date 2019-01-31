@@ -31,15 +31,17 @@ contract RestrictedMinter  {
 
     /**
      * @dev Internal function allowing the owner to change the current minting recipient account
-     * @param sender The sender address of the request
+     * @param originSender The sender address of the request
      * @param _mintingRecipientAccount address of new minting recipient
      */
     function _changeMintingRecipient(
-        address sender,
+        address originSender,
         address _mintingRecipientAccount
     )
         internal
     {
+        originSender;
+
         require(_mintingRecipientAccount != address(0),
                 "zero minting recipient");
         address prev = mintingRecipientAccount;
