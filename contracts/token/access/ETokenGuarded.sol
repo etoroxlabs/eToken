@@ -3,8 +3,42 @@ pragma solidity 0.4.24;
 import "./Pausable.sol";
 import "../ERC20/ERC20.sol";
 import "./AccesslistGuarded.sol";
+import "./roles/BurnerRole.sol";
+import "./roles/MinterRole.sol";
+import "./RestrictedMinter.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
+contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, MinterRole, RestrictedMinter {
+
+    modifier requireOwner(address addr) {
+        require(owner() == addr, "is not owner");
+        _;
+    }
+
+    /**
+     * @dev Constructor
+     * @param name The ERC20 detailed token name
+     * @param symbol The ERC20 detailed symbol name
+     * @param decimals Determines the number of decimals of this token
+     * @param externalStorage The external storage contract.
+     * Should be zero address if shouldCreateStorage is true.
+     * @param initialDeployment Defines whether it should
+     * create a new external storage. Should be false if
+     * externalERC20Storage is defined.
+     */
+    constructor(
+        string name,
+        string symbol,
+        uint8 decimals,
+        Storage externalStorage,
+        bool initialDeployment,
+        address initialMintingRecipient
+    )
+        internal
+        ERC20(name, symbol, decimals, externalStorage, initialDeployment, initialMintingRecipient)
+        {
+            RestrictedMinter(initialMintingRecipient);
+        }
 
     /**
      * @dev Like EToken.name, but gets sender from explicit sender
@@ -147,7 +181,6 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
         uint256 value
     )
         internal
-        isEnabled
         whenNotPaused
         requireHasAccess(from)
         requireHasAccess(to)
@@ -239,9 +272,11 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
      */
     function mintGuarded(address sender, address to, uint256 value)
         internal
+        requireMinter(sender)
+        requireMintingRecipient(to)
         returns (bool success)
     {
-        _mintGuarded(sender, to, value);
+        _mint(sender, to, value);
         return true;
     }
 
@@ -252,6 +287,7 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
      * this contract upgraded).
      */
     function changeMintingRecipientGuarded(address sender, address mintingRecip)
+        requireOwner(sender)
         internal
     {
         _changeMintingRecipient(sender, mintingRecip);
@@ -264,4 +300,5 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded {
         sender;
         _paused();
     }
+
 }
