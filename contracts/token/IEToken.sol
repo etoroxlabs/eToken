@@ -1,7 +1,5 @@
 pragma solidity 0.4.24;
 
-import "./IUpgradableEToken.sol";
-
 /**
  * @title EToken interface
  * @dev The interface comprising an EToken contract
