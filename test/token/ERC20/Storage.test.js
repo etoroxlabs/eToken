@@ -3,8 +3,8 @@
 
 const { ZERO_ADDRESS } = require('openzeppelin-solidity/test/helpers/constants');
 
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
-const ExternalERC20StorageE = require('./ExternalERC20Storage.events.js');
+const Storage = artifacts.require('Storage');
+const StorageE = require('./Storage.events.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -14,10 +14,10 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccount, thirdAccount]) {
+contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccount]) {
   beforeEach(async function () {
-    this.token = await ExternalERC20Storage.new(owner, implementor, { from: owner });
-    this.tokenE = ExternalERC20StorageE.wrap(this.token);
+    this.token = await Storage.new(owner, implementor, { from: owner });
+    this.tokenE = StorageE.wrap(this.token);
   });
 
   describe('initial deployment', function () {
@@ -31,13 +31,13 @@ contract('ExternalERC20Storage', function ([_, owner, implementor, anotherAccoun
 
     it('should fail if owner is the zero address', async function () {
       await utils.assertRevertsReason(
-        ExternalERC20Storage.new(utils.ZERO_ADDRESS, implementor),
+        Storage.new(utils.ZERO_ADDRESS, implementor),
         'Owner should not be the zero address');
     });
 
     it('should fail if implementor is the zero address', async function () {
       await utils.assertRevertsReason(
-        ExternalERC20Storage.new(owner, utils.ZERO_ADDRESS),
+        Storage.new(owner, utils.ZERO_ADDRESS),
         'Implementor should not be the zero address');
     });
   });
