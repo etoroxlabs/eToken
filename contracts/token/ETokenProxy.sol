@@ -4,6 +4,11 @@ import "./IETokenProxy.sol";
 
 contract ETokenProxy is IETokenProxy {
 
+    modifier onlyProxy() {
+        msg.sender == _upgradedFrom;
+        _;
+    }
+
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function nameProxy(address sender)
         external
