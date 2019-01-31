@@ -3,6 +3,7 @@ pragma solidity 0.4.24;
 import "./Pausable.sol";
 import "../ERC20/ERC20.sol";
 import "./AccesslistGuarded.sol";
+import "./Accesslist.sol";
 import "./roles/BurnerRole.sol";
 import "./roles/MinterRole.sol";
 import "./RestrictedMinter.sol";
@@ -20,6 +21,8 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
      * @param name The ERC20 detailed token name
      * @param symbol The ERC20 detailed symbol name
      * @param decimals Determines the number of decimals of this token
+     * @param accesslist Address of a deployed whitelist contract
+     * @param whitelistEnabled Create token with whitelist enabled
      * @param externalStorage The external storage contract.
      * Should be zero address if shouldCreateStorage is true.
      * @param initialDeployment Defines whether it should
@@ -30,12 +33,15 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
         string name,
         string symbol,
         uint8 decimals,
+        Accesslist accesslist,
+        bool whitelistEnabled,
         Storage externalStorage,
         bool initialDeployment,
         address initialMintingRecipient
     )
         internal
         ERC20(name, symbol, decimals, externalStorage, initialDeployment)
+        AccesslistGuarded(accesslist, whitelistEnabled)
         {
             RestrictedMinter(initialMintingRecipient);
         }
@@ -294,7 +300,7 @@ contract ETokenGuarded is Pausable, ERC20, AccesslistGuarded, BurnerRole, Minter
     }
 
     function pausedGuarded(address sender)
-        external
+        internal
     {
         // Silence warnings
         sender;
