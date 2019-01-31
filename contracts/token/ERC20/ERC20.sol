@@ -9,6 +9,10 @@ contract ERC20 {
 
     Storage public _storage;
 
+    string private _name_;
+    string private _symbol_;
+    uint8 private _decimals_;
+
     event Transfer(
         address indexed from,
         address indexed to,
@@ -23,6 +27,9 @@ contract ERC20 {
 
     /**
      * @dev Constructor
+     * @param name The ERC20 detailed token name
+     * @param symbol The ERC20 detailed symbol name
+     * @param decimals Determines the number of decimals of this token
      * @param stor The external storage contract.
      * Should be zero address if shouldCreateStorage is true.
      * @param initialDeployment Defines whether it should
@@ -30,6 +37,9 @@ contract ERC20 {
      * externalERC20Storage is defined.
      */
     constructor(
+        string name,
+        string symbol,
+        uint8 decimals,
         Storage stor,
         bool initialDeployment
     )
@@ -41,11 +51,36 @@ contract ERC20 {
             (stor == address(0) && initialDeployment),
             "Cannot both create external storage and use the provided one.");
 
+        _name_ = name;
+        _symbol_ = symbol;
+        _decimals_ = decimals;
+
         if (initialDeployment) {
             _storage = new Storage(msg.sender, this);
         } else {
             _storage = stor;
         }
+    }
+
+    /**
+     * @return the name of the token.
+     */
+    function _name() internal view returns(string) {
+        return _name_;
+    }
+
+    /**
+     * @return the symbol of the token.
+     */
+    function _symbol() internal view returns(string) {
+        return _symbol_;
+    }
+
+    /**
+     * @return the number of decimals of the token.
+     */
+    function _decimals() internal view returns(uint8) {
+        return _decimals_;
     }
 
     /**
