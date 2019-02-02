@@ -11,7 +11,7 @@ import "../token/ERC20/Storage.sol";
 contract ERC20Mock is ERC20 {
 
     constructor(
-        address initialAccount, uint256 initialBalance, 
+        address initialAccount, uint256 initialBalance,
         Storage _storage, bool isInitialDeployment
     )
         ERC20("test", "te", 4, _storage, isInitialDeployment)
@@ -123,18 +123,18 @@ contract ERC20Mock is ERC20 {
         address originSender,
         address spender,
         uint256 value
-    ) 
-        public 
-        returns (bool) 
+    )
+        public
+        returns (bool)
     {
         return _approve(originSender, spender, value);
     }
 
     function increaseAllowancePublicTest(
-        address originSender, 
-        address spender, 
+        address originSender,
+        address spender,
         uint256 addedValue
-    ) 
+    )
         public
         returns (bool)
     {
@@ -142,10 +142,10 @@ contract ERC20Mock is ERC20 {
     }
 
     function decreaseAllowancePublicTest(
-        address originSender, 
-        address spender, 
+        address originSender,
+        address spender,
         uint256 subtractedValue
-    ) 
+    )
         public
         returns (bool)
     {
