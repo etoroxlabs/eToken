@@ -55,6 +55,12 @@ interface IEToken {
         external
         returns (bool success);
 
+    function pause() external;
+
+    function unpause() external;
+
+    function paused() external view returns (bool);
+
     function decreaseAllowance(
         address spender,
         uint subtractedValue

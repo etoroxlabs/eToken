@@ -247,6 +247,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     function pausedProxy(address sender)
         external
+        view
         onlyProxy
         returns (bool)
     {

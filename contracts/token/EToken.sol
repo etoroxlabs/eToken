@@ -318,11 +318,11 @@ contract EToken is IEToken, ETokenProxy {
     /**
      * @return true if the contract is paused, false otherwise.
      */
-    function paused() public {
+    function paused() public view returns (bool) {
         if (isUpgraded()) {
-            upgradedToken.pausedProxy(msg.sender);
+            return upgradedToken.pausedProxy(msg.sender);
         } else {
-            pausedGuarded(msg.sender);
+            return pausedGuarded(msg.sender);
         }
     }
 }
