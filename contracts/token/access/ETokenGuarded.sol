@@ -212,6 +212,7 @@ contract ETokenGuarded is
         uint256 value
     )
         internal
+        isEnabled
         whenNotPaused
         requireHasAccess(originSender)
         requireHasAccess(from)
@@ -338,6 +339,7 @@ contract ETokenGuarded is
 
     function pauseGuarded(address originSender)
         internal
+        isEnabled
         requireOwner(originSender)
     {
         _pause();
@@ -345,6 +347,7 @@ contract ETokenGuarded is
 
     function unpauseGuarded(address originSender)
         internal
+        isEnabled
         requireOwner(originSender)
     {
         _unpause();

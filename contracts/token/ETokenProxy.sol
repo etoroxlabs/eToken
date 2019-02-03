@@ -50,6 +50,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function nameProxy(address sender)
         external
         view
+        isEnabled
         onlyProxy
         returns(string)
     {
@@ -63,6 +64,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function symbolProxy(address sender)
         external
         view
+        isEnabled
         onlyProxy
         returns(string)
     {
@@ -76,6 +78,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function decimalsProxy(address sender)
         external
         view
+        isEnabled
         onlyProxy
         returns(uint8)
     {
@@ -90,6 +93,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function totalSupplyProxy(address sender)
         external
         view
+        isEnabled
         onlyProxy
         returns (uint256)
     {
@@ -103,6 +107,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function balanceOfProxy(address sender, address who)
         external
         view
+        isEnabled
         onlyProxy
         returns (uint256)
     {
@@ -118,6 +123,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                             address spender)
         external
         view
+        isEnabled
         onlyProxy
         returns (uint256)
     {
@@ -131,6 +137,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     function transferProxy(address sender, address to, uint256 value)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -146,6 +153,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                           address spender,
                           uint256 value)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -162,6 +170,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                                address to,
                                uint256 value)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -174,6 +183,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     function mintProxy(address sender, address to, uint256 value)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -187,6 +197,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function changeMintingRecipientProxy(address sender,
                                          address mintingRecip)
         external
+        isEnabled
         onlyProxy
     {
         if (isUpgraded()) {
@@ -196,7 +207,11 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
-    function burnProxy(address sender, uint256 value) external {
+    function burnProxy(address sender, uint256 value)
+        external
+        isEnabled
+        onlyProxy
+    {
         if (isUpgraded()) {
             upgradedToken.burnProxy(sender, value);
         } else {
@@ -208,6 +223,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                            address from,
                            uint256 value)
         external
+        isEnabled
         onlyProxy
     {
         if (isUpgraded()) {
@@ -221,6 +237,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                                     address spender,
                                     uint addedValue)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -235,6 +252,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
                                     address spender,
                                     uint subtractedValue)
         external
+        isEnabled
         onlyProxy
         returns (bool)
     {
@@ -248,6 +266,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     function pausedProxy(address sender)
         external
         view
+        isEnabled
         onlyProxy
         returns (bool)
     {
