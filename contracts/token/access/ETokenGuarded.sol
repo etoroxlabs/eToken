@@ -66,7 +66,6 @@ contract ETokenGuarded is
     function nameGuarded(address originSender)
         internal
         view
-        isEnabled
         returns(string)
     {
         // Silence warnings
@@ -83,7 +82,6 @@ contract ETokenGuarded is
     function symbolGuarded(address originSender)
         internal
         view
-        isEnabled
         returns(string)
     {
         // Silence warnings
@@ -100,7 +98,6 @@ contract ETokenGuarded is
     function decimalsGuarded(address originSender)
         internal
         view
-        isEnabled
         returns(uint8)
     {
         // Silence warnings
