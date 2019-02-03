@@ -312,8 +312,6 @@ contract ERC20 {
     {
         require(value <= _storage.allowed(account, originSender));
 
-        // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,
-        // this function needs to emit an event with the updated approval.
         _storage .setAllowed(
             account, originSender,
             _storage.allowed(account, originSender).sub(value)
