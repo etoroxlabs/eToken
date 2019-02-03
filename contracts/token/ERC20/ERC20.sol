@@ -252,13 +252,7 @@ contract ERC20 {
      * @param account The account that will receive the created tokens.
      * @param value The amount that will be created.
      */
-    function _mint(
-        address originSender,
-        address account,
-        uint256 value
-    )
-        internal
-        returns (bool)
+    function _mint(address account, uint256 value) internal returns (bool)
     {
         // Silence warnings
         originSender;

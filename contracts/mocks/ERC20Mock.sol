@@ -18,7 +18,7 @@ contract ERC20Mock is ERC20 {
         public
     {
         if (initialBalance != 0) {
-            _mint(msg.sender, initialAccount, initialBalance);
+            _mint(initialAccount, initialBalance);
         }
     }
 
@@ -96,7 +96,7 @@ contract ERC20Mock is ERC20 {
         public
         returns (bool)
     {
-        return _mint(msg.sender, account, value);
+        return _mint(account, value);
     }
 
     function burn(
