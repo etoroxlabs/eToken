@@ -70,6 +70,7 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
+
         return _name();
     }
 
@@ -86,6 +87,7 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
+
         return _symbol();
     }
 
@@ -102,6 +104,7 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
+
         return _decimals();
     }
 
@@ -117,7 +120,9 @@ contract ETokenGuarded is
         isEnabled
         returns(uint256)
     {
+        // Silence warnings
         originSender;
+
         return _totalSupply();
     }
 
@@ -135,6 +140,7 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
+
         return _balanceOf(who);
     }
 
@@ -154,7 +160,9 @@ contract ETokenGuarded is
         isEnabled
         returns(uint256)
     {
+        // Silence warnings
         originSender;
+
         return _allowance(owner, spender);
     }
 
