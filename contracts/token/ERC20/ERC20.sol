@@ -248,15 +248,11 @@ contract ERC20 {
      * @dev Internal function that mints an amount of the token and assigns it to
      * an account. This encapsulates the modification of balances such that the
      * proper events are emitted.
-     * @param originSender the original transaction sender
      * @param account The account that will receive the created tokens.
      * @param value The amount that will be created.
      */
     function _mint(address account, uint256 value) internal returns (bool)
     {
-        // Silence warnings
-        originSender;
-
         require(account != 0);
         _storage.setTotalSupply(_storage.totalSupply().add(value));
         _storage.setBalance(account, _storage.balances(account).add(value));
