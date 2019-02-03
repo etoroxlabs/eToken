@@ -155,9 +155,9 @@ contract ERC20 {
      * is to first reduce the spender's allowance to 0 and set the
      * desired value afterwards:
      * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-     * @param originSender the original transaction sender @param
-     * spender The address which will spend the funds.  @param value
-     * The amount of tokens to be spent.
+     * @param originSender the original transaction sender
+     * @param spender The address which will spend the funds.
+     * @param value The amount of tokens to be spent.
      */
     function _approve(address originSender, address spender, uint256 value)
         internal
