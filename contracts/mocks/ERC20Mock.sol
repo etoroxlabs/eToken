@@ -69,7 +69,12 @@ contract ERC20Mock is ERC20 {
         public
         returns (bool)
     {
-        return _transferFrom(msg.sender, from, to, value);
+        return _transferFrom(
+            msg.sender,
+            from,
+            to,
+            value
+        );
     }
 
     function increaseAllowance(address spender, uint256 addedValue)

@@ -44,7 +44,8 @@ contract UpgradeSupport is Ownable, ERC20 {
     }
 
     modifier upgradeExists() {
-        require(_upgradedFrom != address(0), "Must have a contract to upgrade from");
+        require(_upgradedFrom != address(0),
+                "Must have a contract to upgrade from");
         _;
     }
 
@@ -63,7 +64,8 @@ contract UpgradeSupport is Ownable, ERC20 {
 
     /**
      * Upgrades the current token
-     * @param _upgradedToken The address of the token that this token should be upgraded to
+     * @param _upgradedToken The address of the token that this token
+     * should be upgraded to
      */
     function upgrade(IETokenProxy _upgradedToken) public onlyOwner {
         require(!isUpgraded(), "Token is already upgraded");
@@ -71,11 +73,11 @@ contract UpgradeSupport is Ownable, ERC20 {
                 "Cannot upgrade to null address");
         require(_upgradedToken != IETokenProxy(this),
                 "Cannot upgrade to myself");
-        require(_storage.isImplementor(),
+        require(getExternalStorage().isImplementor(),
                 "I don't own my storage. This will end badly.");
 
         upgradedToken = _upgradedToken;
-        _storage.transferImplementor(_upgradedToken);
+        getExternalStorage().transferImplementor(_upgradedToken);
         _upgradedToken.finalizeUpgrade();
         emit Upgraded(_upgradedToken);
     }
@@ -92,7 +94,8 @@ contract UpgradeSupport is Ownable, ERC20 {
      * sender passing
      */
     modifier onlyProxy () {
-        require(msg.sender == _upgradedFrom, "Proxy is the only allowed caller");
+        require(msg.sender == _upgradedFrom,
+                "Proxy is the only allowed caller");
         _;
     }
 

@@ -176,7 +176,12 @@ contract EToken is IEToken, ETokenProxy {
                 value
             );
         } else {
-            return transferFromGuarded(msg.sender, from, to, value);
+            return transferFromGuarded(
+                msg.sender,
+                from,
+                to,
+                value
+            );
         }
     }
 

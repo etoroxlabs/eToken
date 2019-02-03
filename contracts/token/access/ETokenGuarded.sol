@@ -144,7 +144,11 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function allowanceGuarded(address originSender, address owner, address spender)
+    function allowanceGuarded(
+        address originSender,
+        address owner,
+        address spender
+    )
         internal
         view
         isEnabled
@@ -178,7 +182,11 @@ contract ETokenGuarded is
      * called from the proxy contract (the contract that this contract
      * upgraded).
      */
-    function approveGuarded(address originSender, address spender, uint256 value)
+    function approveGuarded(
+        address originSender,
+        address spender,
+        uint256 value
+    )
         internal
         isEnabled
         whenNotPaused
@@ -317,24 +325,27 @@ contract ETokenGuarded is
      * can only be called from the proxy contract (the contract that
      * this contract upgraded).
      */
-    function changeMintingRecipientGuarded(address originSender, address mintingRecip)
+    function changeMintingRecipientGuarded(
+        address originSender,
+        address mintingRecip
+    )
+        internal
         isEnabled
         requireOwner(originSender)
-        internal
     {
         _changeMintingRecipient(originSender, mintingRecip);
     }
 
     function pauseGuarded(address originSender)
-        requireOwner(originSender)
         internal
+        requireOwner(originSender)
     {
         _pause();
     }
 
     function unpauseGuarded(address originSender)
-        requireOwner(originSender)
         internal
+        requireOwner(originSender)
     {
         _unpause();
     }
