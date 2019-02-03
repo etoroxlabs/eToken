@@ -9,10 +9,12 @@ import "./Accesslist.sol";
 import "./roles/BurnerRole.sol";
 import "./roles/MinterRole.sol";
 import "./RestrictedMinter.sol";
+import "./../ETokenUpgrade.sol";
 
 contract ETokenGuarded is
     Pausable,
     ERC20,
+    ETokenUpgrade,
     AccesslistGuarded,
     BurnerRole,
     MinterRole,
@@ -64,6 +66,7 @@ contract ETokenGuarded is
     function nameGuarded(address originSender)
         internal
         view
+        isEnabled
         returns(string)
     {
         // Silence warnings
@@ -80,6 +83,7 @@ contract ETokenGuarded is
     function symbolGuarded(address originSender)
         internal
         view
+        isEnabled
         returns(string)
     {
         // Silence warnings
@@ -96,6 +100,7 @@ contract ETokenGuarded is
     function decimalsGuarded(address originSender)
         internal
         view
+        isEnabled
         returns(uint8)
     {
         // Silence warnings
@@ -112,6 +117,7 @@ contract ETokenGuarded is
     function totalSupplyGuarded(address originSender)
         internal
         view
+        isEnabled
         returns(uint256)
     {
         originSender;
@@ -127,6 +133,7 @@ contract ETokenGuarded is
     function balanceOfGuarded(address originSender, address who)
         internal
         view
+        isEnabled
         returns(uint256)
     {
         // Silence warnings
@@ -143,6 +150,7 @@ contract ETokenGuarded is
     function allowanceGuarded(address originSender, address owner, address spender)
         internal
         view
+        isEnabled
         returns(uint256)
     {
         originSender;
@@ -157,6 +165,7 @@ contract ETokenGuarded is
      */
     function transferGuarded(address originSender, address to, uint256 value)
         internal
+        isEnabled
         whenNotPaused
         requireHasAccess(to)
         requireHasAccess(originSender)
@@ -174,6 +183,7 @@ contract ETokenGuarded is
      */
     function approveGuarded(address originSender, address spender, uint256 value)
         internal
+        isEnabled
         whenNotPaused
         requireHasAccess(spender)
         requireHasAccess(originSender)
@@ -225,6 +235,7 @@ contract ETokenGuarded is
         uint256 addedValue
     )
         internal
+        isEnabled
         whenNotPaused
         requireHasAccess(originSender)
         requireHasAccess(spender)
@@ -246,6 +257,7 @@ contract ETokenGuarded is
         uint256 subtractedValue
     )
         internal
+        isEnabled
         whenNotPaused
         requireHasAccess(originSender)
         requireHasAccess(spender)
@@ -262,6 +274,7 @@ contract ETokenGuarded is
      */
     function burnGuarded(address originSender, uint256 value)
         internal
+        isEnabled
         requireBurner(originSender)
     {
         _burn(originSender, value);
@@ -275,6 +288,7 @@ contract ETokenGuarded is
      */
     function burnFromGuarded(address originSender, address from, uint256 value)
         internal
+        isEnabled
         requireBurner(originSender)
     {
         _burnFrom(originSender, from, value);
@@ -288,11 +302,15 @@ contract ETokenGuarded is
      */
     function mintGuarded(address originSender, address to, uint256 value)
         internal
+        isEnabled
         requireMinter(originSender)
         requireMintingRecipient(to)
         returns (bool success)
     {
-        _mint(originSender, to, value);
+        // Silence warnings
+        originSender;
+
+        _mint(to, value);
         return true;
     }
 
@@ -303,6 +321,7 @@ contract ETokenGuarded is
      * this contract upgraded).
      */
     function changeMintingRecipientGuarded(address originSender, address mintingRecip)
+        isEnabled
         requireOwner(originSender)
         internal
     {

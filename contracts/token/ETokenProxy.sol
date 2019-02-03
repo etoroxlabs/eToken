@@ -4,7 +4,7 @@ import "./IETokenProxy.sol";
 import "./ETokenUpgrade.sol";
 import "./access/ETokenGuarded.sol";
 
-contract ETokenProxy is IETokenProxy, ETokenUpgrade, ETokenGuarded {
+contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /**
      * @dev Constructor

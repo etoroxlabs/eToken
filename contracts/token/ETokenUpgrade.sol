@@ -1,7 +1,9 @@
 pragma solidity 0.4.24;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./ERC20/ERC20.sol";
+
 import "./IETokenProxy.sol";
-import "./access/ETokenGuarded.sol";
 
 contract ETokenUpgrade is Ownable, ERC20 {
 
