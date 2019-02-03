@@ -9,12 +9,12 @@ import "./Accesslist.sol";
 import "./roles/BurnerRole.sol";
 import "./roles/MinterRole.sol";
 import "./RestrictedMinter.sol";
-import "./../ETokenUpgrade.sol";
+import "./../UpgradeSupport.sol";
 
 contract ETokenGuarded is
     Pausable,
     ERC20,
-    ETokenUpgrade,
+    UpgradeSupport,
     AccesslistGuarded,
     BurnerRole,
     MinterRole,

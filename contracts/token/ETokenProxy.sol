@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "./IETokenProxy.sol";
-import "./ETokenUpgrade.sol";
+import "./UpgradeSupport.sol";
 import "./access/ETokenGuarded.sol";
 
 contract ETokenProxy is IETokenProxy, ETokenGuarded {
@@ -37,7 +37,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         bool initialDeployment
     )
         internal
-        ETokenUpgrade(initialDeployment, upgradedFrom)
+        UpgradeSupport(initialDeployment, upgradedFrom)
         ETokenGuarded(name, symbol, decimals,
                       accesslist, whitelistEnabled,
                       externalStorage, initialMintingRecipient,
