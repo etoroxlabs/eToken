@@ -32,7 +32,7 @@ contract ETokenUpgrade is Ownable, ERC20 {
                 (upgradedFrom == address(0) && initialDeployment),
                 "Cannot both be upgraded and initial deployment.");
 
-        if (!initialDeployment) {
+        if (! initialDeployment) {
             // Pause until explicitly unpaused by upgraded contract
             enabled = false;
             _upgradedFrom = upgradedFrom;

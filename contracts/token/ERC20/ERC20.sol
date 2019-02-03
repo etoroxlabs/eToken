@@ -271,12 +271,7 @@ contract ERC20 {
      * @param originSender The account whose tokens will be burnt.
      * @param value The amount that will be burnt.
      */
-    function _burn(
-        address originSender,
-        uint256 value
-    )
-        internal
-        returns (bool)
+    function _burn(address originSender, uint256 value) internal returns (bool)
     {
         require(originSender != 0);
         require(value <= _storage.balances(originSender));
@@ -296,11 +291,7 @@ contract ERC20 {
      * @param account The account whose tokens will be burnt.
      * @param value The amount that will be burnt.
      */
-    function _burnFrom(
-        address originSender,
-        address account,
-        uint256 value
-    )
+    function _burnFrom(address originSender, address account, uint256 value)
         internal
         returns (bool)
     {
