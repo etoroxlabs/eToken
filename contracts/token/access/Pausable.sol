@@ -10,24 +10,24 @@ contract Pausable is PauserRole {
     event Paused(address account);
     event Unpaused(address account);
 
-    bool private __paused;
+    bool private paused_;
 
     constructor() internal {
-        __paused = false;
+        paused_ = false;
     }
 
     /**
      * @return true if the contract is paused, false otherwise.
      */
     function _paused() internal view returns(bool) {
-        return __paused;
+        return paused_;
     }
 
     /**
      * @dev Modifier to make a function callable only when the contract is not paused.
      */
     modifier whenNotPaused() {
-        require(!__paused);
+        require(!paused_);
         _;
     }
 
@@ -35,7 +35,7 @@ contract Pausable is PauserRole {
      * @dev Modifier to make a function callable only when the contract is paused.
      */
     modifier whenPaused() {
-        require(__paused);
+        require(paused_);
         _;
     }
 
@@ -43,7 +43,7 @@ contract Pausable is PauserRole {
      * @dev Called by the owner to pause, triggers stopped state
      */
     function _pause() internal onlyPauser whenNotPaused {
-        __paused = true;
+        paused_ = true;
         emit Paused(msg.sender);
     }
 
@@ -51,7 +51,7 @@ contract Pausable is PauserRole {
      * @dev Called by the owner to unpause, returns to normal state
      */
     function _unpause() internal onlyPauser whenPaused {
-        __paused = false;
+        paused_ = false;
         emit Unpaused(msg.sender);
     }
 }
