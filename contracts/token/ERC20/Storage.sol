@@ -49,7 +49,7 @@ contract Storage is Ownable {
    * @dev Return whether the sender is an implementor.
    */
   function isImplementor() public view returns(bool) {
-    return msg.sender == _implementor;
+      return msg.sender == _implementor;
   }
 
   /**
@@ -58,10 +58,10 @@ contract Storage is Ownable {
    */
   function setBalance(address owner,
                       uint256 value)
-    public
-    onlyImplementor
+      public
+      onlyImplementor
   {
-    balances[owner] = value;
+      balances[owner] = value;
   }
 
   /**
@@ -69,11 +69,11 @@ contract Storage is Ownable {
    * @return The current balance of owner
    */
   function getBalance(address owner)
-    public
-    view
-    returns (uint256)
+      public
+      view
+      returns (uint256)
   {
-    return balances[owner];
+      return balances[owner];
   }
 
   /**
@@ -83,10 +83,10 @@ contract Storage is Ownable {
   function setAllowed(address owner,
                       address spender,
                       uint256 value)
-    public
-    onlyImplementor
+      public
+      onlyImplementor
   {
-    allowed[owner][spender] = value;
+      allowed[owner][spender] = value;
   }
 
   /**
@@ -95,11 +95,11 @@ contract Storage is Ownable {
    */
   function getAllowed(address owner,
                       address spender)
-    public
-    view
-    returns (uint256)
+      public
+      view
+      returns (uint256)
   {
-    return allowed[owner][spender];
+      return allowed[owner][spender];
   }
 
   /**
@@ -107,10 +107,10 @@ contract Storage is Ownable {
    * Can only be called by implementor contract.
    */
   function setTotalSupply(uint256 value)
-    public
-    onlyImplementor
+      public
+      onlyImplementor
   {
-    totalSupply = value;
+      totalSupply = value;
   }
 
   /**
@@ -118,11 +118,11 @@ contract Storage is Ownable {
    * @return Current supply
    */
   function getTotalSupply()
-    public
-    view
-    returns (uint256)
+      public
+      view
+      returns (uint256)
   {
-    return totalSupply;
+      return totalSupply;
   }
 
   /**
@@ -130,38 +130,38 @@ contract Storage is Ownable {
    * Can only be called by owner or implementor contract.
    */
   function transferImplementor(address newImplementor)
-    public
-    requireNonZero(newImplementor)
-    onlyImplementorOrOwner
+      public
+      requireNonZero(newImplementor)
+      onlyImplementorOrOwner
   {
-    require(newImplementor != _implementor,
-            "Cannot transfer to same implementor as existing");
-    address curImplementor = _implementor;
-    _implementor = newImplementor;
-    emit StorageImplementorTransferred(curImplementor, newImplementor);
+      require(newImplementor != _implementor,
+              "Cannot transfer to same implementor as existing");
+      address curImplementor = _implementor;
+      _implementor = newImplementor;
+      emit StorageImplementorTransferred(curImplementor, newImplementor);
   }
 
   /**
    * @dev Asserts that sender is either owner or implementor.
    */
   modifier onlyImplementorOrOwner() {
-    require(isImplementor() || isOwner(), "Is not implementor or owner");
-    _;
+      require(isImplementor() || isOwner(), "Is not implementor or owner");
+      _;
   }
 
   /**
    * @dev Asserts that sender is the implementor.
    */
   modifier onlyImplementor() {
-    require(isImplementor(), "Is not implementor");
-    _;
+      require(isImplementor(), "Is not implementor");
+      _;
   }
 
   /**
    * @dev Asserts that the given address is not the null-address
    */
   modifier requireNonZero(address addr) {
-    require(addr != address(0), "Expected a non-zero address");
-    _;
+      require(addr != address(0), "Expected a non-zero address");
+      _;
   }
 }
