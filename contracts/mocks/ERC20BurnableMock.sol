@@ -10,7 +10,7 @@ import "./ERC20Mock.sol";
 contract ERC20BurnableMock is ERC20Mock {
 
     constructor(
-        address initialAccount, uint256 initialBalance, 
+        address initialAccount, uint256 initialBalance,
         Storage _storage, bool isInitialDeployment
     )
         ERC20Mock(initialAccount, initialBalance, _storage, isInitialDeployment)
