@@ -81,18 +81,14 @@ function proxyTokenBehavior () {
 }
 
 function proxyPausableBehavior () {
-  describe('pause', function () {
+  ['pause', 'unpause', 'paused'].forEach(function(f) {
+  describe(f, function () {
     it('reverts when token is upgraded', async function () {
-      await util.assertRevertsReason(this.token.pause(),
-                                     'Token is upgraded. Call pause from new token.');
+      await util.assertRevertsReason(
+        this.token[f](),
+        `Token is upgraded. Call ${f} from new token.`);
     });
   });
-
-  describe('unpause', function () {
-    it('reverts when token is upgraded', async function () {
-      await util.assertRevertsReason(this.token.unpause(),
-                                     'Token is upgraded. Call unpause from new token.');
-    });
   });
 }
 
@@ -421,7 +417,7 @@ contract('EToken', async function (
             token.upgrade(upgradeToken.address, { from: owner }),
             'Token is already upgraded');
         });
-      });
+       });
     });
   });
 
