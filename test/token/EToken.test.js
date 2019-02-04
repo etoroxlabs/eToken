@@ -81,7 +81,7 @@ function proxyTokenBehavior () {
 }
 
 function proxyPausableBehavior () {
-  ['pause', 'unpause', 'paused'].forEach(function(f) {
+  ['pause', 'unpause', 'paused'].forEach(function (f) {
     describe(f, function () {
       it('reverts when token is upgraded', async function () {
         await util.assertRevertsReason(
