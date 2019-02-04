@@ -4,6 +4,10 @@ import "./IETokenProxy.sol";
 import "./UpgradeSupport.sol";
 import "./access/ETokenGuarded.sol";
 
+/**
+ * For every call recieved the following takes place:
+ * If this token is upgraded, all calls are being 
+ */
 contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /**
@@ -46,7 +50,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     }
 
-    /* Taken from ERC20Detailed in openzeppelin-solidity */
+    /** Like EToken.name but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function nameProxy(address sender)
         external
         view
@@ -61,6 +66,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function symbolProxy(address sender)
         external
         view
@@ -75,6 +82,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.decimals but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function decimalsProxy(address sender)
         external
         view
@@ -90,6 +99,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     }
 
     /* Taken from IERC20 in openzeppelin-solidity */
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function totalSupplyProxy(address sender)
         external
         view
@@ -104,6 +115,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function balanceOfProxy(address sender, address who)
         external
         view
@@ -118,6 +131,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function allowanceProxy(address sender,
                             address owner,
                             address spender)
@@ -135,6 +150,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     }
 
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function transferProxy(address sender, address to, uint256 value)
         external
         isEnabled
@@ -149,6 +166,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     }
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function approveProxy(address sender,
                           address spender,
                           uint256 value)
@@ -165,6 +184,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.symbol but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function transferFromProxy(address sender,
                                address from,
                                address to,
@@ -175,12 +196,20 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferFromProxy(sender, from, to, value);
+            upgradedToken.transferFromProxy(sender,
+                                            from,
+                                            to,
+                                            value);
         } else {
-            transferFromGuarded(sender, from, to, value);
+            transferFromGuarded(sender,
+                                from,
+                                to,
+                                value);
         }
     }
 
+    /** Like EToken. but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function mintProxy(address sender, address to, uint256 value)
         external
         isEnabled
@@ -194,6 +223,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.changeMintingRecipient but proxies calls as
+        described in the documentation for the declaration of this
+        contract. */
     function changeMintingRecipientProxy(address sender,
                                          address mintingRecip)
         external
@@ -207,6 +239,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.burn but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function burnProxy(address sender, uint256 value)
         external
         isEnabled
@@ -219,6 +253,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.burnFrom but proxies calls as described in the
+        documentation for the declaration of this contract. */
     function burnFromProxy(address sender,
                            address from,
                            uint256 value)
@@ -233,6 +269,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.increaseAllowance but proxies calls as described
+        in the documentation for the declaration of this contract. */
     function increaseAllowanceProxy(address sender,
                                     address spender,
                                     uint addedValue)
@@ -248,6 +286,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.decreaseAllowance but proxies calls as described
+        in the documentation for the declaration of this contract. */
     function decreaseAllowanceProxy(address sender,
                                     address spender,
                                     uint subtractedValue)

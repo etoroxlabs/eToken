@@ -7,13 +7,11 @@ import "../token/IETokenProxy.sol";
  * @dev Implements a proxy interface which always reverts. Used for
  * testing if upgraded tokens actually forwards calls to the proxy.
  */
-
-
 contract RevertingProxy is IETokenProxy {
 
-/* solium-disable */
+    /* solium-disable zeppelin/missing-natspec-comments */
 
-    function upgrade(IETokenProxy upgradedToken) pure public {
+    function upgrade(IETokenProxy upgradedToken) public pure {
         // Silence warnings
         upgradedToken;
     }

@@ -10,17 +10,22 @@ import "../token/ERC20/Storage.sol";
  */
 contract ERC20Mock is ERC20 {
 
-    constructor(
-        address initialAccount, uint256 initialBalance,
-        Storage _storage, bool isInitialDeployment
-    )
+    /* solium-disable zeppelin/missing-natspec-comments */
+
+    constructor(address initialAccount, uint256 initialBalance,
+                Storage _storage, bool isInitialDeployment)
         ERC20("test", "te", 4, _storage, isInitialDeployment)
         public
     {
-        if (initialBalance != 0) {
+        if (initialBalance > 0) {
             _mint(initialAccount, initialBalance);
         }
     }
+
+    //
+    // Functions for enabling access to internal functions of ERC20
+    // from tests
+    //
 
     function name() public view returns(string) {
         return _name();
@@ -177,6 +182,116 @@ contract ERC20Mock is ERC20 {
         public
         returns (bool)
     {
-        return _transferFrom(originSender, from, to, value);
+        return _transferFrom(
+            originSender,
+            from,
+            to,
+            value
+        );
     }
+
+    //
+    // Function declarations for ensuring that compilation fails if
+    // internal members of ERC20 are not declared internal
+    //
+
+    function _name() internal view returns(string) {
+        return super._name();
+    }
+
+    function _symbol() internal view returns(string) {
+        return super._symbol();
+    }
+
+    function _decimals() internal view returns(uint8) {
+        return super._decimals();
+    }
+
+    function _totalSupply() internal view returns (uint256) {
+        return super._totalSupply();
+    }
+
+    function _balanceOf(address owner) internal view returns (uint256) {
+        return super._balanceOf(owner);
+    }
+
+    function _allowance(address owner, address spender)
+        internal
+        view
+        returns (uint256)
+    {
+        return super._allowance(owner, spender);
+    }
+
+    function _transfer(address originSender, address to, uint256 value)
+        internal
+        returns (bool)
+    {
+        return super._transfer(originSender, to, value);
+    }
+
+    function _approve(address originSender, address spender, uint256 value)
+        internal
+        returns (bool)
+    {
+        return super._approve(originSender, spender, value);
+    }
+
+    function _transferFrom(
+        address originSender,
+        address from,
+        address to,
+        uint256 value
+    )
+        internal
+        returns (bool)
+    {
+        return super._transferFrom(
+            originSender,
+            from,
+            to,
+            value
+        );
+    }
+
+    function _increaseAllowance(
+        address originSender,
+        address spender,
+        uint256 addedValue
+    )
+        internal
+        returns (bool)
+    {
+        return super._increaseAllowance(
+            originSender, spender, addedValue);
+    }
+
+    function _decreaseAllowance(
+        address originSender,
+        address spender,
+        uint256 subtractedValue
+    )
+        internal
+        returns (bool)
+    {
+        return super._decreaseAllowance(
+            originSender, spender, subtractedValue);
+    }
+
+    function _mint(address account, uint256 value) internal returns (bool) {
+        return super._mint(account, value);
+    }
+
+    function _burn(address originSender, uint256 value) internal returns (bool)
+    {
+        return super._burn(originSender, value);
+    }
+
+    function _burnFrom(address originSender, address account, uint256 value)
+        internal
+        returns (bool)
+    {
+        return super._burnFrom(originSender, account, value);
+    }
+
 }

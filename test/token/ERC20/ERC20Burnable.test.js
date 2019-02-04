@@ -18,7 +18,7 @@ contract('ERC20Burnable', function ([_, owner, spender, ...otherAccounts]) {
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
-      this.storage = Storage.at(await this.token._storage());
+      this.storage = Storage.at(await this.token.getExternalStorage());
       this.token2 = await ERC20BurnableMock.new(
         owner, 0,
         this.storage.address,

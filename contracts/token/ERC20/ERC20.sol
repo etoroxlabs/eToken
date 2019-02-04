@@ -4,6 +4,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./Storage.sol";
 
+/**
+ * @title Internal implementation of ERC20 functionality with support
+ * for a separate storage contract
+ */
 contract ERC20 {
     using SafeMath for uint256;
 

@@ -11,6 +11,9 @@ import "./roles/MinterRole.sol";
 import "./RestrictedMinter.sol";
 import "./../UpgradeSupport.sol";
 
+/**
+ * This contract 
+ */
 contract ETokenGuarded is
     Pausable,
     ERC20,
@@ -122,8 +125,8 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
-
-        return _totalSupply();
+        return 70;
+        //return _totalSupply();
     }
 
     /**

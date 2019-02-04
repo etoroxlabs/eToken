@@ -19,6 +19,7 @@ contract ERC20BurnableMock is ERC20Mock {
 
     }
 
+    /** Interface for testing the internal _burn function */
     function burn(uint256 value) public returns (bool) {
         return super._burn(msg.sender, value);
     }

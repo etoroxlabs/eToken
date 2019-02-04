@@ -2,6 +2,12 @@ pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
+/**
+ * @title Restricted minter
+ * @dev Implements the notion of a restricted minter which is only
+ * able to mint to a single specified account. Only the owner may
+ * change this account.
+ */
 contract RestrictedMinter  {
 
     address private mintingRecipientAccount;

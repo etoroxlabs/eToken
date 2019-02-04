@@ -5,6 +5,9 @@ import "./ERC20/ERC20.sol";
 
 import "./IETokenProxy.sol";
 
+/**
+ * @title Functionality supporting contract upgradability
+ */
 contract UpgradeSupport is Ownable, ERC20 {
 
     event Upgraded(address indexed to);

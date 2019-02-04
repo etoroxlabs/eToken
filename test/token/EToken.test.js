@@ -55,7 +55,7 @@ const otherOps = [
   ['mint', [util.ZERO_ADDRESS, 0]],
   ['changeMintingRecipient', [util.ZERO_ADDRESS]],
   ['pause', []],
-  ['unpause', []],
+  ['unpause', []]
 ];
 
 function unupgradedTokenBehavior () {
@@ -462,7 +462,6 @@ contract('EToken', async function (
 
     describe('when upgraded twice', function () {
       beforeEach(async function () {
-
         const storage = await this.token.getExternalStorage();
 
         this.upgradedToToken = await EToken.new(

@@ -45,7 +45,7 @@ contract('ERC20', function ([_, owner, recipient, anotherAccount]) {
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
-      this.storage = Storage.at(await this.token._storage());
+      this.storage = Storage.at(await this.token.getExternalStorage());
       this.token2 = await ERC20Mock.new(
         owner, 0,
         this.storage.address, false,

@@ -6,7 +6,7 @@
 const TokenManager = artifacts.require('TokenManager');
 const Accesslist = artifacts.require('Accesslist');
 const EToken = artifacts.require('EToken');
-const Storage = artifacts.require('Storage');
+// const Storage = artifacts.require('Storage');
 
 const util = require('./utils.js');
 const upgradeToken = require('../scripts/upgradeToken/upgradeToken.js');
@@ -34,7 +34,7 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
          { from: oldTokenOwner }
        );
 
-       const storageAddress = await oldToken._storage();
+       const storageAddress = await oldToken.getExternalStorage();
 
        const newToken = await EToken.new(
          tokenName, 'e', newTokenDecimals,
