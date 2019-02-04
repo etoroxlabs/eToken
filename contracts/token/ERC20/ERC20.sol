@@ -13,9 +13,9 @@ contract ERC20 {
 
     Storage private externalStorage;
 
-    string private _name_;
-    string private _symbol_;
-    uint8 private _decimals_;
+    string private name_;
+    string private symbol_;
+    uint8 private decimals_;
 
     event Transfer(
         address indexed from,
@@ -55,9 +55,9 @@ contract ERC20 {
             (_externalStorage == address(0) && initialDeployment),
             "Cannot both create external storage and use the provided one.");
 
-        _name_ = name;
-        _symbol_ = symbol;
-        _decimals_ = decimals;
+        name_ = name;
+        symbol_ = symbol;
+        decimals_ = decimals;
 
         if (initialDeployment) {
             externalStorage = new Storage(msg.sender, this);
@@ -77,21 +77,21 @@ contract ERC20 {
      * @return the name of the token.
      */
     function _name() internal view returns(string) {
-        return _name_;
+        return name_;
     }
 
     /**
      * @return the symbol of the token.
      */
     function _symbol() internal view returns(string) {
-        return _symbol_;
+        return symbol_;
     }
 
     /**
      * @return the number of decimals of the token.
      */
     function _decimals() internal view returns(uint8) {
-        return _decimals_;
+        return decimals_;
     }
 
     /**
