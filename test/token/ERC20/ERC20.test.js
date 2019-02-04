@@ -41,6 +41,25 @@ contract('ERC20', function ([_, owner, recipient, anotherAccount]) {
     );
   });
 
+  describe('identity', function () {
+    // The expected values for this test are specified in
+    // ERC20Mock.sol
+    // Tests mainly included for coverage
+
+    it('returns correct name', async function () {
+      (await this.token.name()).should.be.equal('test');
+    });
+
+    it('returns correct symbol', async function () {
+      (await this.token.symbol()).should.be.equal('te');
+    });
+
+    it('returns correct number of decimals', async function () {
+      (await this.token.decimals()).should.be.bignumber.equal(4);
+    });
+  });
+
+
   shouldBehaveLikeERC20(owner, recipient, anotherAccount);
 
   describe('When sharing storage', function () {
