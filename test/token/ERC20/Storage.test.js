@@ -144,7 +144,7 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
     describe('when is owner', function () {
       it('should not allow changing allowance', async function () {
         await utils.assertRevertsReason(
-          this.token.setGetAllowed(anotherAccount, thirdAccount, newAllowance, { from: owner }),
+          this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: owner }),
           'Is not implementor');
       });
     });
@@ -152,7 +152,7 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
     describe('when is implementor', function () {
       it('should allow changing allowance', async function () {
         (await this.token.getAllowed(anotherAccount, thirdAccount)).should.not.be.bignumber.equal(newAllowance);
-        await this.token.setGetAllowed(anotherAccount, thirdAccount, newAllowance, { from: implementor });
+        await this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: implementor });
         (await this.token.getAllowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(newAllowance);
       });
     });
@@ -163,7 +163,7 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
 
         oldAllowance.should.not.be.bignumber.equal(newAllowance);
         await utils.assertRevertsReason(
-          this.token.setGetAllowed(anotherAccount, thirdAccount, newAllowance, { from: anotherAccount }),
+          this.token.setAllowed(anotherAccount, thirdAccount, newAllowance, { from: anotherAccount }),
           'Is not implementor');
         (await this.token.getAllowed(anotherAccount, thirdAccount)).should.be.bignumber.equal(oldAllowance);
       });
