@@ -12,7 +12,14 @@ import "./RestrictedMinter.sol";
 import "./../UpgradeSupport.sol";
 
 /**
- * This contract 
+ * @title EToken access guards
+ * @dev This contract implements access guards for functions comprising
+ * the EToken public API. Since these functions may be called through
+ * a proxy, access checks does not rely on the implicit value of
+ * msg.sender but rather on the originSender parameter which is passed
+ * to the functions of this contract. The value of originSender is
+ * captured from msg.sender at the initial landing-point of the
+ * request.
  */
 contract ETokenGuarded is
     Pausable,

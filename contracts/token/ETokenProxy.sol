@@ -5,8 +5,14 @@ import "./UpgradeSupport.sol";
 import "./access/ETokenGuarded.sol";
 
 /**
- * For every call recieved the following takes place:
- * If this token is upgraded, all calls are being 
+ * @title EToken upgradability proxy
+ * For every call received the following takes place:
+ * If this token is upgraded, all calls are forwarded to the proxy
+ * interface of the new contract thereby forming a chain of proxy
+ * calls.
+ * If this token is not upgraded, that is, it is the most recent
+ * generation of ETokens, then calls are forwarded directly to the
+ * ETokenGuarded interface which performs access
  */
 contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
@@ -280,7 +286,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.increaseAllowanceProxy(sender, spender, addedValue);
+            return upgradedToken.increaseAllowanceProxy(
+                sender, spender, addedValue);
         } else {
             return increaseAllowanceGuarded(sender, spender, addedValue);
         }
@@ -297,7 +304,8 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.decreaseAllowanceProxy(sender, spender, subtractedValue);
+            return upgradedToken.decreaseAllowanceProxy(
+                sender, spender, subtractedValue);
         } else {
             return decreaseAllowanceGuarded(sender, spender, subtractedValue);
         }
