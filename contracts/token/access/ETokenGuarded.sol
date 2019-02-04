@@ -128,6 +128,7 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
+
         return _totalSupply();
     }
 

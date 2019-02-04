@@ -114,9 +114,9 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            upgradedToken.totalSupplyProxy(sender);
+            return upgradedToken.totalSupplyProxy(sender);
         } else {
-            totalSupplyGuarded(sender);
+            return totalSupplyGuarded(sender);
         }
     }
 
