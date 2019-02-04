@@ -3,9 +3,7 @@ pragma solidity 0.4.24;
 import "./ERC20Mock.sol";
 
 /**
- * @title External ERC20 mock contract
- * @dev Contract to test out currently unused functions for the
- * external ERC20
+ * @title ERC20 burnable mock contract
  */
 contract ERC20BurnableMock is ERC20Mock {
 
