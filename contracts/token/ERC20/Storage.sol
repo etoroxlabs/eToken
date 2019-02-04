@@ -71,7 +71,6 @@ contract Storage is Ownable {
   function getBalance(address owner)
     public
     view
-    onlyImplementor
     returns (uint256)
   {
     return balances[owner];
@@ -98,7 +97,6 @@ contract Storage is Ownable {
                       address spender)
     public
     view
-    onlyImplementor
     returns (uint256)
   {
     return allowed[owner][spender];
@@ -122,7 +120,6 @@ contract Storage is Ownable {
   function getTotalSupply()
     public
     view
-    onlyImplementor
     returns (uint256)
   {
     return totalSupply;
