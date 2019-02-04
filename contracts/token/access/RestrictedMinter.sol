@@ -31,7 +31,7 @@ contract RestrictedMinter  {
     /**
      * @return The current minting recipient account address
      */
-    function getMintingRecipientAccount() public view returns (address) {
+    function getMintingRecipient() public view returns (address) {
         return mintingRecipientAccount;
     }
 

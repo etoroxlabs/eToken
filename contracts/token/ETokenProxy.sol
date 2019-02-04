@@ -104,7 +104,6 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
-    /* Taken from IERC20 in openzeppelin-solidity */
     /** Like EToken.symbol but proxies calls as described in the
         documentation for the declaration of this contract. */
     function totalSupplyProxy(address sender)
