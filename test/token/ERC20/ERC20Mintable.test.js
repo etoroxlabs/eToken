@@ -1,17 +1,17 @@
 /* global artifacts, contract */
 /* eslint-env mocha */
 
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
-const ExternalERC20 = artifacts.require('ExternalERC20');
+const Storage = artifacts.require('Storage');
+const ERC20Mock = artifacts.require('ERC20Mock');
 
 const { shouldBehaveLikeERC20Mintable } = require('./behaviors/ERC20Mintable.behavior');
-const ExternalERC20MintableMock = artifacts.require('ExternalERC20MintableMock');
+const ERC20MintableMock = artifacts.require('ERC20MintableMock');
 const { shouldBehaveLikePublicRole } = require('../access/roles/behaviors/PublicRole.behavior');
 
-contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAccounts]) {
+contract('ERC20MockMintable', function ([_, minter, otherMinter, ...otherAccounts]) {
   const mintingRecipientAccount = '0x000000000000000000000000000000000000d00f';
   beforeEach(async function () {
-    this.token = await ExternalERC20MintableMock.new(mintingRecipientAccount, { from: minter });
+    this.token = await ERC20MintableMock.new(mintingRecipientAccount, { from: minter });
     this.token.addMinter(minter, { from: minter });
   });
 
@@ -28,9 +28,9 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
-      this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
-      this.token2 = await ExternalERC20.new(
-        this.storage.address,
+      this.storage = Storage.at(await this.token.getExternalStorage());
+      this.token2 = await ERC20Mock.new(
+        minter, 0, this.storage.address,
         false,
         { from: minter }
       );
@@ -49,13 +49,13 @@ contract('ExternalERC20Mintable', function ([_, minter, otherMinter, ...otherAcc
 
   describe('When retrieving minting recipient account', function () {
     it('should return correct address when not changed', async function () {
-      (await this.token.getMintingRecipientAccount()).should.be.equal(mintingRecipientAccount);
+      (await this.token.getMintingRecipient()).should.be.equal(mintingRecipientAccount);
     });
 
     it('should return correct address when changed', async function () {
       const newAccount = '0x000000000000000000000000000000000000dddd';
       await this.token.changeMintingRecipient(newAccount, { from: minter });
-      (await this.token.getMintingRecipientAccount()).should.be.equal(newAccount);
+      (await this.token.getMintingRecipient()).should.be.equal(newAccount);
     });
   });
 });

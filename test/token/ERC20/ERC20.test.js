@@ -59,7 +59,6 @@ contract('ERC20', function ([_, owner, recipient, anotherAccount]) {
     });
   });
 
-
   shouldBehaveLikeERC20(owner, recipient, anotherAccount);
 
   describe('When sharing storage', function () {
