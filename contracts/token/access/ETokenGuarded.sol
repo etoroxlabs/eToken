@@ -68,10 +68,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.name, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.name. Also see the general documentation for this
+     * contract.
      */
     function nameGuarded(address originSender)
         internal
@@ -85,10 +84,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.symbol, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.symbol. Also see the general documentation for this
+     * contract.
      */
     function symbolGuarded(address originSender)
         internal
@@ -102,10 +100,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.decimal, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.decimals. Also see the general documentation for this
+     * contract.
      */
     function decimalsGuarded(address originSender)
         internal
@@ -119,10 +116,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.totalSupply, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.totalSupply. Also see the general documentation for this
+     * contract.
      */
     function totalSupplyGuarded(address originSender)
         internal
@@ -132,15 +128,13 @@ contract ETokenGuarded is
     {
         // Silence warnings
         originSender;
-        return 70;
-        //return _totalSupply();
+        return _totalSupply();
     }
 
     /**
-     * @dev Like EToken.balanceOf, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.balanceOf. Also see the general documentation for this
+     * contract.
      */
     function balanceOfGuarded(address originSender, address who)
         internal
@@ -155,10 +149,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.allowance, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.allowance. Also see the general documentation for this
+     * contract.
      */
     function allowanceGuarded(
         address originSender,
@@ -177,10 +170,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.transfer, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.transfer. Also see the general documentation for this
+     * contract.
      */
     function transferGuarded(address originSender, address to, uint256 value)
         internal
@@ -195,10 +187,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.approve, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.approve. Also see the general documentation for this
+     * contract.
      */
     function approveGuarded(
         address originSender,
@@ -218,10 +209,9 @@ contract ETokenGuarded is
 
 
     /**
-     * @dev Like EToken.transferFrom, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.transferFrom. Also see the documentation for this
+     * contract.
      */
     function transferFromGuarded(
         address originSender,
@@ -248,10 +238,9 @@ contract ETokenGuarded is
 
 
     /**
-     * @dev Like EToken.increaseAllowance, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.increaseAllowance, Also see the general documentation
+     * for this contract.
      */
     function increaseAllowanceGuarded(
         address originSender,
@@ -270,10 +259,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.decreaseAllowance, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.decreaseAllowance. Also see the general documentation
+     * for this contract.
      */
     function decreaseAllowanceGuarded(
         address originSender,
@@ -291,10 +279,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.burn, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.burn. Also see the general documentation for this
+     * contract.
      */
     function burnGuarded(address originSender, uint256 value)
         internal
@@ -305,10 +292,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.burnFrom, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.burnFrom. Also see the general documentation for this
+     * contract.
      */
     function burnFromGuarded(address originSender, address from, uint256 value)
         internal
@@ -319,10 +305,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.mint, but gets sender from explicit sender
-     * parameter rather than msg.sender. This function can only be
-     * called from the proxy contract (the contract that this contract
-     * upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.mint. Also see the general documentation for this
+     * contract.
      */
     function mintGuarded(address originSender, address to, uint256 value)
         internal
@@ -339,10 +324,9 @@ contract ETokenGuarded is
     }
 
     /**
-     * @dev Like EToken.changeMintingRecipient, but gets sender from
-     * explicit sender parameter rather than msg.sender. This function
-     * can only be called from the proxy contract (the contract that
-     * this contract upgraded).
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.changeMintingRecipient. Also see the general
+     * documentation for this contract.
      */
     function changeMintingRecipientGuarded(
         address originSender,
@@ -355,6 +339,11 @@ contract ETokenGuarded is
         _changeMintingRecipient(originSender, mintingRecip);
     }
 
+    /**
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.pause. Also see the general documentation for this
+     * contract.
+     */
     function pauseGuarded(address originSender)
         internal
         isEnabled
@@ -363,6 +352,11 @@ contract ETokenGuarded is
         _pause();
     }
 
+    /**
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.unpause. Also see the general documentation for this
+     * contract.
+     */
     function unpauseGuarded(address originSender)
         internal
         isEnabled
@@ -371,6 +365,11 @@ contract ETokenGuarded is
         _unpause();
     }
 
+    /**
+     * @dev Permission enforcing wrapper around the functionality of
+     * EToken.paused. Also see the general documentation for this
+     * contract.
+     */
     function pausedGuarded(address originSender)
         internal
         view
