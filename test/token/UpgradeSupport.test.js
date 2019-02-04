@@ -15,7 +15,7 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('ETokenExplicitSender', function ([owner, someAddress, ...rest]) {
+contract('UpgradeSupport', function ([owner, someAddress, ...rest]) {
   describe('finalizeUpgrade', function () {
     it('reverts when no upgradeFrom contract is set', async function () {
       const token = await ETokenGuardedMock.new(0, 0, true, { from: owner });
