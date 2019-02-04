@@ -23,6 +23,7 @@ contract ERC20MintableMock is ERC20Mock, RestrictedMinter, MinterRoleMock {
      */
     function mint(address to, uint256 amount)
         public
+        // Recreate the public interface of EToken expected by tests
         requireMinter(msg.sender)
         requireMintingRecipient(to)
         returns (bool)
@@ -36,8 +37,7 @@ contract ERC20MintableMock is ERC20Mock, RestrictedMinter, MinterRoleMock {
      */
     function changeMintingRecipient(address to)
         public
-        // FIXME: What are we really testing here? Maybe wrap
-        // ETokenGuarded instead or change tests?
+        // Recreate the public interface of EToken expected by tests
         onlyOwner
     {
         _changeMintingRecipient(msg.sender, to);
