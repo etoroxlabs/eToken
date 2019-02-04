@@ -64,7 +64,7 @@ function unupgradedTokenBehavior () {
   });
 
   it('should return zero address for upgrade token', async function () {
-    (await this.token.upgradedToken()).should.be.equal(util.ZERO_ADDRESS);
+    (await this.token.getUpgradedToken()).should.be.equal(util.ZERO_ADDRESS);
   });
 }
 
@@ -75,7 +75,7 @@ function proxyTokenBehavior () {
     });
 
     it('should return zero address for upgrade token', async function () {
-      (await this.token.upgradedToken()).should.be.equal(this.newToken.address);
+      (await this.token.getUpgradedToken()).should.be.equal(this.newToken.address);
     });
   });
 }

@@ -98,7 +98,7 @@ contract ERC20 {
      * @dev Total number of tokens in existence
      */
     function _totalSupply() internal view returns (uint256) {
-        return externalStorage.totalSupply();
+        return externalStorage.getTotalSupply();
     }
 
     /**
@@ -107,7 +107,7 @@ contract ERC20 {
      * @return An uint256 representing the amount owned by the passed address.
      */
     function _balanceOf(address owner) internal view returns (uint256) {
-        return externalStorage.balances(owner);
+        return externalStorage.getBalance(owner);
     }
 
     /**
@@ -121,7 +121,7 @@ contract ERC20 {
         view
         returns (uint256)
     {
-        return externalStorage.allowed(owner, spender);
+        return externalStorage.getAllowed(owner, spender);
     }
 
     /**
@@ -134,15 +134,15 @@ contract ERC20 {
         internal
         returns (bool)
     {
-        require(value <= externalStorage.balances(originSender));
+        require(value <= externalStorage.getBalance(originSender));
         require(to != address(0));
 
         externalStorage.setBalance(
             originSender,
-            externalStorage.balances(originSender).sub(value));
+            externalStorage.getBalance(originSender).sub(value));
         externalStorage.setBalance(
             to,
-            externalStorage.balances(to).add(value)
+            externalStorage.getBalance(to).add(value)
         );
 
         emit Transfer(originSender, to, value);
@@ -191,17 +191,17 @@ contract ERC20 {
         internal
         returns (bool)
     {
-        require(value <= externalStorage.allowed(from, originSender));
+        require(value <= externalStorage.getAllowed(from, originSender));
 
         externalStorage.setAllowed(
             from, originSender,
-            externalStorage.allowed(from, originSender).sub(value)
+            externalStorage.getAllowed(from, originSender).sub(value)
         );
         _transfer(from, to, value);
         emit Approval(
             from,
             originSender,
-            externalStorage.allowed(from, originSender)
+            externalStorage.getAllowed(from, originSender)
         );
 
         return true;
@@ -229,11 +229,11 @@ contract ERC20 {
 
         externalStorage.setAllowed(
             originSender, spender,
-            externalStorage.allowed(originSender, spender).add(addedValue)
+            externalStorage.getAllowed(originSender, spender).add(addedValue)
         );
         emit Approval(
             originSender, spender,
-            externalStorage.allowed(originSender, spender)
+            externalStorage.getAllowed(originSender, spender)
         );
 
         return true;
@@ -261,11 +261,11 @@ contract ERC20 {
 
         externalStorage.setAllowed(
             originSender, spender,
-            externalStorage.allowed(originSender, spender).sub(subtractedValue)
+            externalStorage.getAllowed(originSender, spender).sub(subtractedValue)
         );
         emit Approval(
             originSender, spender,
-            externalStorage.allowed(originSender, spender)
+            externalStorage.getAllowed(originSender, spender)
         );
 
         return true;
@@ -282,9 +282,9 @@ contract ERC20 {
     {
         require(account != 0);
         externalStorage.setTotalSupply(
-            externalStorage.totalSupply().add(value));
+            externalStorage.getTotalSupply().add(value));
         externalStorage.setBalance(
-            account, externalStorage.balances(account).add(value));
+            account, externalStorage.getBalance(account).add(value));
         emit Transfer(address(0), account, value);
 
         return true;
@@ -299,13 +299,13 @@ contract ERC20 {
     function _burn(address originSender, uint256 value) internal returns (bool)
     {
         require(originSender != 0);
-        require(value <= externalStorage.balances(originSender));
+        require(value <= externalStorage.getBalance(originSender));
 
         externalStorage.setTotalSupply(
-            externalStorage.totalSupply().sub(value));
+            externalStorage.getTotalSupply().sub(value));
         externalStorage.setBalance(
             originSender,
-            externalStorage.balances(originSender).sub(value)
+            externalStorage.getBalance(originSender).sub(value)
         );
         emit Transfer(originSender, address(0), value);
 
@@ -324,15 +324,15 @@ contract ERC20 {
         internal
         returns (bool)
     {
-        require(value <= externalStorage.allowed(account, originSender));
+        require(value <= externalStorage.getAllowed(account, originSender));
 
-        externalStorage .setAllowed(
+        externalStorage.setAllowed(
             account, originSender,
-            externalStorage.allowed(account, originSender).sub(value)
+            externalStorage.getAllowed(account, originSender).sub(value)
         );
         _burn(account, value);
         emit Approval(account, originSender,
-                      externalStorage.allowed(account, originSender));
+                      externalStorage.getAllowed(account, originSender));
 
         return true;
     }

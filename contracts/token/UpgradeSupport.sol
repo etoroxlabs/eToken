@@ -18,7 +18,7 @@ contract UpgradeSupport is Ownable, ERC20 {
      */
     address private _upgradedFrom;
     bool private enabled;
-    IETokenProxy public upgradedToken;
+    IETokenProxy private upgradedToken;
 
     /**
      * @dev Constructor
@@ -90,6 +90,13 @@ contract UpgradeSupport is Ownable, ERC20 {
      */
     function isUpgraded() public view returns (bool) {
         return upgradedToken != IETokenProxy(0);
+    }
+
+    /**
+     * @return The token that this was upgraded to
+     */
+    function getUpgradedToken() public view returns (IETokenProxy) {
+        return upgradedToken;
     }
 
     /**

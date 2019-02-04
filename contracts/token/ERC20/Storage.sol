@@ -13,9 +13,9 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  */
 contract Storage is Ownable {
 
-  mapping (address => uint256) public balances;
-  mapping (address => mapping (address => uint256)) public allowed;
-  uint256 public totalSupply;
+  mapping (address => uint256) private balances;
+  mapping (address => mapping (address => uint256)) private allowed;
+  uint256 private totalSupply;
 
   address private _implementor;
 
@@ -46,7 +46,7 @@ contract Storage is Ownable {
   }
 
   /**
-   * @dev Returns whether the sender is an implementor.
+   * @dev Return whether the sender is an implementor.
    */
   function isImplementor() public view returns(bool) {
     return msg.sender == _implementor;
@@ -65,6 +65,19 @@ contract Storage is Ownable {
   }
 
   /**
+   * @dev Can only be done by owner or implementor contract.
+   * @return The current balance of owner
+   */
+  function getBalance(address owner)
+    public
+    view
+    onlyImplementor
+    returns (uint256)
+  {
+    return balances[owner];
+  }
+
+  /**
    * @dev Sets new allowance.
    * Can only be called by implementor contract.
    */
@@ -78,6 +91,20 @@ contract Storage is Ownable {
   }
 
   /**
+   * @dev Can only be called by implementor contract.
+   * @return The current allowance for spender from owner
+   */
+  function getAllowed(address owner,
+                      address spender)
+    public
+    view
+    onlyImplementor
+    returns (uint256)
+  {
+    return allowed[owner][spender];
+  }
+
+  /**
    * @dev Change totalSupply.
    * Can only be called by implementor contract.
    */
@@ -86,6 +113,19 @@ contract Storage is Ownable {
     onlyImplementor
   {
     totalSupply = value;
+  }
+
+  /**
+   * @dev Can only be called by implementor contract.
+   * @return Current supply
+   */
+  function getTotalSupply()
+    public
+    view
+    onlyImplementor
+    returns (uint256)
+  {
+    return totalSupply;
   }
 
   /**

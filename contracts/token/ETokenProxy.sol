@@ -66,7 +66,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns(string)
     {
         if (isUpgraded()) {
-            return upgradedToken.nameProxy(sender);
+            return getUpgradedToken().nameProxy(sender);
         } else {
             return nameGuarded(sender);
         }
@@ -82,7 +82,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns(string)
     {
         if (isUpgraded()) {
-            return upgradedToken.symbolProxy(sender);
+            return getUpgradedToken().symbolProxy(sender);
         } else {
             return symbolGuarded(sender);
         }
@@ -98,7 +98,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns(uint8)
     {
         if (isUpgraded()) {
-            return upgradedToken.decimalsProxy(sender);
+            return getUpgradedToken().decimalsProxy(sender);
         } else {
             return decimalsGuarded(sender);
         }
@@ -114,7 +114,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            return upgradedToken.totalSupplyProxy(sender);
+            return getUpgradedToken().totalSupplyProxy(sender);
         } else {
             return totalSupplyGuarded(sender);
         }
@@ -130,7 +130,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            return upgradedToken.balanceOfProxy(sender, who);
+            return getUpgradedToken().balanceOfProxy(sender, who);
         } else {
             return balanceOfGuarded(sender, who);
         }
@@ -148,7 +148,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (uint256)
     {
         if (isUpgraded()) {
-            return upgradedToken.allowanceProxy(sender, owner, spender);
+            return getUpgradedToken().allowanceProxy(sender, owner, spender);
         } else {
             return allowanceGuarded(sender, owner, spender);
         }
@@ -164,7 +164,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.transferProxy(sender, to, value);
+            return getUpgradedToken().transferProxy(sender, to, value);
         } else {
             return transferGuarded(sender, to, value);
         }
@@ -183,7 +183,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     {
 
         if (isUpgraded()) {
-            return upgradedToken.approveProxy(sender, spender, value);
+            return getUpgradedToken().approveProxy(sender, spender, value);
         } else {
             return approveGuarded(sender, spender, value);
         }
@@ -201,7 +201,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            upgradedToken.transferFromProxy(sender,
+            getUpgradedToken().transferFromProxy(sender,
                                             from,
                                             to,
                                             value);
@@ -222,7 +222,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.mintProxy(sender, to, value);
+            return getUpgradedToken().mintProxy(sender, to, value);
         } else {
             return mintGuarded(sender, to, value);
         }
@@ -238,7 +238,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         onlyProxy
     {
         if (isUpgraded()) {
-            upgradedToken.changeMintingRecipientProxy(sender, mintingRecip);
+            getUpgradedToken().changeMintingRecipientProxy(sender, mintingRecip);
         } else {
             changeMintingRecipientGuarded(sender, mintingRecip);
         }
@@ -252,7 +252,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         onlyProxy
     {
         if (isUpgraded()) {
-            upgradedToken.burnProxy(sender, value);
+            getUpgradedToken().burnProxy(sender, value);
         } else {
             burnGuarded(sender, value);
         }
@@ -268,7 +268,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         onlyProxy
     {
         if (isUpgraded()) {
-            upgradedToken.burnFromProxy(sender, from, value);
+            getUpgradedToken().burnFromProxy(sender, from, value);
         } else {
             burnFromGuarded(sender, from, value);
         }
@@ -285,7 +285,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.increaseAllowanceProxy(
+            return getUpgradedToken().increaseAllowanceProxy(
                 sender, spender, addedValue);
         } else {
             return increaseAllowanceGuarded(sender, spender, addedValue);
@@ -303,7 +303,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.decreaseAllowanceProxy(
+            return getUpgradedToken().decreaseAllowanceProxy(
                 sender, spender, subtractedValue);
         } else {
             return decreaseAllowanceGuarded(sender, spender, subtractedValue);
