@@ -320,7 +320,7 @@ contract EToken is IEToken, ETokenProxy {
      */
     function paused() public view returns (bool) {
         if (isUpgraded()) {
-            revert("Token is upgraded. Call unpause from new token.");
+            revert("Token is upgraded. Call paused from new token.");
         } else {
             return pausedGuarded(msg.sender);
         }
