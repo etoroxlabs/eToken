@@ -63,7 +63,7 @@ function unupgradedTokenBehavior () {
     (await this.token.isUpgraded()).should.be.equal(false);
   });
 
-  it("should return zero address for upgrade token'", async function () {
+  it("should return zero address for upgrade token", async function () {
     (await this.token.upgradedToken()).should.be.equal(util.ZERO_ADDRESS);
   });
 }
