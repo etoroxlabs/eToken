@@ -501,15 +501,20 @@ contract('EToken', async function (
       ['burnFrom', [owner, 1], minter],
       ['increaseAllowance', [minter, 1]],
       ['decreaseAllowance', [minter, 1]],
-      ['changeMintingRecipient', [minter]]
+      ['changeMintingRecipient', [minter]],
+      ['pause', []],
+      ['unpause', [], undefined, (t) => t.pause()], // Pause before testing unpause
+      ['paused', []]
     ];
 
     upgradeOps.forEach(function (u) {
       const name = u[0];
       const params = u[1];
       const from = u[2] === undefined ? owner : u[2];
+      const preFn = u[3];
 
       it(`should proxy ${name} method`, async function () {
+        preFn && await preFn(this.token);
         await this.token[name](...params, { from });
         await this.upgrade();
         await util.assertRevertsReason(this.token[name](...params, { from }), name);

@@ -348,9 +348,8 @@ contract ETokenGuarded is
     function pauseGuarded(address originSender)
         internal
         isEnabled
-        requireOwner(originSender)
     {
-        _pause();
+        _pause(originSender);
     }
 
     /**
@@ -361,9 +360,8 @@ contract ETokenGuarded is
     function unpauseGuarded(address originSender)
         internal
         isEnabled
-        requireOwner(originSender)
     {
-        _unpause();
+        _unpause(originSender);
     }
 
     /**
@@ -374,11 +372,11 @@ contract ETokenGuarded is
     function pausedGuarded(address originSender)
         internal
         view
+        isEnabled
         returns (bool)
     {
         // Silence warnings
         originSender;
         return _paused();
     }
-
 }

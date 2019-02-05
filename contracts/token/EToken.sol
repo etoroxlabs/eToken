@@ -221,8 +221,7 @@ contract EToken is IEToken, ETokenProxy {
      * @dev Proxies call to new token if this token is upgraded
      * @param value The amount of token to be burned.
      */
-    function burn(uint256 value) public
-    {
+    function burn(uint256 value) public {
         if (isUpgraded()) {
             getUpgradedToken().burnProxy(msg.sender, value);
         } else {
@@ -237,8 +236,7 @@ contract EToken is IEToken, ETokenProxy {
      * @param from address The address which you want to send tokens from
      * @param value uint256 The amount of token to be burned
      */
-    function burnFrom(address from, uint256 value) public
-    {
+    function burnFrom(address from, uint256 value) public {
         if (isUpgraded()) {
             getUpgradedToken().burnFromProxy(msg.sender, from, value);
         } else {
@@ -323,12 +321,10 @@ contract EToken is IEToken, ETokenProxy {
 
     /**
      * Allows a pauser to pause the current token.
-     * @dev This function will _not_ be proxied to the new
-     * token if this token is upgraded
      */
     function pause() public {
         if (isUpgraded()) {
-            revert("Token is upgraded. Call pause from new token.");
+            getUpgradedToken().pauseProxy(msg.sender);
         } else {
             pauseGuarded(msg.sender);
         }
@@ -336,12 +332,10 @@ contract EToken is IEToken, ETokenProxy {
 
     /**
      * Allows a pauser to unpause the current token.
-     * @dev This function will _not_ be proxied to the new
-     * token if this token is upgraded
      */
     function unpause() public {
         if (isUpgraded()) {
-            revert("Token is upgraded. Call unpause from new token.");
+            getUpgradedToken().unpauseProxy(msg.sender);
         } else {
             unpauseGuarded(msg.sender);
         }
@@ -352,7 +346,7 @@ contract EToken is IEToken, ETokenProxy {
      */
     function paused() public view returns (bool) {
         if (isUpgraded()) {
-            revert("Token is upgraded. Call paused from new token.");
+            return getUpgradedToken().pausedProxy(msg.sender);
         } else {
             return pausedGuarded(msg.sender);
         }

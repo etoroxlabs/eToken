@@ -40,18 +40,37 @@ contract Pausable is PauserRole {
     }
 
     /**
-     * @dev Called by the owner to pause, triggers stopped state
+     * @dev Modifier to make a function callable if a specified account is pauser.
+     * @param account the address of the account to check
      */
-    function _pause() internal onlyPauser whenNotPaused {
+    modifier requireIsPauser(address account) {
+        require(isPauser(account));
+        _;
+    }
+
+    /**
+     * @dev Called by the owner to pause, triggers stopped state
+     * @param originSender the original sender of this method
+     */
+    function _pause(address originSender)
+        internal
+        requireIsPauser(originSender)
+        whenNotPaused
+    {
         paused_ = true;
-        emit Paused(msg.sender);
+        emit Paused(originSender);
     }
 
     /**
      * @dev Called by the owner to unpause, returns to normal state
+     * @param originSender the original sender of this method
      */
-    function _unpause() internal onlyPauser whenPaused {
+    function _unpause(address originSender)
+        internal
+        requireIsPauser(originSender)
+        whenPaused
+    {
         paused_ = false;
-        emit Unpaused(msg.sender);
+        emit Unpaused(originSender);
     }
 }

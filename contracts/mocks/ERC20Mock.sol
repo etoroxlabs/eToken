@@ -293,5 +293,4 @@ contract ERC20Mock is ERC20 {
     {
         return super._burnFrom(originSender, account, value);
     }
-
 }
