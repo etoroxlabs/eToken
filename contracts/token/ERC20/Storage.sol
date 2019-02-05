@@ -1,6 +1,7 @@
 pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
  * @title External ERC20 Storage
@@ -12,156 +13,171 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
  * by the implementor.
  */
 contract Storage is Ownable {
+    using SafeMath for uint256;
 
-  mapping (address => uint256) private balances;
-  mapping (address => mapping (address => uint256)) private allowed;
-  uint256 private totalSupply;
+    mapping (address => uint256) private balances;
+    mapping (address => mapping (address => uint256)) private allowed;
+    uint256 private totalSupply;
 
-  address private _implementor;
+    address private _implementor;
 
-  event StorageImplementorTransferred(address indexed from,
-                                      address indexed to);
+    event StorageImplementorTransferred(address indexed from,
+                                        address indexed to);
 
-  /**
-   * @dev Contructor.
-   * @param owner The address of the owner of the contract.
-   * Must not be the zero address.
-   * @param implementor The address of the contract that is
-   * allowed to change state. Must not be the zero address.
-   */
-  constructor(address owner, address implementor) public {
+    /**
+     * @dev Contructor.
+     * @param owner The address of the owner of the contract.
+     * Must not be the zero address.
+     * @param implementor The address of the contract that is
+     * allowed to change state. Must not be the zero address.
+     */
+    constructor(address owner, address implementor) public {
 
-      require(
-          owner != address(0),
-          "Owner should not be the zero address"
-      );
+        require(
+            owner != address(0),
+            "Owner should not be the zero address"
+        );
 
-      require(
-          implementor != address(0),
-          "Implementor should not be the zero address"
-      );
+        require(
+            implementor != address(0),
+            "Implementor should not be the zero address"
+        );
 
-      transferOwnership(owner);
-      _implementor = implementor;
-  }
+        transferOwnership(owner);
+        _implementor = implementor;
+    }
 
-  /**
-   * @dev Return whether the sender is an implementor.
-   */
-  function isImplementor() public view returns(bool) {
-      return msg.sender == _implementor;
-  }
+    /**
+     * @dev Return whether the sender is an implementor.
+     */
+    function isImplementor() public view returns(bool) {
+        return msg.sender == _implementor;
+    }
 
-  /**
-   * @dev Sets new balance.
-   * Can only be done by owner or implementor contract.
-   */
-  function setBalance(address owner,
-                      uint256 value)
-      public
-      onlyImplementor
-  {
-      balances[owner] = value;
-  }
+    /**
+     * @dev Sets new balance.
+     * Can only be done by owner or implementor contract.
+     */
+    function setBalance(address owner,
+                        uint256 value)
+        public
+        onlyImplementor
+    {
+        balances[owner] = value;
+    }
 
-  /**
-   * @dev Can only be done by owner or implementor contract.
-   * @return The current balance of owner
-   */
-  function getBalance(address owner)
-      public
-      view
-      returns (uint256)
-  {
-      return balances[owner];
-  }
+    function increaseBalance(address owner, uint256 addedValue)
+        public
+        onlyImplementor
+    {
+        balances[owner] = balances[owner].add(addedValue);
+    }
 
-  /**
-   * @dev Sets new allowance.
-   * Can only be called by implementor contract.
-   */
-  function setAllowed(address owner,
-                      address spender,
-                      uint256 value)
-      public
-      onlyImplementor
-  {
-      allowed[owner][spender] = value;
-  }
+    function decreaseBalance(address owner, uint256 subtractedValue)
+        public
+        onlyImplementor
+    {
+        balances[owner] = balances[owner].sub(subtractedValue);
+    }
 
-  /**
-   * @dev Can only be called by implementor contract.
-   * @return The current allowance for spender from owner
-   */
-  function getAllowed(address owner,
-                      address spender)
-      public
-      view
-      returns (uint256)
-  {
-      return allowed[owner][spender];
-  }
+    /**
+     * @dev Can only be done by owner or implementor contract.
+     * @return The current balance of owner
+     */
+    function getBalance(address owner)
+        public
+        view
+        returns (uint256)
+    {
+        return balances[owner];
+    }
 
-  /**
-   * @dev Change totalSupply.
-   * Can only be called by implementor contract.
-   */
-  function setTotalSupply(uint256 value)
-      public
-      onlyImplementor
-  {
-      totalSupply = value;
-  }
+    /**
+     * @dev Sets new allowance.
+     * Can only be called by implementor contract.
+     */
+    function setAllowed(address owner,
+                        address spender,
+                        uint256 value)
+        public
+        onlyImplementor
+    {
+        allowed[owner][spender] = value;
+    }
 
-  /**
-   * @dev Can only be called by implementor contract.
-   * @return Current supply
-   */
-  function getTotalSupply()
-      public
-      view
-      returns (uint256)
-  {
-      return totalSupply;
-  }
+    /**
+     * @dev Can only be called by implementor contract.
+     * @return The current allowance for spender from owner
+     */
+    function getAllowed(address owner,
+                        address spender)
+        public
+        view
+        returns (uint256)
+    {
+        return allowed[owner][spender];
+    }
 
-  /**
-   * @dev Transfer implementor to new contract
-   * Can only be called by owner or implementor contract.
-   */
-  function transferImplementor(address newImplementor)
-      public
-      requireNonZero(newImplementor)
-      onlyImplementorOrOwner
-  {
-      require(newImplementor != _implementor,
-              "Cannot transfer to same implementor as existing");
-      address curImplementor = _implementor;
-      _implementor = newImplementor;
-      emit StorageImplementorTransferred(curImplementor, newImplementor);
-  }
+    /**
+     * @dev Change totalSupply.
+     * Can only be called by implementor contract.
+     */
+    function setTotalSupply(uint256 value)
+        public
+        onlyImplementor
+    {
+        totalSupply = value;
+    }
 
-  /**
-   * @dev Asserts that sender is either owner or implementor.
-   */
-  modifier onlyImplementorOrOwner() {
-      require(isImplementor() || isOwner(), "Is not implementor or owner");
-      _;
-  }
+    /**
+     * @dev Can only be called by implementor contract.
+     * @return Current supply
+     */
+    function getTotalSupply()
+        public
+        view
+        returns (uint256)
+    {
+        return totalSupply;
+    }
 
-  /**
-   * @dev Asserts that sender is the implementor.
-   */
-  modifier onlyImplementor() {
-      require(isImplementor(), "Is not implementor");
-      _;
-  }
+    /**
+     * @dev Transfer implementor to new contract
+     * Can only be called by owner or implementor contract.
+     */
+    function transferImplementor(address newImplementor)
+        public
+        requireNonZero(newImplementor)
+        onlyImplementorOrOwner
+    {
+        require(newImplementor != _implementor,
+                "Cannot transfer to same implementor as existing");
+        address curImplementor = _implementor;
+        _implementor = newImplementor;
+        emit StorageImplementorTransferred(curImplementor, newImplementor);
+    }
 
-  /**
-   * @dev Asserts that the given address is not the null-address
-   */
-  modifier requireNonZero(address addr) {
-      require(addr != address(0), "Expected a non-zero address");
-      _;
-  }
+    /**
+     * @dev Asserts that sender is either owner or implementor.
+     */
+    modifier onlyImplementorOrOwner() {
+        require(isImplementor() || isOwner(), "Is not implementor or owner");
+        _;
+    }
+
+    /**
+     * @dev Asserts that sender is the implementor.
+     */
+    modifier onlyImplementor() {
+        require(isImplementor(), "Is not implementor");
+        _;
+    }
+
+    /**
+     * @dev Asserts that the given address is not the null-address
+     */
+    modifier requireNonZero(address addr) {
+        require(addr != address(0), "Expected a non-zero address");
+        _;
+    }
 }

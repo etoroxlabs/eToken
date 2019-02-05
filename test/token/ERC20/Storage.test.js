@@ -138,6 +138,78 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
     });
   });
 
+  describe('increaseBalance', function () {
+    const initialBalance = 100;
+    const increasedValue = 200;
+
+    const totalValue = initialBalance + increasedValue;
+
+    describe('when is owner', function () {
+      it('should not allow changing balance', async function () {
+        await utils.assertRevertsReason(
+          this.token.increaseBalance(anotherAccount, increasedValue, { from: owner }),
+          'Is not implementor');
+      });
+    });
+
+    describe('when is implementor', function () {
+      it('should allow increasing balance', async function () {
+        await this.token.setBalance(anotherAccount, initialBalance, { from: implementor });
+        await this.token.getBalance(anotherAccount);
+        await this.token.increaseBalance(anotherAccount, increasedValue, { from: implementor });
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(totalValue);
+      });
+    });
+
+    describe('when is not owner or implementor', function () {
+      it('should not allow increasing balance', async function () {
+        const oldBalance = await this.token.getBalance(anotherAccount);
+
+        oldBalance.should.not.be.bignumber.equal(totalValue);
+        await utils.assertRevertsReason(
+          this.token.increaseBalance(anotherAccount, increasedValue, { from: thirdAccount }),
+          'Is not implementor');
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(oldBalance);
+      });
+    });
+  });
+
+  describe('decreaseBalance', function () {
+    const initialBalance = 100;
+    const decreasedValue = 50;
+
+    const totalValue = initialBalance - decreasedValue;
+
+    describe('when is owner', function () {
+      it('should not allow changing balance', async function () {
+        await utils.assertRevertsReason(
+          this.token.decreaseBalance(anotherAccount, decreasedValue, { from: owner }),
+          'Is not implementor');
+      });
+    });
+
+    describe('when is implementor', function () {
+      it('should allow increasing balance', async function () {
+        await this.token.setBalance(anotherAccount, initialBalance, { from: implementor });
+        await this.token.getBalance(anotherAccount);
+        await this.token.decreaseBalance(anotherAccount, decreasedValue, { from: implementor });
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(totalValue);
+      });
+    });
+
+    describe('when is not owner or implementor', function () {
+      it('should not allow increasing balance', async function () {
+        const oldBalance = await this.token.getBalance(anotherAccount);
+
+        oldBalance.should.not.be.bignumber.equal(totalValue);
+        await utils.assertRevertsReason(
+          this.token.decreaseBalance(anotherAccount, decreasedValue, { from: thirdAccount }),
+          'Is not implementor');
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(oldBalance);
+      });
+    });
+  });
+
   describe('setAllowed', function () {
     const newAllowance = 200;
 

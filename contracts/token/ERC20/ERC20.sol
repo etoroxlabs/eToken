@@ -136,13 +136,8 @@ contract ERC20 {
     {
         require(to != address(0));
 
-        externalStorage.setBalance(
-            originSender,
-            externalStorage.getBalance(originSender).sub(value));
-        externalStorage.setBalance(
-            to,
-            externalStorage.getBalance(to).add(value)
-        );
+        externalStorage.decreaseBalance(originSender, value);
+        externalStorage.increaseBalance(to, value);
 
         emit Transfer(originSender, to, value);
 
