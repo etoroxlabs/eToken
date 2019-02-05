@@ -155,7 +155,7 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
     describe('when is implementor', function () {
       it('should allow increasing balance', async function () {
         await this.token.setBalance(anotherAccount, initialBalance, { from: implementor });
-        await this.token.getBalance(anotherAccount);
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(initialBalance);
         await this.token.increaseBalance(anotherAccount, increasedValue, { from: implementor });
         (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(totalValue);
       });
@@ -189,16 +189,16 @@ contract('Storage', function ([_, owner, implementor, anotherAccount, thirdAccou
     });
 
     describe('when is implementor', function () {
-      it('should allow increasing balance', async function () {
+      it('should allow decreasing balance', async function () {
         await this.token.setBalance(anotherAccount, initialBalance, { from: implementor });
-        await this.token.getBalance(anotherAccount);
+        (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(initialBalance);
         await this.token.decreaseBalance(anotherAccount, decreasedValue, { from: implementor });
         (await this.token.getBalance(anotherAccount)).should.be.bignumber.equal(totalValue);
       });
     });
 
     describe('when is not owner or implementor', function () {
-      it('should not allow increasing balance', async function () {
+      it('should not allow decreasing balance', async function () {
         const oldBalance = await this.token.getBalance(anotherAccount);
 
         oldBalance.should.not.be.bignumber.equal(totalValue);
