@@ -66,6 +66,11 @@ contract Storage is Ownable {
         balances[owner] = value;
     }
 
+    /**
+     * @dev Increases the balances relatively
+     * @param owner the address for which to increase balance
+     * @param addedValue the value to increase with
+     */
     function increaseBalance(address owner, uint256 addedValue)
         public
         onlyImplementor
@@ -73,6 +78,11 @@ contract Storage is Ownable {
         balances[owner] = balances[owner].add(addedValue);
     }
 
+    /**
+     * @dev Decreases the balances relatively
+     * @param owner the address for which to decrease balance
+     * @param subtractedValue the value to decrease with
+     */
     function decreaseBalance(address owner, uint256 subtractedValue)
         public
         onlyImplementor
@@ -103,6 +113,40 @@ contract Storage is Ownable {
         onlyImplementor
     {
         allowed[owner][spender] = value;
+    }
+
+    /**
+     * @dev Increases the allowance relatively
+     * @param owner the address for which to allow from
+     * @param spender the addres for which the allowance increase is granted
+     * @param addedValue the value to increase with
+     */
+    function increaseAllowed(
+        address owner,
+        address spender,
+        uint256 addedValue
+    )
+        public
+        onlyImplementor
+    {
+        allowed[owner][spender] = allowed[owner][spender].add(addedValue);
+    }
+
+    /**
+     * @dev Decreases the allowance relatively
+     * @param owner the address for which to allow from
+     * @param spender the addres for which the allowance decrease is granted
+     * @param subtractedValue the value to decrease with
+     */
+    function decreaseAllowed(
+        address owner,
+        address spender,
+        uint256 subtractedValue
+    )
+        public
+        onlyImplementor
+    {
+        allowed[owner][spender] = allowed[owner][spender].sub(subtractedValue);
     }
 
     /**
