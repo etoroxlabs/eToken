@@ -134,7 +134,6 @@ contract ERC20 {
         internal
         returns (bool)
     {
-        require(value <= externalStorage.getBalance(originSender));
         require(to != address(0));
 
         externalStorage.setBalance(
@@ -191,13 +190,13 @@ contract ERC20 {
         internal
         returns (bool)
     {
-        require(value <= externalStorage.getAllowed(from, originSender));
-
         externalStorage.setAllowed(
             from, originSender,
             externalStorage.getAllowed(from, originSender).sub(value)
         );
+
         _transfer(from, to, value);
+
         emit Approval(
             from,
             originSender,
@@ -299,7 +298,6 @@ contract ERC20 {
     function _burn(address originSender, uint256 value) internal returns (bool)
     {
         require(originSender != 0);
-        require(value <= externalStorage.getBalance(originSender));
 
         externalStorage.setTotalSupply(
             externalStorage.getTotalSupply().sub(value));
