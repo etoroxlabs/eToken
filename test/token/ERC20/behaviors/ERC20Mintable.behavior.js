@@ -66,9 +66,14 @@ function shouldBehaveLikeERC20Mintable (owner, minter, [anyone], mintingRecip) {
         });
       });
 
-      it('reverts when changing recipient ', async function () {
+      it('reverts when changing recipient to zero addr ', async function () {
         await shouldFail.reverting(
           this.token.changeMintingRecipient(0, { from: minter }));
+      });
+
+      it('returns the correct minting recipient', async function () {
+        (await this.token.getMintingRecipient())
+          .should.be.bignumber.equal(mintingRecip);
       });
 
       context('when changing minting recipient', async function () {

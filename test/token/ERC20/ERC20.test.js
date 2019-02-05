@@ -1,9 +1,9 @@
 /* global artifacts, contract, web3 */
 /* eslint-env mocha */
 
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
-const ExternalERC20 = artifacts.require('ExternalERC20');
-const ExternalERC20Mock = artifacts.require('ExternalERC20Mock');
+const Storage = artifacts.require('Storage');
+const ERC20 = artifacts.require('ERC20');
+const ERC20Mock = artifacts.require('ERC20Mock');
 
 const { shouldBehaveLikeERC20 } = require('./behaviors/ERC20.behavior');
 const utils = require('../../utils');
@@ -14,41 +14,59 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
+contract('ERC20', function ([_, owner, recipient, anotherAccount]) {
   beforeEach(async function () {
-    this.token = await ExternalERC20Mock.new(owner, 100);
+    this.token = await ERC20Mock.new(owner, 100, utils.ZERO_ADDRESS, true);
   });
 
   describe('At contruction', function () {
     it('should fail if specified external storage and expecting new storage',
        async function () {
          const someAddress = anotherAccount;
-         const assertReason = 'Cannot both create external storage and use existing one.';
+         const assertReason = 'Cannot both create external storage and use the provided one.';
 
          await utils.assertRevertsReason(
-           ExternalERC20.new(someAddress, true),
+           ERC20.new('t', 'test', 4, someAddress, true),
            assertReason);
        }
     );
 
     it('should fail if not specified external storage and not expecting new storage',
        async function () {
-         const assertReason = 'Cannot both create external storage and use existing one.';
+         const assertReason = 'Cannot both create external storage and use the provided one.';
          await utils.assertRevertsReason(
-           ExternalERC20.new(utils.ZERO_ADDRESS, false),
+           ERC20.new('t', 'test', 4, utils.ZERO_ADDRESS, false),
            assertReason);
        }
     );
+  });
+
+  describe('identity', function () {
+    // The expected values for this test are specified in
+    // ERC20Mock.sol
+    // Tests mainly included for coverage
+
+    it('returns correct name', async function () {
+      (await this.token.name()).should.be.equal('test');
+    });
+
+    it('returns correct symbol', async function () {
+      (await this.token.symbol()).should.be.equal('te');
+    });
+
+    it('returns correct number of decimals', async function () {
+      (await this.token.decimals()).should.be.bignumber.equal(4);
+    });
   });
 
   shouldBehaveLikeERC20(owner, recipient, anotherAccount);
 
   describe('When sharing storage', function () {
     beforeEach(async function () {
-      this.storage = ExternalERC20Storage.at(await this.token._externalERC20Storage());
-      this.token2 = await ExternalERC20.new(
-        this.storage.address,
-        false,
+      this.storage = Storage.at(await this.token.getExternalStorage());
+      this.token2 = await ERC20Mock.new(
+        owner, 0,
+        this.storage.address, false,
         { from: owner }
       );
     });
@@ -61,8 +79,6 @@ contract('ExternalERC20', function ([_, owner, recipient, anotherAccount]) {
     it('balanceOf should use external storage', async function () {
       (await this.token.balanceOf(owner)).should.be.bignumber.equal(100);
       (await this.token2.balanceOf(owner)).should.be.bignumber.equal(100);
-
-      // await this.storage.setImplementor(this.token2.address, {from: owner});
     });
 
     it('allowance should use external storage', async function () {

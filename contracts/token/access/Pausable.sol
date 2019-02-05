@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/PauserRole.sol";
+import "./roles/PauserRole.sol";
 
 /**
  * @title Pausable
@@ -10,24 +10,24 @@ contract Pausable is PauserRole {
     event Paused(address account);
     event Unpaused(address account);
 
-    bool private _paused;
+    bool private paused_;
 
     constructor() internal {
-        _paused = false;
+        paused_ = false;
     }
 
     /**
      * @return true if the contract is paused, false otherwise.
      */
-    function paused() public view returns(bool) {
-        return _paused;
+    function _paused() internal view returns(bool) {
+        return paused_;
     }
 
     /**
      * @dev Modifier to make a function callable only when the contract is not paused.
      */
     modifier whenNotPaused() {
-        require(!_paused);
+        require(!paused_);
         _;
     }
 
@@ -35,23 +35,23 @@ contract Pausable is PauserRole {
      * @dev Modifier to make a function callable only when the contract is paused.
      */
     modifier whenPaused() {
-        require(_paused);
+        require(paused_);
         _;
     }
 
     /**
      * @dev Called by the owner to pause, triggers stopped state
      */
-    function pause() public onlyPauser whenNotPaused {
-        _paused = true;
+    function _pause() internal onlyPauser whenNotPaused {
+        paused_ = true;
         emit Paused(msg.sender);
     }
 
     /**
      * @dev Called by the owner to unpause, returns to normal state
      */
-    function unpause() public onlyPauser whenPaused {
-        _paused = false;
+    function _unpause() internal onlyPauser whenPaused {
+        paused_ = false;
         emit Unpaused(msg.sender);
     }
 }

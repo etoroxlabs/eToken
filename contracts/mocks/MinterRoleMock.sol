@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/MinterRole.sol";
+import "../token/access/roles/MinterRole.sol";
 
 /**
  * @title Mock contract for testing MinterRole

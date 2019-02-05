@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/WhitelistAdminRole.sol";
+import "../token/access/roles/WhitelistAdminRole.sol";
 
 /** @title Mock contract for testing WhitelistAdminRole */
 contract WhitelistAdminRoleMock is WhitelistAdminRole {

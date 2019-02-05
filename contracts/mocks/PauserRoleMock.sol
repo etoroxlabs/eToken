@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/PauserRole.sol";
+import "../token/access/roles/PauserRole.sol";
 
 /**
  * @title Mock contract for testing PauserRole

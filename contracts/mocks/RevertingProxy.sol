@@ -1,11 +1,17 @@
-/* solium-disable */
 pragma solidity 0.4.24;
 
-import "../token/IUpgradableEToken.sol";
+import "../token/IETokenProxy.sol";
 
-contract RevertTokenMock is IUpgradableEToken {
+/**
+ * @title Reverting proxy mock contract
+ * @dev Implements a proxy interface which always reverts. Used for
+ * testing if upgraded tokens actually forwards calls to the proxy.
+ */
+contract RevertingProxy is IETokenProxy {
 
-    function upgrade(IUpgradableEToken upgradedToken) public {
+    /* solium-disable zeppelin/missing-natspec-comments */
+
+    function upgrade(IETokenProxy upgradedToken) public pure {
         // Silence warnings
         upgradedToken;
     }
@@ -13,7 +19,7 @@ contract RevertTokenMock is IUpgradableEToken {
     function finalizeUpgrade() public {
     }
 
-    function nameExplicitSender(address sender)
+    function nameProxy(address sender)
         public
         view
         returns(string)
@@ -22,7 +28,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("name");
     }
 
-    function symbolExplicitSender(address sender)
+    function symbolProxy(address sender)
         public
         view
         returns(string)
@@ -31,7 +37,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("symbol");
     }
 
-    function decimalsExplicitSender(address sender)
+    function decimalsProxy(address sender)
         public
         view
         returns(uint8)
@@ -41,7 +47,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("decimals");
     }
 
-    function totalSupplyExplicitSender(address sender)
+    function totalSupplyProxy(address sender)
         public
         view
         returns(uint256)
@@ -51,7 +57,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("totalSupply");
     }
 
-    function balanceOfExplicitSender(address sender, address who)
+    function balanceOfProxy(address sender, address who)
         public
         view
         returns(uint256)
@@ -62,7 +68,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("balanceOf");
     }
 
-    function allowanceExplicitSender(address sender, address owner, address spender)
+    function allowanceProxy(address sender, address owner, address spender)
         public
         view
         returns(uint256)
@@ -74,7 +80,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("allowance");
     }
 
-    function transferExplicitSender(address sender, address to, uint256 value)
+    function transferProxy(address sender, address to, uint256 value)
         public
         returns (bool)
     {
@@ -84,7 +90,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("transfer");
     }
 
-    function approveExplicitSender(address sender, address spender, uint256 value)
+    function approveProxy(address sender, address spender, uint256 value)
         public
         returns (bool)
     {
@@ -94,7 +100,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("approve");
     }
 
-    function transferFromExplicitSender(
+    function transferFromProxy(
         address sender,
         address from,
         address to,
@@ -110,7 +116,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("transferFrom");
     }
 
-    function increaseAllowanceExplicitSender(
+    function increaseAllowanceProxy(
         address sender,
         address spender,
         uint256 addedValue
@@ -124,7 +130,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("increaseAllowance");
     }
 
-    function decreaseAllowanceExplicitSender(address sender,
+    function decreaseAllowanceProxy(address sender,
                                              address spender,
                                              uint256 subtractedValue)
         public
@@ -135,7 +141,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("decreaseAllowance");
     }
 
-    function burnExplicitSender(address sender, uint256 value)
+    function burnProxy(address sender, uint256 value)
         public
     {
         sender;
@@ -143,7 +149,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("burn");
     }
 
-    function burnFromExplicitSender(address sender,
+    function burnFromProxy(address sender,
                                     address from,
                                     uint256 value)
         public
@@ -154,7 +160,7 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("burnFrom");
     }
 
-    function mintExplicitSender(address sender, address to, uint256 value)
+    function mintProxy(address sender, address to, uint256 value)
         public
         returns (bool)
     {
@@ -164,11 +170,12 @@ contract RevertTokenMock is IUpgradableEToken {
         revert("mint");
     }
 
-    function changeMintingRecipientExplicitSender(address sender, address mintingRecip)
+    function changeMintingRecipientProxy(address sender, address mintingRecip)
         public
     {
         sender;
         mintingRecip;
         revert("changeMintingRecipient");
     }
+
 }

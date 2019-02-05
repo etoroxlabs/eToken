@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/BurnerRole.sol";
+import "../token/access/roles/BurnerRole.sol";
 
 /**
  * @title Burner role mock contract

@@ -1,9 +1,8 @@
 pragma solidity 0.4.24;
 
-/* solium-disable max-len */
-import "../token/ERC20/ExternalERC20Storage.sol";
+import "../token/ERC20/Storage.sol";
 import "../token/EToken.sol";
-import "../token/IUpgradableEToken.sol";
+import "../token/IETokenProxy.sol";
 import "./PauserRoleMock.sol";
 
 /** @title Mock contract for testing EToken */
@@ -36,9 +35,9 @@ contract ETokenMock is EToken, PauserRoleMock {
         uint8 decimals,
         Accesslist accesslist,
         bool whitelistEnabled,
-        ExternalERC20Storage stor,
+        Storage stor,
         address mintingRecip,
-        IUpgradableEToken upgradedFrom,
+        IETokenProxy upgradedFrom,
         bool initialDeployment,
         address initialAccount,
         uint256 initialBalance

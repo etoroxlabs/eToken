@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/roles/BlacklistAdminRole.sol";
+import "../token/access/roles/BlacklistAdminRole.sol";
 
 /**
  * @title An Blacklist admin mock contract

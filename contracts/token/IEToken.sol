@@ -1,14 +1,18 @@
 pragma solidity 0.4.24;
 
-import "./IUpgradableEToken.sol";
+import "./IETokenProxy.sol";
 
 /**
  * @title EToken interface
  * @dev The interface comprising an EToken contract
+ * This interface is a superset of the ERC20 interface defined at
+ * https://github.com/ethereum/EIPs/issues/20
  */
 interface IEToken {
 
     /* solium-disable zeppelin/missing-natspec-comments */
+
+    function upgrade(IETokenProxy upgradedToken) external;
 
     /* Taken from ERC20Detailed in openzeppelin-solidity */
     function name() external view returns(string);
@@ -50,6 +54,12 @@ interface IEToken {
     )
         external
         returns (bool success);
+
+    function pause() external;
+
+    function unpause() external;
+
+    function paused() external view returns (bool);
 
     function decreaseAllowance(
         address spender,

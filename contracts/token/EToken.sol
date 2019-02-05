@@ -1,13 +1,10 @@
 pragma solidity 0.4.24;
 
-import "./ERC20/ExternalERC20Storage.sol";
-
-import "./ETokenExplicitSender.sol";
 import "./IEToken.sol";
-import "./IUpgradableEToken.sol";
+import "./ETokenProxy.sol";
 
 /** @title Main EToken contract */
-contract EToken is IEToken, ETokenExplicitSender {
+contract EToken is IEToken, ETokenProxy {
 
     /**
      * @param name The name of the token
@@ -15,8 +12,8 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @param decimals The number of decimals of the token
      * @param accesslist Address of a deployed whitelist contract
      * @param whitelistEnabled Create token with whitelist enabled
-     * @param externalERC20Storage Address of a deployed ERC20 storage contract
-     * @param mintingRecipientAccount The initial minting recipient of the token
+     * @param externalStorage Address of a deployed ERC20 storage contract
+     * @param initialMintingRecipient The initial minting recipient of the token
      * @param upgradedFrom The token contract that this contract upgrades. Set
      * to address(0) for initial deployments
      * @param initialDeployment Set to true if this is the initial deployment of
@@ -33,23 +30,25 @@ contract EToken is IEToken, ETokenExplicitSender {
         uint8 decimals,
         Accesslist accesslist,
         bool whitelistEnabled,
-        ExternalERC20Storage externalERC20Storage,
-        address mintingRecipientAccount,
+        Storage externalStorage,
+        address initialMintingRecipient,
         address upgradedFrom,
         bool initialDeployment
     )
         public
-        ETokenExplicitSender(
+        ETokenProxy(
             name,
             symbol,
             decimals,
             accesslist,
             whitelistEnabled,
-            externalERC20Storage,
-            mintingRecipientAccount,
+            externalStorage,
+            initialMintingRecipient,
             upgradedFrom,
             initialDeployment
-        ) {
+        )
+    {
+
     }
 
     /**
@@ -58,9 +57,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function name() public view returns(string) {
         if (isUpgraded()) {
-            return upgradedToken.nameExplicitSender(msg.sender);
+            return getUpgradedToken().nameProxy(msg.sender);
         } else {
-            return super.name();
+            return nameGuarded(msg.sender);
         }
     }
 
@@ -70,9 +69,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function symbol() public view returns(string) {
         if (isUpgraded()) {
-            return upgradedToken.symbolExplicitSender(msg.sender);
+            return getUpgradedToken().symbolProxy(msg.sender);
         } else {
-            return super.symbol();
+            return symbolGuarded(msg.sender);
         }
     }
 
@@ -81,9 +80,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function decimals() public view returns(uint8) {
         if (isUpgraded()) {
-            return upgradedToken.decimalsExplicitSender(msg.sender);
+            return getUpgradedToken().decimalsProxy(msg.sender);
         } else {
-            return super.decimals();
+            return decimalsGuarded(msg.sender);
         }
     }
 
@@ -93,9 +92,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function totalSupply() public view returns (uint256) {
         if (isUpgraded()) {
-            return upgradedToken.totalSupplyExplicitSender(msg.sender);
+            return getUpgradedToken().totalSupplyProxy(msg.sender);
         } else {
-            return super.totalSupply();
+            return totalSupplyGuarded(msg.sender);
         }
     }
 
@@ -107,18 +106,20 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function balanceOf(address who) public view returns (uint256) {
         if (isUpgraded()) {
-            return upgradedToken.balanceOfExplicitSender(msg.sender, who);
+            return getUpgradedToken().balanceOfProxy(msg.sender, who);
         } else {
-            return super.balanceOf(who);
+            return balanceOfGuarded(msg.sender, who);
         }
     }
 
     /**
-     * @dev Function to check the amount of tokens that an owner allowed to a spender.
+     * @dev Function to check the amount of tokens that an owner
+     * allowed to a spender.
      * @dev Proxies call to new token if this token is upgraded
      * @param owner address The address which owns the funds.
      * @param spender address The address which will spend the funds.
-     * @return A uint256 specifying the amount of tokens still available for the spender.
+     * @return A uint256 specifying the amount of tokens still available
+     * for the spender.
      */
     function allowance(address owner, address spender)
         public
@@ -126,9 +127,13 @@ contract EToken is IEToken, ETokenExplicitSender {
         returns (uint256)
     {
         if (isUpgraded()) {
-            return upgradedToken.allowanceExplicitSender(msg.sender, owner, spender);
+            return getUpgradedToken().allowanceProxy(
+                msg.sender,
+                owner,
+                spender
+            );
         } else {
-            return super.allowance(owner, spender);
+            return allowanceGuarded(msg.sender, owner, spender);
         }
     }
 
@@ -141,17 +146,20 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function transfer(address to, uint256 value) public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.transferExplicitSender(msg.sender, to, value);
+            return getUpgradedToken().transferProxy(msg.sender, to, value);
         } else {
-            return super.transfer(to, value);
+            return transferGuarded(msg.sender, to, value);
         }
     }
 
     /**
-     * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
-     * Beware that changing an allowance with this method brings the risk that someone may use both the old
-     * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
-     * race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards:
+     * @dev Approve the passed address to spend the specified amount
+     * of tokens on behalf of msg.sender.  Beware that changing an
+     * allowance with this method brings the risk that someone may use
+     * both the old and the new allowance by unfortunate transaction
+     * ordering. One possible solution to mitigate this race condition
+     * is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
      * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
      * @dev Proxies call to new token if this token is upgraded
      * @param spender The address which will spend the funds.
@@ -159,9 +167,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function approve(address spender, uint256 value) public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.approveExplicitSender(msg.sender, spender, value);
+            return getUpgradedToken().approveProxy(msg.sender, spender, value);
         } else {
-            return super.approve(spender, value);
+            return approveGuarded(msg.sender, spender, value);
         }
     }
 
@@ -177,14 +185,19 @@ contract EToken is IEToken, ETokenExplicitSender {
         returns (bool)
     {
         if (isUpgraded()) {
-            return upgradedToken.transferFromExplicitSender(
+            return getUpgradedToken().transferFromProxy(
                 msg.sender,
                 from,
                 to,
                 value
             );
         } else {
-            return super.transferFrom(from, to, value);
+            return transferFromGuarded(
+                msg.sender,
+                from,
+                to,
+                value
+            );
         }
     }
 
@@ -197,9 +210,9 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function mint(address to, uint256 value) public returns (bool) {
         if (isUpgraded()) {
-            return upgradedToken.mintExplicitSender(msg.sender, to, value);
+            return getUpgradedToken().mintProxy(msg.sender, to, value);
         } else {
-            return super.mint(to, value);
+            return mintGuarded(msg.sender, to, value);
         }
     }
 
@@ -208,25 +221,28 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @dev Proxies call to new token if this token is upgraded
      * @param value The amount of token to be burned.
      */
-    function burn(uint256 value) public {
+    function burn(uint256 value) public
+    {
         if (isUpgraded()) {
-            upgradedToken.burnExplicitSender(msg.sender, value);
+            getUpgradedToken().burnProxy(msg.sender, value);
         } else {
-            super.burn(value);
+            burnGuarded(msg.sender, value);
         }
     }
 
     /**
-     * @dev Burns a specific amount of tokens from the target address and decrements allowance
+     * @dev Burns a specific amount of tokens from the target address
+     * and decrements allowance
      * @dev Proxies call to new token if this token is upgraded
      * @param from address The address which you want to send tokens from
      * @param value uint256 The amount of token to be burned
      */
-    function burnFrom(address from, uint256 value) public {
+    function burnFrom(address from, uint256 value) public
+    {
         if (isUpgraded()) {
-            upgradedToken.burnFromExplicitSender(msg.sender, from, value);
+            getUpgradedToken().burnFromProxy(msg.sender, from, value);
         } else {
-            super.burnFrom(from, value);
+            burnFromGuarded(msg.sender, from, value);
         }
     }
 
@@ -248,9 +264,13 @@ contract EToken is IEToken, ETokenExplicitSender {
         returns (bool success)
     {
         if (isUpgraded()) {
-            return upgradedToken.increaseAllowanceExplicitSender(msg.sender, spender, addedValue);
+            return getUpgradedToken().increaseAllowanceProxy(
+                msg.sender,
+                spender,
+                addedValue
+            );
         } else {
-            return super.increaseAllowance(spender, addedValue);
+            return increaseAllowanceGuarded(msg.sender, spender, addedValue);
         }
     }
 
@@ -272,9 +292,17 @@ contract EToken is IEToken, ETokenExplicitSender {
         returns (bool success)
     {
         if (isUpgraded()) {
-            return upgradedToken.decreaseAllowanceExplicitSender(msg.sender, spender, subtractedValue);
+            return getUpgradedToken().decreaseAllowanceProxy(
+                msg.sender,
+                spender,
+                subtractedValue
+            );
         } else {
-            return super.decreaseAllowance(spender, subtractedValue);
+            return super.decreaseAllowanceGuarded(
+                msg.sender,
+                spender,
+                subtractedValue
+            );
         }
     }
 
@@ -284,9 +312,12 @@ contract EToken is IEToken, ETokenExplicitSender {
      */
     function changeMintingRecipient(address mintingRecip) public {
         if (isUpgraded()) {
-            upgradedToken.changeMintingRecipientExplicitSender(msg.sender, mintingRecip);
+            getUpgradedToken().changeMintingRecipientProxy(
+                msg.sender,
+                mintingRecip
+            );
         } else {
-            super.changeMintingRecipient(mintingRecip);
+            changeMintingRecipientGuarded(msg.sender, mintingRecip);
         }
     }
 
@@ -295,11 +326,11 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @dev This function will _not_ be proxied to the new
      * token if this token is upgraded
      */
-    function pause () public {
+    function pause() public {
         if (isUpgraded()) {
             revert("Token is upgraded. Call pause from new token.");
         } else {
-            super.pause();
+            pauseGuarded(msg.sender);
         }
     }
 
@@ -308,11 +339,22 @@ contract EToken is IEToken, ETokenExplicitSender {
      * @dev This function will _not_ be proxied to the new
      * token if this token is upgraded
      */
-    function unpause () public {
+    function unpause() public {
         if (isUpgraded()) {
             revert("Token is upgraded. Call unpause from new token.");
         } else {
-            super.unpause();
+            unpauseGuarded(msg.sender);
+        }
+    }
+
+    /**
+     * @return true if the contract is paused, false otherwise.
+     */
+    function paused() public view returns (bool) {
+        if (isUpgraded()) {
+            revert("Token is upgraded. Call paused from new token.");
+        } else {
+            return pausedGuarded(msg.sender);
         }
     }
 }

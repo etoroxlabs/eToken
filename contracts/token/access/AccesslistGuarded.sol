@@ -10,7 +10,7 @@ import "./Accesslist.sol";
 contract AccesslistGuarded {
 
     Accesslist private accesslist;
-    bool public whitelistEnabled;
+    bool private whitelistEnabled;
 
     /**
      * @dev Constructor. Checks if the accesslist is a zero address

@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../access/AccesslistGuarded.sol";
+import "../token/access/AccesslistGuarded.sol";
 
 /**
  * @title An AccesslistGuarded mock contract

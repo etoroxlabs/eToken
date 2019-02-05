@@ -1,13 +1,14 @@
 pragma solidity 0.4.24;
 
-import "./ExternalERC20.sol";
-import "../../access/roles/MinterRole.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
- * @title ExternalERC20 ERC20Mintable
- * @dev ERC20 minting logic
+ * @title Restricted minter
+ * @dev Implements the notion of a restricted minter which is only
+ * able to mint to a single specified account. Only the owner may
+ * change this account.
  */
-contract ExternalERC20Mintable is ExternalERC20, MinterRole {
+contract RestrictedMinter  {
 
     address private mintingRecipientAccount;
 
@@ -21,25 +22,32 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
         _changeMintingRecipient(msg.sender, _mintingRecipientAccount);
     }
 
+    modifier requireMintingRecipient(address account) {
+        require(account == mintingRecipientAccount,
+                "is not mintingRecpientAccount");
+        _;
+    }
+
     /**
      * @return The current minting recipient account address
      */
-    function getMintingRecipientAccount() public view returns (address) {
+    function getMintingRecipient() public view returns (address) {
         return mintingRecipientAccount;
     }
 
     /**
      * @dev Internal function allowing the owner to change the current minting recipient account
-     * @param sender The sender address of the request
+     * @param originSender The sender address of the request
      * @param _mintingRecipientAccount address of new minting recipient
      */
     function _changeMintingRecipient(
-        address sender,
+        address originSender,
         address _mintingRecipientAccount
     )
         internal
     {
-        require(owner() == sender, "is not owner");
+        originSender;
+
         require(_mintingRecipientAccount != address(0),
                 "zero minting recipient");
         address prev = mintingRecipientAccount;
@@ -47,23 +55,4 @@ contract ExternalERC20Mintable is ExternalERC20, MinterRole {
         emit MintingRecipientAccountChanged(prev, mintingRecipientAccount);
     }
 
-    /**
-     * @dev Function to mint tokens
-     * @param sender the sender address of the requiest
-     * @param to The address that will receive the minted tokens.
-     * @param value The amount of tokens to mint.
-     * @return A boolean that indicates if the operation was successful.
-     */
-    function _mintExplicitSender(
-        address sender,
-        address to,
-        uint256 value
-    )
-        internal
-        requireMinter(sender)
-    {
-        require(to == mintingRecipientAccount,
-                "not minting to mintingRecipientAccount");
-        _mint(to, value);
-    }
 }

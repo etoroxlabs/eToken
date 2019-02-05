@@ -17,9 +17,9 @@ const util = require('./../utils.js');
 const Accesslist = artifacts.require('Accesslist');
 const ETokenMock = artifacts.require('ETokenMock');
 const EToken = artifacts.require('EToken');
-const RevertTokenMock = artifacts.require('RevertTokenMock');
+const RevertingProxy = artifacts.require('RevertingProxy');
 const ETokenE = require('./EToken.events.js');
-const ExternalERC20Storage = artifacts.require('ExternalERC20Storage');
+const Storage = artifacts.require('Storage');
 
 const BigNumber = web3.BigNumber;
 
@@ -28,20 +28,20 @@ require('chai')
   .should();
 
 const explicitSenderOps = [
-  ['nameExplicitSender', [util.ZERO_ADDRESS]],
-  ['symbolExplicitSender', [util.ZERO_ADDRESS]],
-  ['decimalsExplicitSender', [util.ZERO_ADDRESS]],
-  ['totalSupplyExplicitSender', [util.ZERO_ADDRESS]],
-  ['balanceOfExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]],
-  ['allowanceExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, util.ZERO_ADDRESS]],
-  ['transferExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['approveExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['transferFromExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['increaseAllowanceExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['decreaseAllowanceExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['burnExplicitSender', [util.ZERO_ADDRESS, 0]],
-  ['burnFromExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['changeMintingRecipientExplicitSender', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]]
+  ['nameProxy', [util.ZERO_ADDRESS]],
+  ['symbolProxy', [util.ZERO_ADDRESS]],
+  ['decimalsProxy', [util.ZERO_ADDRESS]],
+  ['totalSupplyProxy', [util.ZERO_ADDRESS]],
+  ['balanceOfProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]],
+  ['allowanceProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, util.ZERO_ADDRESS]],
+  ['transferProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['approveProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['transferFromProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['increaseAllowanceProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['decreaseAllowanceProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['burnProxy', [util.ZERO_ADDRESS, 0]],
+  ['burnFromProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['changeMintingRecipientProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]]
 ];
 
 const otherOps = [
@@ -53,7 +53,9 @@ const otherOps = [
   ['burn', [0]],
   ['burnFrom', [util.ZERO_ADDRESS, 0]],
   ['mint', [util.ZERO_ADDRESS, 0]],
-  ['changeMintingRecipient', [util.ZERO_ADDRESS]]
+  ['changeMintingRecipient', [util.ZERO_ADDRESS]],
+  ['pause', []],
+  ['unpause', []]
 ];
 
 function unupgradedTokenBehavior () {
@@ -61,8 +63,8 @@ function unupgradedTokenBehavior () {
     (await this.token.isUpgraded()).should.be.equal(false);
   });
 
-  it("should return zero address for upgrade token'", async function () {
-    (await this.token.upgradedToken()).should.be.equal(util.ZERO_ADDRESS);
+  it('should return zero address for upgrade token', async function () {
+    (await this.token.getUpgradedToken()).should.be.equal(util.ZERO_ADDRESS);
   });
 }
 
@@ -72,24 +74,20 @@ function proxyTokenBehavior () {
       (await this.token.isUpgraded()).should.be.equal(true);
     });
 
-    it("should return zero address for upgrade token'", async function () {
-      (await this.token.upgradedToken()).should.be.equal(this.newToken.address);
+    it('should return zero address for upgrade token', async function () {
+      (await this.token.getUpgradedToken()).should.be.equal(this.newToken.address);
     });
   });
 }
 
 function proxyPausableBehavior () {
-  describe('pause', function () {
-    it('reverts when token is upgraded', async function () {
-      await util.assertRevertsReason(this.token.pause(),
-                                     'Token is upgraded. Call pause from new token.');
-    });
-  });
-
-  describe('unpause', function () {
-    it('reverts when token is upgraded', async function () {
-      await util.assertRevertsReason(this.token.unpause(),
-                                     'Token is upgraded. Call unpause from new token.');
+  ['pause', 'unpause', 'paused'].forEach(function (f) {
+    describe(f, function () {
+      it('reverts when token is upgraded', async function () {
+        await util.assertRevertsReason(
+          this.token[f](),
+          `Token is upgraded. Call ${f} from new token.`);
+      });
     });
   });
 }
@@ -208,7 +206,7 @@ contract('EToken', async function (
     let storage;
 
     beforeEach(async function () {
-      storage = await ExternalERC20Storage.new(owner, owner, { from: owner });
+      storage = await Storage.new(owner, owner, { from: owner });
     });
 
     it('reverts when both upgradedFrom and initialDeployment are set', async function () {
@@ -243,7 +241,7 @@ contract('EToken', async function (
                                    accesslist.address, true, util.ZERO_ADDRESS,
                                    mintingRecipientAccount,
                                    0, true, owner, 100, { from: owner });
-      storage = ExternalERC20Storage.at(await token._externalERC20Storage());
+      storage = Storage.at(await token.getExternalStorage());
 
       tokenE = ETokenE.wrap(token);
       upgradeToken = await ETokenMock.new(
@@ -384,7 +382,7 @@ contract('EToken', async function (
                          blackwhite, blackwhite1);
         identifiesAsNewToken();
 
-        describe('Upgraded token rejects unauthorized for explicit sender functions', function () {
+        describe('Upgraded token rejects unauthorized for proxy sender functions', function () {
           explicitSenderOps.forEach(function (op) {
             it(`${op[0]} reverts`, async function () {
               await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
@@ -423,9 +421,14 @@ contract('EToken', async function (
     });
   });
 
-  describe('when upgraded once', function () {
+  describe('upgrade proxy chaining', function () {
+    let accesslist;
+
     beforeEach(async function () {
-      const accesslist = await Accesslist.new({ from: owner });
+      accesslist = await Accesslist.new({ from: owner });
+
+      await accesslist.addWhitelisted(owner);
+      await accesslist.addWhitelisted(minter);
 
       this.token = await ETokenMock.new(
         'upgraded', 'upg', 8, accesslist.address, true,
@@ -433,60 +436,53 @@ contract('EToken', async function (
         true, owner, 100
       );
 
-      this.revertToken = await RevertTokenMock.new();
-      // Ensure 100% coverage
-      await this.revertToken.upgrade(0);
-      this.upgrade = function () {
-        return this.token.upgrade(this.revertToken.address);
-      };
-
-      // Needed state changes for testing
-      await accesslist.addWhitelisted(owner);
-      await accesslist.addWhitelisted(minter);
-      await this.token.addMinter(owner);
-      await this.token.addBurner(minter);
-      await this.token.approve(minter, 2);
+      this.revertToken = await RevertingProxy.new();
     });
 
-    proxyTests();
-  });
+    describe('when upgraded once', function () {
+      beforeEach(async function () {
+        // Ensure 100% coverage
+        await this.revertToken.upgrade(0);
+        this.upgrade = function () {
+          return this.token.upgrade(this.revertToken.address);
+        };
 
-  describe('when upgraded twice', function () {
-    beforeEach(async function () {
-      const accesslist = await Accesslist.new({ from: owner });
+        // Needed state changes for testing
+        await this.token.addMinter(owner);
+        await this.token.addBurner(minter);
+        await this.token.approve(minter, 2);
+      });
 
-      this.token = await ETokenMock.new(
-        'upgraded', 'upg', 8, accesslist.address, true,
-        util.ZERO_ADDRESS, owner, util.ZERO_ADDRESS,
-        true, owner, 100
-      );
-
-      const storage = await this.token._externalERC20Storage();
-
-      this.upgradedToToken = await EToken.new(
-        'upgraded2', 'upg2', 10, accesslist.address, true,
-        storage, owner, this.token.address,
-        false
-      );
-
-      await this.token.upgrade(this.upgradedToToken.address);
-
-      this.revertToken = await RevertTokenMock.new();
-      this.upgrade = function () {
-        return this.upgradedToToken.upgrade(this.revertToken.address);
-      };
-
-      // Needed state changes for testing
-      await accesslist.addWhitelisted(owner);
-      await accesslist.addWhitelisted(minter);
-      await this.token.addMinter(owner);
-      await this.token.addBurner(minter);
-      await this.token.approve(minter, 2);
-      await this.upgradedToToken.addMinter(owner);
-      await this.upgradedToToken.addBurner(minter);
+      proxyTests();
     });
 
-    proxyTests();
+    describe('when upgraded twice', function () {
+      beforeEach(async function () {
+        const storage = await this.token.getExternalStorage();
+
+        this.upgradedToToken = await EToken.new(
+          'upgraded2', 'upg2', 10, accesslist.address, true,
+          storage, owner, this.token.address,
+          false
+        );
+
+        await this.token.upgrade(this.upgradedToToken.address);
+
+        this.revertToken = await RevertingProxy.new();
+        this.upgrade = function () {
+          return this.upgradedToToken.upgrade(this.revertToken.address);
+        };
+
+        // Needed state changes for testing
+        await this.token.addMinter(owner);
+        await this.token.addBurner(minter);
+        await this.token.approve(minter, 2);
+        await this.upgradedToToken.addMinter(owner);
+        await this.upgradedToToken.addBurner(minter);
+      });
+
+      proxyTests();
+    });
   });
 
   function proxyTests () {
