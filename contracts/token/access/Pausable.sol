@@ -54,8 +54,6 @@ contract Pausable is PauserRole {
      */
     function _pause(address originSender)
         internal
-        requireIsPauser(originSender)
-        whenNotPaused
     {
         paused_ = true;
         emit Paused(originSender);
@@ -67,8 +65,6 @@ contract Pausable is PauserRole {
      */
     function _unpause(address originSender)
         internal
-        requireIsPauser(originSender)
-        whenPaused
     {
         paused_ = false;
         emit Unpaused(originSender);

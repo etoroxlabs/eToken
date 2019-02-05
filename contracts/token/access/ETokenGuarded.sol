@@ -348,6 +348,8 @@ contract ETokenGuarded is
     function pauseGuarded(address originSender)
         internal
         isEnabled
+        requireIsPauser(originSender)
+        whenNotPaused
     {
         _pause(originSender);
     }
@@ -360,6 +362,8 @@ contract ETokenGuarded is
     function unpauseGuarded(address originSender)
         internal
         isEnabled
+        requireIsPauser(originSender)
+        whenPaused
     {
         _unpause(originSender);
     }
