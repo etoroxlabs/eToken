@@ -178,4 +178,18 @@ contract RevertingProxy is IETokenProxy {
         revert("changeMintingRecipient");
     }
 
+    function pauseProxy(address sender) external {
+        sender;
+        revert("pause");
+    }
+
+    function unpauseProxy(address sender) external {
+        sender;
+        revert("unpause");
+    }
+
+    function pausedProxy(address sender) external view returns (bool) {
+        sender;
+        revert("paused");
+    }
 }

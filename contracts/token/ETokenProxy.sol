@@ -320,4 +320,33 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
         }
     }
 
+    /** Like EToken.pause but proxies calls as described
+        in the documentation for the declaration of this contract. */
+    function pauseProxy(address sender) external {
+        if (isUpgraded()) {
+            getUpgradedToken().pauseProxy(sender);
+        } else {
+            pauseGuarded(sender);
+        }
+    }
+
+    /** Like EToken.unpause but proxies calls as described
+        in the documentation for the declaration of this contract. */
+    function unpauseProxy(address sender) external {
+        if (isUpgraded()) {
+            getUpgradedToken().unpauseProxy(sender);
+        } else {
+            unpauseGuarded(sender);
+        }
+    }
+
+    /** Like EToken.paused but proxies calls as described
+        in the documentation for the declaration of this contract. */
+    function pausedProxy(address sender) external view returns (bool) {
+        if (isUpgraded()) {
+            return getUpgradedToken().pausedProxy(sender);
+        } else {
+            return pausedGuarded(sender);
+        }
+    }
 }

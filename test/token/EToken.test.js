@@ -55,7 +55,8 @@ const otherOps = [
   ['mint', [util.ZERO_ADDRESS, 0]],
   ['changeMintingRecipient', [util.ZERO_ADDRESS]],
   ['pause', []],
-  ['unpause', []]
+  ['unpause', []],
+  ['paused', []]
 ];
 
 function unupgradedTokenBehavior () {
@@ -76,18 +77,6 @@ function proxyTokenBehavior () {
 
     it('should return zero address for upgrade token', async function () {
       (await this.token.getUpgradedToken()).should.be.equal(this.newToken.address);
-    });
-  });
-}
-
-function proxyPausableBehavior () {
-  ['pause', 'unpause', 'paused'].forEach(function (f) {
-    describe(f, function () {
-      it('reverts when token is upgraded', async function () {
-        await util.assertRevertsReason(
-          this.token[f](),
-          `Token is upgraded. Call ${f} from new token.`);
-      });
     });
   });
 }
@@ -405,7 +394,6 @@ contract('EToken', async function (
         shouldBehaveLikeERC20PublicAPI(owner, whitelisted, whitelisted1);
         shouldBehaveLikeERC20Mintable(owner, minter, [user], mintingRecipientAccount);
         shouldBehaveLikeERC20Burnable(owner, 100, [burner]);
-        proxyPausableBehavior();
         ERC20Permissions(owner, whitelisted, user, user1,
                          blacklisted, blacklisted1,
                          blackwhite, blackwhite1);
@@ -501,15 +489,20 @@ contract('EToken', async function (
       ['burnFrom', [owner, 1], minter],
       ['increaseAllowance', [minter, 1]],
       ['decreaseAllowance', [minter, 1]],
-      ['changeMintingRecipient', [minter]]
+      ['changeMintingRecipient', [minter]],
+      ['pause', []],
+      ['unpause', [], undefined, (t) => t.pause()], // Pause before testing unpause
+      ['paused', []]
     ];
 
     upgradeOps.forEach(function (u) {
       const name = u[0];
       const params = u[1];
       const from = u[2] === undefined ? owner : u[2];
+      const preFn = u[3];
 
       it(`should proxy ${name} method`, async function () {
+        preFn && await preFn(this.token);
         await this.token[name](...params, { from });
         await this.upgrade();
         await util.assertRevertsReason(this.token[name](...params, { from }), name);

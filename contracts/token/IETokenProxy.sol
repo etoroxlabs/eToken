@@ -83,5 +83,11 @@ interface IETokenProxy {
         external
         returns (bool success);
 
+    function pauseProxy(address sender) external;
+
+    function unpauseProxy(address sender) external;
+
+    function pausedProxy(address sender) external view returns (bool);
+
     function finalizeUpgrade() external;
 }
