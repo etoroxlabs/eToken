@@ -36,10 +36,17 @@ contract EToken is IEToken, ETokenProxy {
         bool initialDeployment
     )
         public
-        ETokenProxy(name, symbol, decimals,
-                    accesslist, whitelistEnabled,
-                    externalStorage, initialMintingRecipient,
-                    upgradedFrom, initialDeployment)
+        ETokenProxy(
+            name,
+            symbol,
+            decimals,
+            accesslist,
+            whitelistEnabled,
+            externalStorage,
+            initialMintingRecipient,
+            upgradedFrom,
+            initialDeployment
+        )
     {
 
     }
@@ -106,11 +113,13 @@ contract EToken is IEToken, ETokenProxy {
     }
 
     /**
-     * @dev Function to check the amount of tokens that an owner allowed to a spender.
+     * @dev Function to check the amount of tokens that an owner
+     * allowed to a spender.
      * @dev Proxies call to new token if this token is upgraded
      * @param owner address The address which owns the funds.
      * @param spender address The address which will spend the funds.
-     * @return A uint256 specifying the amount of tokens still available for the spender.
+     * @return A uint256 specifying the amount of tokens still available
+     * for the spender.
      */
     function allowance(address owner, address spender)
         public
@@ -118,7 +127,11 @@ contract EToken is IEToken, ETokenProxy {
         returns (uint256)
     {
         if (isUpgraded()) {
-            return getUpgradedToken().allowanceProxy(msg.sender, owner, spender);
+            return getUpgradedToken().allowanceProxy(
+                msg.sender,
+                owner,
+                spender
+            );
         } else {
             return allowanceGuarded(msg.sender, owner, spender);
         }
@@ -140,10 +153,13 @@ contract EToken is IEToken, ETokenProxy {
     }
 
     /**
-     * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
-     * Beware that changing an allowance with this method brings the risk that someone may use both the old
-     * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
-     * race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards:
+     * @dev Approve the passed address to spend the specified amount
+     * of tokens on behalf of msg.sender.  Beware that changing an
+     * allowance with this method brings the risk that someone may use
+     * both the old and the new allowance by unfortunate transaction
+     * ordering. One possible solution to mitigate this race condition
+     * is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
      * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
      * @dev Proxies call to new token if this token is upgraded
      * @param spender The address which will spend the funds.
@@ -215,7 +231,8 @@ contract EToken is IEToken, ETokenProxy {
     }
 
     /**
-     * @dev Burns a specific amount of tokens from the target address and decrements allowance
+     * @dev Burns a specific amount of tokens from the target address
+     * and decrements allowance
      * @dev Proxies call to new token if this token is upgraded
      * @param from address The address which you want to send tokens from
      * @param value uint256 The amount of token to be burned
@@ -247,7 +264,11 @@ contract EToken is IEToken, ETokenProxy {
         returns (bool success)
     {
         if (isUpgraded()) {
-            return getUpgradedToken().increaseAllowanceProxy(msg.sender, spender, addedValue);
+            return getUpgradedToken().increaseAllowanceProxy(
+                msg.sender,
+                spender,
+                addedValue
+            );
         } else {
             return increaseAllowanceGuarded(msg.sender, spender, addedValue);
         }
@@ -271,9 +292,17 @@ contract EToken is IEToken, ETokenProxy {
         returns (bool success)
     {
         if (isUpgraded()) {
-            return getUpgradedToken().decreaseAllowanceProxy(msg.sender, spender, subtractedValue);
+            return getUpgradedToken().decreaseAllowanceProxy(
+                msg.sender,
+                spender,
+                subtractedValue
+            );
         } else {
-            return super.decreaseAllowanceGuarded(msg.sender, spender, subtractedValue);
+            return super.decreaseAllowanceGuarded(
+                msg.sender,
+                spender,
+                subtractedValue
+            );
         }
     }
 
@@ -283,7 +312,10 @@ contract EToken is IEToken, ETokenProxy {
      */
     function changeMintingRecipient(address mintingRecip) public {
         if (isUpgraded()) {
-            getUpgradedToken().changeMintingRecipientProxy(msg.sender, mintingRecip);
+            getUpgradedToken().changeMintingRecipientProxy(
+                msg.sender,
+                mintingRecip
+            );
         } else {
             changeMintingRecipientGuarded(msg.sender, mintingRecip);
         }

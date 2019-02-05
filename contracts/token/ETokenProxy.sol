@@ -48,10 +48,16 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
     )
         internal
         UpgradeSupport(initialDeployment, upgradedFrom)
-        ETokenGuarded(name, symbol, decimals,
-                      accesslist, whitelistEnabled,
-                      externalStorage, initialMintingRecipient,
-                      initialDeployment)
+        ETokenGuarded(
+            name,
+            symbol,
+            decimals,
+            accesslist,
+            whitelistEnabled,
+            externalStorage,
+            initialMintingRecipient,
+            initialDeployment
+        )
     {
 
     }
@@ -138,9 +144,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.symbol but proxies calls as described in the
         documentation for the declaration of this contract. */
-    function allowanceProxy(address sender,
-                            address owner,
-                            address spender)
+    function allowanceProxy(address sender, address owner, address spender)
         external
         view
         isEnabled
@@ -173,9 +177,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.symbol but proxies calls as described in the
         documentation for the declaration of this contract. */
-    function approveProxy(address sender,
-                          address spender,
-                          uint256 value)
+    function approveProxy(address sender, address spender, uint256 value)
         external
         isEnabled
         onlyProxy
@@ -191,25 +193,31 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.symbol but proxies calls as described in the
         documentation for the declaration of this contract. */
-    function transferFromProxy(address sender,
-                               address from,
-                               address to,
-                               uint256 value)
+    function transferFromProxy(
+        address sender,
+        address from,
+        address to,
+        uint256 value
+    )
         external
         isEnabled
         onlyProxy
         returns (bool)
     {
         if (isUpgraded()) {
-            getUpgradedToken().transferFromProxy(sender,
-                                            from,
-                                            to,
-                                            value);
+            getUpgradedToken().transferFromProxy(
+                sender,
+                from,
+                to,
+                value
+            );
         } else {
-            transferFromGuarded(sender,
-                                from,
-                                to,
-                                value);
+            transferFromGuarded(
+                sender,
+                from,
+                to,
+                value
+            );
         }
     }
 
@@ -260,9 +268,7 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.burnFrom but proxies calls as described in the
         documentation for the declaration of this contract. */
-    function burnFromProxy(address sender,
-                           address from,
-                           uint256 value)
+    function burnFromProxy(address sender, address from, uint256 value)
         external
         isEnabled
         onlyProxy
@@ -276,9 +282,11 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.increaseAllowance but proxies calls as described
         in the documentation for the declaration of this contract. */
-    function increaseAllowanceProxy(address sender,
-                                    address spender,
-                                    uint addedValue)
+    function increaseAllowanceProxy(
+        address sender,
+        address spender,
+        uint addedValue
+    )
         external
         isEnabled
         onlyProxy
@@ -294,9 +302,11 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.decreaseAllowance but proxies calls as described
         in the documentation for the declaration of this contract. */
-    function decreaseAllowanceProxy(address sender,
-                                    address spender,
-                                    uint subtractedValue)
+    function decreaseAllowanceProxy(
+        address sender,
+        address spender,
+        uint subtractedValue
+    )
         external
         isEnabled
         onlyProxy
