@@ -1,4 +1,4 @@
-/* global artifacts, web3, contract */
+/* global artifacts, web3, contract, assert */
 /* eslint-env mocha */
 
 'use strict';
@@ -39,9 +39,13 @@ const explicitSenderOps = [
   ['transferFromProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
   ['increaseAllowanceProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
   ['decreaseAllowanceProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
+  ['mintProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
   ['burnProxy', [util.ZERO_ADDRESS, 0]],
   ['burnFromProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS, 0]],
-  ['changeMintingRecipientProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]]
+  ['changeMintingRecipientProxy', [util.ZERO_ADDRESS, util.ZERO_ADDRESS]],
+  ['pauseProxy', [util.ZERO_ADDRESS]],
+  ['unpauseProxy', [util.ZERO_ADDRESS]],
+  ['pausedProxy', [util.ZERO_ADDRESS]]
 ];
 
 const otherOps = [
@@ -372,6 +376,22 @@ contract('EToken', async function (
         identifiesAsNewToken();
 
         describe('Upgraded token rejects unauthorized for proxy sender functions', function () {
+          it('should test for all the proxy methods', async function () {
+            const methodsToTest = explicitSenderOps.map(o => o[0]).sort();
+            const proxyMethods = Object.entries(this.token)
+              .filter(
+                ([key, value]) => key.endsWith('Proxy') &&
+                      typeof value === 'function'
+              )
+              .map(o => o[0])
+              .sort();
+
+            assert.deepEqual(
+              methodsToTest,
+              proxyMethods,
+              'Not all proxy methods are tested');
+          });
+
           explicitSenderOps.forEach(function (op) {
             it(`${op[0]} reverts`, async function () {
               await util.assertRevertsReason(upgradeToken[op[0]](...op[1], { from: owner }),
