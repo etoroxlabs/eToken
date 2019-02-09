@@ -322,7 +322,11 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.pause but proxies calls as described
         in the documentation for the declaration of this contract. */
-    function pauseProxy(address sender) external {
+    function pauseProxy(address sender)
+        external
+        isEnabled
+        onlyProxy
+    {
         if (isUpgraded()) {
             getUpgradedToken().pauseProxy(sender);
         } else {
@@ -332,7 +336,11 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.unpause but proxies calls as described
         in the documentation for the declaration of this contract. */
-    function unpauseProxy(address sender) external {
+    function unpauseProxy(address sender)
+        external
+        isEnabled
+        onlyProxy
+    {
         if (isUpgraded()) {
             getUpgradedToken().unpauseProxy(sender);
         } else {
@@ -342,7 +350,13 @@ contract ETokenProxy is IETokenProxy, ETokenGuarded {
 
     /** Like EToken.paused but proxies calls as described
         in the documentation for the declaration of this contract. */
-    function pausedProxy(address sender) external view returns (bool) {
+    function pausedProxy(address sender)
+        external
+        view
+        isEnabled
+        onlyProxy
+        returns (bool)
+    {
         if (isUpgraded()) {
             return getUpgradedToken().pausedProxy(sender);
         } else {
