@@ -19,15 +19,16 @@ async function setENS (name, parentNode, address, owner) {
 
 module.exports = (deployer, network, accounts) => {
   const owner = accounts[0];
-  const dummyaddress = '0x5aeda56215b167893e80b4fe645ba6d5bab767de'; // used accounts[9] as a placeholder for etokenize.eth addresss
+  const dummyaddress = accounts[0]; // used accounts[9] as a placeholder for etokenize.eth addresss
   const tld = 'eth';
   const etokenizeName = 'etokenize';
   const etokenizeTldName = etokenizeName + '.' + tld;
   const accesslistName = 'accesslist';
-  const tokenManagerName = 'manager';
+  const tokenManagerName = 'tokenmanager';
 
   if (deployer.network === 'development' ||
-      deployer.network === 'develop') {
+      deployer.network === 'develop' ||
+      deployer.network === 'ropsten') {
     deployer.then(async () => {
       await setENS(etokenizeName, tld, dummyaddress, owner);
       await setENS(accesslistName, etokenizeTldName, Accesslist.address, owner);
