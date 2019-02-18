@@ -19,7 +19,7 @@ async function setENS (name, parentNode, address, owner) {
 
 module.exports = (deployer, network, accounts) => {
   const owner = accounts[0];
-  const dummyaddress = accounts[0]; // used accounts[9] as a placeholder for etokenize.eth addresss
+  const dummyaddress = accounts[0];
   const tld = 'eth';
   const etokenizeName = 'etokenize';
   const etokenizeTldName = etokenizeName + '.' + tld;

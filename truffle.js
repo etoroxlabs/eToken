@@ -24,8 +24,8 @@ module.exports = {
       gas: 7000000
     },
     ropsten: {
-      provider: function() {
-        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/98b6008ef68a4389a5b10240f197e650')
+      provider: function () {
+        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/98b6008ef68a4389a5b10240f197e650');
       },
       gas: 8000000,
       gasPrice: 1000000,

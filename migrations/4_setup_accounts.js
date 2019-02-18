@@ -24,7 +24,7 @@ async function setupAccounts ([owner, ..._]) {
   const mintTargetAccount = 0xd00f;
 
   // Setup whitelists
-  const accesslistContract = await Accesslist.deployed();;
+  const accesslistContract = await Accesslist.deployed();
 
   // Setup tokens
   const tokenManagerContract = await TokenManager.deployed();
