@@ -11,9 +11,15 @@
  *     gasPrice: 10000000000,
  *   },
  */
-
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const mnemonic = process.env.ETOKEN_MNEMONIC;
+
+const LedgerWalletProvider = require('truffle-ledger-provider');
+const ledgerOptions = {
+  askConfirm: true,
+  accountsLength: 1,
+  accountsOffset: 0
+  };
 
 module.exports = {
   networks: {
@@ -30,6 +36,14 @@ module.exports = {
       gas: 8000000,
       gasPrice: 1000000,
       network_id: 3
+    },
+    mainnet: {
+      provider: function () {
+        return new LedgerWalletProvider(ledgerOptions, 'https://mainnet.infura.io/v3/98b6008ef68a4389a5b10240f197e650');
+      },
+      gas: 8000000,
+      gasPrice: 15000000000,
+      network_id: 1
     },
     coverage: {
       host: '127.0.0.1',

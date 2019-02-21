@@ -21,7 +21,7 @@ module.exports = function (deployer, _network, accounts) {
   // Deploy local ENS when running on dev network
   if (deployer.network === 'development' ||
         deployer.network === 'develop' ||
-        deployer.network === 'ropsten') {
+        deployer.network === 'ropsten' ) {
     deployer.deploy(ENS)
       .then(() => {
         return deployer.deploy(
