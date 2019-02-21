@@ -19,7 +19,7 @@ const ledgerOptions = {
   askConfirm: true,
   accountsLength: 1,
   accountsOffset: 0
-  };
+};
 
 module.exports = {
   networks: {
