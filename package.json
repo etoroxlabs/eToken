@@ -17,6 +17,7 @@
     "upgradeToken": "yarn truffle exec scripts/upgradeToken/upgradeTokenWrapper.js $@"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
     "eth-ens-namehash": "2.0.8",
     "ganache-cli": "6.2.3",
