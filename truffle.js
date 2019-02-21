@@ -12,6 +12,9 @@
  *   },
  */
 
+const HDWalletProvider = require('truffle-hdwallet-provider');
+const mnemonic = process.env.ETOKEN_MNEMONIC;
+
 module.exports = {
   networks: {
     development: {
@@ -19,7 +22,14 @@ module.exports = {
       port: 8545,
       network_id: '*',
       gas: 7000000
-
+    },
+    ropsten: {
+      provider: function () {
+        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/98b6008ef68a4389a5b10240f197e650');
+      },
+      gas: 8000000,
+      gasPrice: 1000000,
+      network_id: 3
     },
     coverage: {
       host: '127.0.0.1',
@@ -28,6 +38,10 @@ module.exports = {
       gas: 0xfffffffffff, // <-- Use this high gas value
       gasPrice: 0x01 // <-- Use this low gas price
     }
+  },
+  rpc: {
+    host: 'localhost',
+    post: '8080'
   },
   solc: {
     optimizer: {
