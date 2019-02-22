@@ -43,5 +43,8 @@
     "solium-plugin-zeppelin": "ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247",
     "truffle-assertions": "0.7.1",
     "truffle-ledger-provider": "^1.0.0"
+  },
+  "resolutions": {
+    "@ledgerhq/web3-subprovider": "4.41.0"
   }
 }
