@@ -26,58 +26,58 @@ async function setupAccounts ([owner, ..._]) {
 
   const tokenDetails = [
     {
-      name: 'Etoro United States Dollar',
+      name: 'eToro United States Dollar',
       symbol: 'USDX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Euro',
+      name: 'eToro Euro',
       symbol: 'EURX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Pound sterling',
+      name: 'eToro Pound sterling',
       symbol: 'GBPX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Australian Dollar',
+      name: 'eToro Australian Dollar',
       symbol: 'AUDX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro New Zealand Dollar',
+      name: 'eToro New Zealand Dollar',
       symbol: 'NZDX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Japanese Yen',
+      name: 'eToro Japanese Yen',
       symbol: 'JPYX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Russian Ruble',
+      name: 'eToro Russian Ruble',
       symbol: 'RUBX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Chinese Yuan',
+      name: 'eToro Chinese Yuan',
       symbol: 'CNYX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     },
     {
-      name: 'Etoro Swiss Franc',
+      name: 'eToro Swiss Franc',
       symbol: 'CHFX',
       decimals: 18,
-      whitelistEnabled: true
+      whitelistEnabled: false
     }
   ];
 
