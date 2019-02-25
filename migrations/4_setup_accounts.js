@@ -78,6 +78,18 @@ async function setupAccounts ([owner, ..._]) {
       symbol: 'CHFX',
       decimals: 18,
       whitelistEnabled: false
+    },
+    {
+      name: 'eToro Gold',
+      symbol: 'GLDX',
+      decimals: 18,
+      whitelistEnabled: false
+    },
+    {
+      name: 'eToro Silver',
+      symbol: 'SLVX',
+      decimals: 18,
+      whitelistEnabled: false
     }
   ];
 
