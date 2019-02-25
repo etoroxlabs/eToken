@@ -46,7 +46,7 @@ module.exports = {
         return new LedgerWalletProvider(ledgerOptions, 'https://mainnet.infura.io/');
       },
       gas: 8000000,
-      gasPrice: 40000000000,
+      gasPrice: 60000000000,
       network_id: 1
     },
     coverage: {

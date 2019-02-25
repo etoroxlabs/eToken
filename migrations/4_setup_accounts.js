@@ -26,30 +26,6 @@ async function setupAccounts ([owner, ..._]) {
 
   const tokenDetails = [
     {
-      name: 'eToro United States Dollar',
-      symbol: 'USDX',
-      decimals: 18,
-      whitelistEnabled: false
-    },
-    {
-      name: 'eToro Euro',
-      symbol: 'EURX',
-      decimals: 18,
-      whitelistEnabled: false
-    },
-    {
-      name: 'eToro Pound sterling',
-      symbol: 'GBPX',
-      decimals: 18,
-      whitelistEnabled: false
-    },
-    {
-      name: 'eToro Australian Dollar',
-      symbol: 'AUDX',
-      decimals: 18,
-      whitelistEnabled: false
-    },
-    {
       name: 'eToro New Zealand Dollar',
       symbol: 'NZDX',
       decimals: 18,
@@ -80,6 +56,30 @@ async function setupAccounts ([owner, ..._]) {
       whitelistEnabled: false
     },
     {
+      name: 'eToro United States Dollar',
+      symbol: 'USDX',
+      decimals: 18,
+      whitelistEnabled: false
+    },
+    {
+      name: 'eToro Euro',
+      symbol: 'EURX',
+      decimals: 18,
+      whitelistEnabled: false
+    },
+    {
+      name: 'eToro Pound sterling',
+      symbol: 'GBPX',
+      decimals: 18,
+      whitelistEnabled: false
+    },
+    {
+      name: 'eToro Australian Dollar',
+      symbol: 'AUDX',
+      decimals: 18,
+      whitelistEnabled: false
+    },
+    {
       name: 'eToro Gold',
       symbol: 'GLDX',
       decimals: 18,
@@ -93,16 +93,14 @@ async function setupAccounts ([owner, ..._]) {
     }
   ];
 
-  await Promise.all(
-    tokenDetails.map(async (td) => {
-      const token = await EToken.new(
-        td.name, td.symbol, td.decimals,
-        accesslistContract.address, td.whitelistEnabled,
-        ZERO_ADDRESS,
-        mintTargetAccount, ZERO_ADDRESS, true,
-        { from: owner });
+  for (let td of tokenDetails) {
+    const token = await EToken.new(
+      td.name, td.symbol, td.decimals,
+      accesslistContract.address, td.whitelistEnabled,
+      ZERO_ADDRESS,
+      mintTargetAccount, ZERO_ADDRESS, true,
+      { from: owner });
 
-      await tokenManagerContract.addToken(td.name, token.address);
-      return token;
-    }));
+    await tokenManagerContract.addToken(td.name, token.address);
+  }
 }
