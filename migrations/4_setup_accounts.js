@@ -93,7 +93,7 @@ async function setupAccounts ([owner, ..._]) {
     }
   ];
 
-  for (let td of tokenDetails) {
+  for (const td of tokenDetails) {
     const token = await EToken.new(
       td.name, td.symbol, td.decimals,
       accesslistContract.address, td.whitelistEnabled,
