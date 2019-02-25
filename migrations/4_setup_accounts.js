@@ -9,19 +9,14 @@ const { ZERO_ADDRESS } = require('../test/utils.js');
 module.exports = function (deployer, _network, accounts) {
   if (deployer.network === 'development' ||
       deployer.network === 'develop' ||
-      deployer.network === 'ropsten') {
+      deployer.network === 'ropsten' ||
+      deployer.network === 'mainnet') {
     deployer.then(() => setupAccounts(accounts));
   }
 };
 
 async function setupAccounts ([owner, ..._]) {
-  /*
-    The purpose of this is to automatically setup the test environment accounts.
-    DO NOT use in production yet.
-  */
-
-  // FIXME: Use some real address here
-  const mintTargetAccount = 0xd00f;
+  const mintTargetAccount = owner;
 
   // Setup whitelists
   const accesslistContract = await Accesslist.deployed();
@@ -31,16 +26,58 @@ async function setupAccounts ([owner, ..._]) {
 
   const tokenDetails = [
     {
-      name: 'eToro Israel Shekel',
-      symbol: 'eILS',
-      decimals: 2,
+      name: 'Etoro United States Dollar',
+      symbol: 'USDX',
+      decimals: 18,
       whitelistEnabled: true
     },
     {
-      name: 'eToro Danish krone',
-      symbol: 'eDKK',
-      decimals: 2,
-      whitelistEnabled: false
+      name: 'Etoro Euro',
+      symbol: 'EURX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Pound sterling',
+      symbol: 'GBPX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Australian Dollar',
+      symbol: 'AUDX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro New Zealand Dollar',
+      symbol: 'NZDX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Japanese Yen',
+      symbol: 'JPYX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Russian Ruble',
+      symbol: 'RUBX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Chinese Yuan',
+      symbol: 'CNYX',
+      decimals: 18,
+      whitelistEnabled: true
+    },
+    {
+      name: 'Etoro Swiss Franc',
+      symbol: 'CHFX',
+      decimals: 18,
+      whitelistEnabled: true
     }
   ];
 
