@@ -13,10 +13,11 @@
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
     "lint": "/bin/bash -c 'eslint .; esr=$?; solium -d contracts/; sor=$?; [ $esr == 0 -a $sor == 0 ]'",
-    "beautify": "eslint .  --fix | snazzy && solium -d contracts/ --fix",
+    "beautify": "eslint .  --fix && solium -d contracts/ --fix",
     "upgradeToken": "yarn truffle exec scripts/upgradeToken/upgradeTokenWrapper.js $@"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "@ensdomains/ens": "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8",
     "eth-ens-namehash": "2.0.8",
     "ganache-cli": "6.2.3",
@@ -40,6 +41,10 @@
     "solidity-coverage": "0.5.11",
     "solium": "^1.1.8",
     "solium-plugin-zeppelin": "ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247",
-    "truffle-assertions": "0.7.1"
+    "truffle-assertions": "0.7.1",
+    "truffle-ledger-provider": "^1.0.0"
+  },
+  "resolutions": {
+    "@ledgerhq/web3-subprovider": "4.41.0"
   }
 }
