@@ -57,7 +57,7 @@ async function setupAccounts ([owner, ..._]) {
     },
     {
       name: 'eToro United States Dollar',
-      symbol: 'USDX',
+      symbol: 'USDEX',
       decimals: 18,
       whitelistEnabled: false
     },
@@ -81,7 +81,7 @@ async function setupAccounts ([owner, ..._]) {
     },
     {
       name: 'eToro Gold',
-      symbol: 'GLDX',
+      symbol: 'GOLDX',
       decimals: 18,
       whitelistEnabled: false
     },
