@@ -23,7 +23,8 @@
     "ganache-cli": "6.2.3",
     "openzeppelin-solidity": "2.0.0",
     "truffle": "4.1.14",
-    "truffle-hdwallet-provider": "0.0.6"
+    "truffle-hdwallet-provider": "0.0.6",
+    "truffle-ledger-provider": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -41,8 +42,7 @@
     "solidity-coverage": "0.5.11",
     "solium": "^1.1.8",
     "solium-plugin-zeppelin": "ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247",
-    "truffle-assertions": "0.7.1",
-    "truffle-ledger-provider": "^1.0.0"
+    "truffle-assertions": "0.7.1"
   },
   "resolutions": {
     "@ledgerhq/web3-subprovider": "4.41.0"
