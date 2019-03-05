@@ -8,7 +8,7 @@ const ETokenMock = artifacts.require('ETokenMock');
 const DisableToken = artifacts.require('DisableToken');
 
 const utils = require('./utils.js');
-const disableToken = require('../scripts/disableToken/disableToken.js');
+const disableTokenAction = require('../scripts/disableToken/disableToken.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -41,7 +41,7 @@ contract('Disable Token', async function ([_, owner, otherAccount]) {
        (await token.balanceOf(owner)).should.be.bignumber.equal(10000);
        (await token.allowance(owner, otherAccount)).should.be.bignumber.equal(100);
 
-       await disableToken(DisableToken, token, owner);
+       await disableTokenAction(DisableToken, token, owner);
 
        (await token.name()).should.be.equal('DO NOT USE - Disabled');
        (await token.symbol()).should.be.equal('DEAD');
@@ -63,5 +63,8 @@ contract('Disable Token', async function ([_, owner, otherAccount]) {
        await utils.assertRevertsReason(token.pause(), crippledText);
        await utils.assertRevertsReason(token.unpause(), crippledText);
        await utils.assertRevertsReason(token.paused(), crippledText);
+
+       const disabledToken = DisableToken.at(await token.getUpgradedToken());
+       await utils.assertRevertsReason(disabledToken.upgrade(utils.ZERO_ADDRESS), crippledText);
      });
 });

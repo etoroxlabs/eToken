@@ -14,6 +14,7 @@ contract DisableToken is IETokenProxy {
     function upgrade(IETokenProxy upgradedToken) public pure {
         // Silence warnings
         upgradedToken;
+        revert("Token is disabled");
     }
 
     function finalizeUpgrade() public {
