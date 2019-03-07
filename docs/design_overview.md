@@ -27,26 +27,32 @@ are described separately in Figure 4.*
 
 ### System design
 An overview of the design is shown in Figure 1 and a detailed diagram
-of the interfaces of the various components is shown in Figure 4. The
-components of the shown design serves following purposes:
+of the interfaces of the various components is shown in Figure 4. At a
+high level, the system design can be divided into different aspects.
 
- * The TokenManager acts as a registry of currently deployed
-   tokens. Its primary purpose is to serve as am on-chain registry of
-   the tokens currently deployed which can be queried by clients.
- * The AccessList contract holds the access list which comprises a
-   whitelist containing KYC’d addresses and a blacklist containing the
-   list of addresses which are prevented from accessing the
-   tokens. The blacklist shadows the whitelist such that an address
-   can be temporarily blacklisted without altering the whitelist.
- * The Ethereum Name System (ENS) is used to allow frontends to
-   identify (possibly changing) contract addresses through a constant
-   name.
- * eToken(n) are ERC20 tokens which uses an ERC20 implementation
-   extended from the OpenZeppelin library to enable the use of a
-   separate contract for storing balances and allowances. The need for
-   this separation was driven by our requirement of being able to
-   upgrade the tokens. We discuss the token implementation itself in
-   the following section.
+ * The **Accesslist aspect** provides black- and whitelisting of
+   accounts across all deployed tokens. The whitelist containing KYC’d
+   addresses while the blacklist containing the list of addresses
+   which are prevented from accessing the tokens. Blacklisted entries
+   shadows the whitelist. This makes it possible for an address to be
+   temporarily blacklisted without altering the whitelist. The primary
+   accesslist functionality is provided by the `AccessList`
+   contract. The white- and blacklists are managed by two separate
+   roles.
+ * The **Frontend support** aspect provides supporting facilities
+   which enables user interfaces to discover the locations of our
+   deployed tokens. The TokenManager is a registry of currently
+   deployed tokens. Its primary purpose is to serve as am on-chain
+   record of the tokens currently deployed which can be retrieved by
+   clients. The Ethereum Name Service (ENS) is used for discovering
+   the current address of the TokenManager and centralized access
+   list. ENS is provided as a service on Ethereum and is therefore not
+   deployed by us.
+ * The **Token contract** aspect contains everything which is specific
+   to a particular token. Specifically, this includes the core token
+   functionality, per-token access control roles, the external storage
+   and the upgrade functionality. All of these are described in more
+   detail later in this document.
 
 ### Internal token design
 
