@@ -2,7 +2,7 @@
 
 This document describes the design and implementation of the smart
 contracts comprising eToken which is intended to be used for powering
-several stablecoins representing various assets. At its
+several stable coins representing various assets. At its
 core, eToken is an ERC20 token with additional supporting
 infrastructure relating to token management, permission management and
 token upgradability. The remainder of this document gives a high-level
@@ -31,9 +31,9 @@ of the interfaces of the various components is shown in Figure 4. At a
 high level, the system design can be divided into different aspects.
 
  * The **Accesslist aspect** provides black- and whitelisting of
-   accounts across all deployed tokens. The whitelist containing KYC’d
-   addresses while the blacklist containing the list of addresses
-   which are prevented from accessing the tokens. Blacklisted entries
+   accounts across all deployed tokens. The whitelist contains KYC’d
+   addresses while the blacklist contains the list of addresses which
+   are prevented from accessing the tokens. Blacklisted entries
    shadows the whitelist. This makes it possible for an address to be
    temporarily blacklisted without altering the whitelist. The primary
    accesslist functionality is provided by the `AccessList`
@@ -106,7 +106,7 @@ are arranged bottom-up from outmost to innermost.
 Due to the immutability of Ethereum smart contracts, upgrading the
 functionality of a previously deployed contract is a well-known
 challenge. The strategy we use for upgrading previously deployed
-tokens are similar to, eg., TrueUSD and Tether USD and works by
+tokens are similar to, e.g., TrueUSD and Tether USD and works by
 allowing the functions comprising the external interface of a token to
 which modes such that they proxy all calls to a new contract. In
 particular, the following is achieved.
@@ -199,7 +199,7 @@ follows:
 
 Furthermore, since the roles are tightly integrated in the
 OpenZeppelin system, modifying otherwise unrelated parts of OZ to use
-our roles, such as lifecycle/Pausable, was unfortunately unavoidable.
+our roles, such as `lifecycle/Pausable`, was unfortunately unavoidable.
 
 ## Accesslist
 Access to token transfer functions is guarded by the
@@ -231,3 +231,10 @@ action.
 ![Class diagram](images/class_diagram.svg)
 
 *__Figure 4:__ Detailed interactions of the contracts*
+
+<!--  LocalWords:  Accesslist TokenManager MinterRole BurnerRole
+ -->
+<!--  LocalWords:  PauserRole WhitelistAdminRole AccessList Ownable
+ -->
+<!--  LocalWords:  BlacklistAdminRole OpenZeppelin accesslist eToken
+ -->
