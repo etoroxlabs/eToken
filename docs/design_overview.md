@@ -1,15 +1,8 @@
 # eToken design overview
 
-![overview](images/contracts_overview.svg)
-
-*__Figure 1:__ Design overview. To simplify the overview, aspects
-related to the token upgrading functionality are not shown here but
-are described separately in Figure 4.*
-
-## eToken - ERC20
 This document describes the design and implementation of the smart
 contracts comprising eToken which is intended to be used for powering
-several different stablecoins representing various assets. At its
+several stablecoins representing various assets. At its
 core, eToken is an ERC20 token with additional supporting
 infrastructure relating to token management, permission management and
 token upgradability. The remainder of this document gives a high-level
@@ -24,6 +17,12 @@ OZ code. Therefore, our current implementation contains several
 modified and extended OZ components. When modifying OZ components, we
 have attempted to retain major design decisions and making
 non-intrusive and predictable code alteration.
+
+
+![overview](images/contracts_overview2.svg)
+*__Figure 1:__ Design overview. To simplify the overview, aspects
+related to the token upgrading functionality are not shown here but
+are described separately in Figure 4.*
 
 ### System design
 An overview of the design is shown in Figure 1 and a detailed diagram
@@ -42,7 +41,7 @@ components of the shown design serves following purposes:
    identify (possibly changing) contract addresses through a constant
    name.
  * eToken(n) are ERC20 tokens which uses an ERC20 implementation
-   extended from the OpenZeppelin library to enable the use of an
+   extended from the OpenZeppelin library to enable the use of a
    separate contract for storing balances and allowances. The need for
    this separation was driven by our requirement of being able to
    upgrade the tokens. We discuss the token implementation itself in
@@ -97,7 +96,7 @@ are arranged bottom-up from outmost to innermost.
 
 ### Upgradability and external storage ERC20 implementation
 Due to the immutability of Ethereum smart contracts, upgrading the
-functionality of a previously deployed contract is a well known
+functionality of a previously deployed contract is a well-known
 challenge. The strategy we use for upgrading previously deployed
 tokens are similar to, eg., TrueUSD and Tether USD and works by
 allowing the functions comprising the external interface of a token to
@@ -205,7 +204,7 @@ previously described roles for the following reasons:
    aforementioned roles, on the other hand, may be limited to a
    specific token. For example, different accounts may be responsible
    for minting USD and gold tokens.
-2. The AccessList contains a large number of addresses and it is
+2. The AccessList contains numerous addresses and it is
    impractical to require that this data is transferred if we need to
    upgrade the token contracts.
 
