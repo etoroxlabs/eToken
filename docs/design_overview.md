@@ -91,7 +91,7 @@ contract. However, exceptions were made for administrative functions
 which are not threaded through the upgrade machinery. Examples of such
 are functions for managing permissions and roles.
 
-![The layers comprising the design of EToken](images/token_layers.png)
+![The layers comprising the design of EToken](images/token_layers.svg)
 **Figure 2:** The layers comprising the new token design. The layers
 are arranged bottom-up from outmost to innermost.
 
@@ -122,10 +122,7 @@ accept requests from a single contract at a time. This contract is
 known as the implementor. When a token is upgraded, the implementor of
 the attached storage is transferred to the new token.
 
-<p align="center">
-  <img src="docs/images/token_upgrade.svg"/>
-</p>
-
+![The upgrade token process](images/token_upgrade.svg)
 *__Figure 3:__ Rendering of the token upgrade process. On the left
 side, we see the contract communications before the network
 upgrade. All clients and the token manager targets the token
