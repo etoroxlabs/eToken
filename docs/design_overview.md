@@ -20,6 +20,7 @@ non-intrusive and predictable code alteration.
 
 
 ![overview](images/contracts_overview2.svg)
+
 *__Figure 1:__ Design overview. To simplify the overview, aspects
 related to the token upgrading functionality are not shown here but
 are described separately in Figure 4.*
@@ -91,6 +92,7 @@ which are not threaded through the upgrade machinery. Examples of such
 are functions for managing permissions and roles.
 
 ![The layers comprising the design of EToken](images/token_layers.svg)
+
 **Figure 2:** The layers comprising the new token design. The layers
 are arranged bottom-up from outmost to innermost.
 
@@ -122,6 +124,7 @@ known as the implementor. When a token is upgraded, the implementor of
 the attached storage is transferred to the new token.
 
 ![The upgrade token process](images/token_upgrade.svg)
+
 *__Figure 3:__ Rendering of the token upgrade process. On the left
 side, we see the contract communications before the network
 upgrade. All clients and the token manager targets the token
@@ -220,4 +223,5 @@ action.
 
 ## Class Diagram
 ![Class diagram](images/class_diagram.svg)
+
 *__Figure 4:__ Detailed interactions of the contracts*
