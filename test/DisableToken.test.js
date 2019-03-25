@@ -8,7 +8,7 @@ const ETokenMock = artifacts.require('ETokenMock');
 const DisableToken = artifacts.require('DisableToken');
 
 const utils = require('./utils.js');
-const disableTokenAction = require('../scripts/disableToken/disableToken.js');
+const disableTokenHelper = require('../scripts/disableToken/disableTokenHelper.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -41,7 +41,7 @@ contract('Disable Token', async function ([_, owner, otherAccount]) {
        (await token.balanceOf(owner)).should.be.bignumber.equal(10000);
        (await token.allowance(owner, otherAccount)).should.be.bignumber.equal(100);
 
-       await disableTokenAction(DisableToken, token, owner);
+       await disableTokenHelper(DisableToken, token, owner);
 
        (await token.name()).should.be.equal('DO NOT USE - Disabled');
        (await token.symbol()).should.be.equal('DEAD');

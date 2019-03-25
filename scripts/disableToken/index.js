@@ -14,7 +14,7 @@ const argv = require('optimist')
   .demand(['token', 'tokenOwner'])
   .argv;
 
-const disableToken = require('./disableToken');
+const disableTokenHelper = require('./disableTokenHelper');
 
 async function disableTokenWrapper () {
   const token = EToken.at(argv.token);
@@ -31,7 +31,7 @@ async function disableTokenWrapper () {
     throw Error('You do not understand');
   }
 
-  await disableToken(DisableToken, token, tokenOwner);
+  await disableTokenHelper(DisableToken, token, tokenOwner);
 }
 
 module.exports = (callback, test) => {

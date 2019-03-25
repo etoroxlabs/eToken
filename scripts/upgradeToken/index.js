@@ -11,7 +11,7 @@ const argv = require('optimist')
   .demand(['tokenManager', 'oldToken', 'newToken', 'tokenManagerOwner', 'oldTokenOwner'])
   .argv;
 
-const upgradeToken = require('./upgradeToken');
+const upgradeTokenHelper = require('./upgradeTokenHelper');
 
 async function upgradeTokenWrapper () {
   const tokenManager = TokenManager.at(argv.tokenManager);
@@ -31,7 +31,7 @@ async function upgradeTokenWrapper () {
 
   await newToken.owner();
 
-  await upgradeToken(tokenManager, oldToken, newToken, tokenManagerOwner, oldTokenOwner);
+  await upgradeTokenHelper(tokenManager, oldToken, newToken, tokenManagerOwner, oldTokenOwner);
 }
 
 module.exports = (callback, test) => {

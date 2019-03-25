@@ -8,7 +8,7 @@ const Accesslist = artifacts.require('Accesslist');
 const EToken = artifacts.require('EToken');
 
 const util = require('./utils.js');
-const upgradeToken = require('../scripts/upgradeToken/upgradeToken.js');
+const upgradeTokenHelper = require('../scripts/upgradeToken/upgradeTokenHelper.js');
 
 const BigNumber = web3.BigNumber;
 
@@ -49,7 +49,7 @@ contract('Upgrade Token', async function ([_, tokenManagerOwner, oldTokenOwner, 
        (await tokenManager.addToken(tokenName, oldToken.address, { from: tokenManagerOwner }));
        (await tokenManager.getToken(tokenName)).should.be.equal(oldToken.address);
 
-       await upgradeToken(tokenManager, oldToken, newToken, tokenManagerOwner, oldTokenOwner);
+       await upgradeTokenHelper(tokenManager, oldToken, newToken, tokenManagerOwner, oldTokenOwner);
 
        // Check if upgrade successful
        (await oldToken.decimals()).should.be.bignumber.equal(newTokenDecimals);
