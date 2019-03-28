@@ -1,6 +1,6 @@
 'use strict';
 
-async function transferOwnershipHelper (ownerAddress, newOwnerAddress, ownableContracts) {
+async function transferOwnershipHelper (createOwnable, ownerAddress, newOwnerAddress, ownableContracts) {
   ownableContracts.forEach((t, index) => {
     if (typeof t.transferOwnership !== 'function') {
       throw Error(`The contract no. ${index} is not ownable`);
@@ -17,7 +17,12 @@ async function transferOwnershipHelper (ownerAddress, newOwnerAddress, ownableCo
 
   for (const [index, t] of ownableContracts.entries()) {
     try {
+      await t.removeBurner(ownerAddress, { from: ownerAddress });
+      await t.removePauser(ownerAddress, { from: ownerAddress });
       await t.transferOwnership(newOwnerAddress, { from: ownerAddress });
+
+      const storage = createOwnable(await t.getExternalStorage());
+      await storage.transferOwnership(newOwnerAddress, { from: ownerAddress });
     } catch (e) {
       console.error(`Error in contract no. ${index}`);
       throw e;

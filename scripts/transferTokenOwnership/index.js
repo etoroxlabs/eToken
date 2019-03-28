@@ -2,6 +2,7 @@
 
 'use strict';
 
+const EToken = artifacts.require('EToken.sol');
 const Ownable = artifacts.require('Ownable.sol');
 
 const argv = require('optimist')
@@ -11,14 +12,14 @@ const argv = require('optimist')
   .demand(['owner', 'newOwner', 'ownableContracts'])
   .argv;
 
-const transferOwnershipHelper = require('./transferOwnershipHelper');
+const transferTokenOwnershipHelper = require('./transferTokenOwnershipHelper');
 
 async function transferOwnershipWrapper () {
   const ownableContracts = argv.ownableContracts
     .split(' ')
-    .map(addr => Ownable.at(addr));
+    .map(addr => EToken.at(addr));
 
-  await transferOwnershipHelper(argv.owner, argv.newOwner, ownableContracts);
+  await transferTokenOwnershipHelper(Ownable.at, argv.owner, argv.newOwner, ownableContracts);
 }
 
 module.exports = (callback, test) => {
