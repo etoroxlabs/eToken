@@ -1,5 +1,5 @@
 # eToken - an [eToro](https://www.etoro.com/) stablecoin
-[![Build Status](https://circleci.com/gh/etoroxlabs/eToken.svg?style=shield&circle-token=797dc9ae3f839ac4fc5d5edad6c993ae9faa3943&maxAge=0)](https://circleci.com/gh/etoroxlabs/eToken) [![Coverage Status](https://coveralls.io/repos/github/etoroxlabs/eToken/badge.svg?t=fkTFFY&maxAge=0)](https://coveralls.io/github/etoroxlabs/eToken)
+[![Build Status](https://circleci.com/gh/etoroxlabs/eToken.svg?style=shield&circle-token=797dc9ae3f839ac4fc5d5edad6c993ae9faa3943&maxAge=0)](https://circleci.com/gh/etoroxlabs/eToken) [![Coverage Status](https://coveralls.io/repos/github/etoroxlabs/eToken/badge.svg?maxAge=0)](https://coveralls.io/github/etoroxlabs/eToken)
 
 eToken is stablecoin implementation by [eToro](https://www.etoro.com/) targeting the [Ethereum](https://www.ethereum.org/) platform.
 
