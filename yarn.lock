@@ -26,9 +26,9 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
 
-"@ensdomains/ens@ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8":
+"@ensdomains/ens@https://github.com/etoroxlabs/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8":
   version "0.1.1"
-  resolved "ssh://git@github.com:etokenize/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8"
+  resolved "https://github.com/etoroxlabs/ens.git#aa88abc0fc89a39a752a0192d160483a6faa1da8"
   dependencies:
     eth-ens-namehash "^1.0.2"
     ethereumjs-testrpc "^6.0.3"
@@ -6983,9 +6983,9 @@ solium-plugin-security@0.1.1:
   resolved "https://registry.yarnpkg.com/solium-plugin-security/-/solium-plugin-security-0.1.1.tgz#2a87bcf8f8c3abf7d198e292e4ac080284e3f3f6"
   integrity sha512-kpLirBwIq4mhxk0Y/nn5cQ6qdJTI+U1LO3gpoNIcqNaW+sI058moXBe2UiHs+9wvF9IzYD49jcKhFTxcR9u9SQ==
 
-"solium-plugin-zeppelin@ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247":
+"solium-plugin-zeppelin@https://github.com/OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247":
   version "0.0.2"
-  resolved "ssh://git@github.com:OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247"
+  resolved "https://github.com/OpenZeppelin/solium-plugin-zeppelin.git#44029c8391806f5ba042976e07cc53d793bd8247"
   dependencies:
     dedent "^0.7.0"
     eslint "^4.13.1"
