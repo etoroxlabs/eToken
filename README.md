@@ -14,7 +14,7 @@ To test the library and setup the development environment, issue the following c
 You need to have [`yarn`](https://yarnpkg.com/) and [`node`](https://nodejs.org/) installed.
 This repository has only been tested on UNIX-derived systems.
 
-## Design oveview
+## Design overview
 See [separate document](docs/design_overview.md).
 
 ## FILES
