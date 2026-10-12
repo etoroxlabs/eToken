@@ -2,7 +2,7 @@
   "name": "EToken",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "git@github.com:eTokenize/EToken.git",
+  "repository": "git@github.com:etoroxlabs/EToken.git",
   "author": "eTokenize",
   "license": "UNLICENSED",
   "private": true,
